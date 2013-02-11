@@ -1,0 +1,19 @@
+.--------------------------------.
+|                                |
+| todo.text                      |
+|                                |
+| Created on: Feb 5, 2013        |
+|     Author: oasookee@gmail.com |
+|                                |
+'--------------------------------'
+
+R - Request
+B - Bug
+M - Modification
+A - Addition
+F - FIXED
+X - Won't fix
+
+B: install /etc/ld.conf.d/sookee.conf ?
+
+
