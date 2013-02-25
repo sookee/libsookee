@@ -28,7 +28,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include "log.h"
+#include <sookee/log.h>
 
 namespace sookee { namespace log {
 
