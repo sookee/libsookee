@@ -31,13 +31,14 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include <sookee/types.h>
+//#include <sookee/types.h>
 
 #include <functional>
+#include <algorithm>
 
 namespace sookee { namespace string {
 
-using namespace sookee::types;
+//using namespace sookee::types;
 
 /**
  * Remove leading characters from a std::string.
@@ -46,7 +47,7 @@ using namespace sookee::types;
  * of the string.
  * @return The same string passed in as a parameter reference.
  */
-inline str& ltrim(str& s, const char* t = " \t\n\r\f\v")
+inline std::string& ltrim(std::string& s, const char* t = " \t\n\r\f\v")
 {
 	s.erase(0, s.find_first_not_of(t));
 	return s;
@@ -59,7 +60,7 @@ inline str& ltrim(str& s, const char* t = " \t\n\r\f\v")
  * of the string.
  * @return The same string passed in as a parameter reference.
  */
-inline str& rtrim(str& s, const char* t = " \t\n\r\f\v")
+inline std::string& rtrim(std::string& s, const char* t = " \t\n\r\f\v")
 {
 	s.erase(s.find_last_not_of(t) + 1);
 	return s;
@@ -72,7 +73,7 @@ inline str& rtrim(str& s, const char* t = " \t\n\r\f\v")
  * of the string.
  * @return The same string passed in as a parameter reference.
  */
-inline str& trim(str& s, const char* t = " \t\n\r\f\v")
+inline std::string& trim(std::string& s, const char* t = " \t\n\r\f\v")
 {
 	return ltrim(rtrim(s, t), t);
 }
@@ -84,7 +85,7 @@ inline str& trim(str& s, const char* t = " \t\n\r\f\v")
  * @param c The character value to delete.
  * @return The same string passed in as a parameter reference.
  */
-inline str& ltrim(str& s, char c)
+inline std::string& ltrim(std::string& s, char c)
 {
 	s.erase(0, s.find_first_not_of(c));
 	return s;
@@ -97,7 +98,7 @@ inline str& ltrim(str& s, char c)
  * @param c The character value to delete.
  * @return The same string passed in as a parameter reference.
  */
-inline str& rtrim(str& s, char c)
+inline std::string& rtrim(std::string& s, char c)
 {
 	s.erase(s.find_last_not_of(c) + 1);
 	return s;
@@ -110,40 +111,40 @@ inline str& rtrim(str& s, char c)
  * @param c The character value to delete.
  * @return The same string passed in as a parameter reference.
  */
-inline str& trim(str& s, char c)
+inline std::string& trim(std::string& s, char c)
 {
 	return ltrim(rtrim(s, c), c);
 }
 
-str& replace(str& s, const str& from, const str& to);
+std::string& replace(std::string& s, const std::string& from, const std::string& to);
 
 inline
-str& transform(str& s, const std::function<int(int)>& func)
+std::string& transform(std::string& s, const std::function<int(int)>& func)
 {
 	std::transform(s.begin(), s.end(), s.begin(), func);
 	return s;
 }
 
 inline
-str& lower(str& s)
+std::string& lower(std::string& s)
 {
 	return transform(s, tolower);
 }
 
 inline
-str& lower(str&& s)
+std::string& lower(std::string&& s)
 {
 	return lower(s);
 }
 
 inline
-str& upper(str& s)
+std::string& upper(std::string& s)
 {
 	return transform(s, toupper);
 }
 
 inline
-str& upper(str&& s)
+std::string& upper(std::string&& s)
 {
 	return upper(s);
 }
@@ -175,7 +176,7 @@ str& upper(str&& s)
  * @return On success the position of the character fllowing the end of the end delimiter (d2).
  * On failure returns std::string::npos.
  */
-str::size_type extract_delimited_text(const str& in, const str& d1, const str& d2, str& out, siz pos = 0);
+size_t extract_delimited_text(const std::string& in, const std::string& d1, const std::string& d2, std::string& out, size_t pos = 0);
 
 /**
  * Split a string into an array of substringd by
@@ -187,7 +188,7 @@ str::size_type extract_delimited_text(const str& in, const str& d1, const str& d
  * as a single division. Otherwise each dividing character is one division.
  * @return A std::vector<std::string> containing all the substrings.
  */
-str_vec split(const str& s, char d = ' ', bool fold = true);
+std::vector<std::string> split(const std::string& s, char d = ' ', bool fold = true);
 
 }} // sookee::string
 

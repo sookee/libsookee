@@ -50,7 +50,7 @@ is granted under the same conditions.
 #include <cstdio>
 #include <cstdlib>
 #include <unistd.h>
-#include <errno.h>
+#include <cerrno>
 #include <openssl/rand.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
@@ -58,10 +58,10 @@ is granted under the same conditions.
 #include <string>
 #include <iostream>
 
+namespace sookee { namespace net {
+
 typedef std::string str;
 typedef size_t siz;
-
-namespace sookee { namespace net {
 
 struct ssl_connection
 {

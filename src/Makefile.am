@@ -27,7 +27,7 @@ sookee_librarydir = $(prefix)/lib/sookee
 DEF_FLAGS = \
 	-D _GLIBCXX_USE_NANOSLEEP
 	
-GEN_FLAGS = -Wl,-E -Wfatal-errors -Wall -Wextra -Winit-self -ansi -pedantic -pipe -pthread \
+GEN_FLAGS = -Wl,-E -Wfatal-errors -Wall -Wextra -Winit-self -Werror -ansi -pedantic -pipe -pthread \
 	-I$(top_srcdir)/src/include
 
 AM_CXXFLAGS = -std=gnu++11 $(GEN_FLAGS) $(DEF_FLAGS) $(LIBXML2_FLAG)

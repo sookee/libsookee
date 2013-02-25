@@ -31,18 +31,18 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include <sookee/types.h>
+//#include <sookee/types.h>
 
-#include <ostream>
-#include <ctime>
-#include <csignal>
+#include <iostream>
+//#include <ctime>
+//#include <csignal>
 
 namespace sookee { namespace bug {
 
-using namespace sookee::types;
+//using namespace sookee::types;
 
-extern bool do_color;
-std::ostream& botbug(std::ostream* os = 0);
+//extern bool do_color;
+std::ostream& out(std::ostream* os = 0);
 
 struct __scope__bomb__
 {
@@ -60,7 +60,7 @@ void stack_handler(int sig);
 #define bug_func()
 #define ADD_STACK_HANDLER() do{}while(false)
 #else
-#define bug(m) do{sookee::bug::botbug() << m << std::endl;}while(false)
+#define bug(m) do{sookee::bug::out() << m << std::endl;}while(false)
 #define QUOTE(s) #s
 #define bug_var(v) bug(QUOTE(v:) << std::boolalpha << " " << v)
 #define bug_func() __scope__bomb__ __scoper__(__PRETTY_FUNCTION__)

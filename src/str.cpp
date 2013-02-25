@@ -29,6 +29,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 '-----------------------------------------------------------------*/
 
 #include <sookee/str.h>
+#include <sookee/types.h>
 
 #include <cctype>
 #include <sstream>

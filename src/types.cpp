@@ -31,7 +31,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <sookee/types.h>
 //#include <sookee/logrep.h>
 
-#include <sstream>
+//#include <sstream>
 
 namespace sookee { namespace types {
 

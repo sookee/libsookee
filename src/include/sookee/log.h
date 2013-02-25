@@ -9,8 +9,9 @@
  *      Author: oasookee@gmail.com
  */
 
+#include <cmath>
+#include <algorithm>
 #include <iostream>
-#include <ctime>
 
 namespace sookee { namespace log {
 
@@ -18,37 +19,10 @@ namespace sookee { namespace log {
  * Basic logging.
  */
 
-inline
-std::string get_stamp()
-{
-	time_t rawtime = std::time(0);
-	tm* timeinfo = std::localtime(&rawtime);
-	char buffer[32];
-	std::strftime(buffer, 32, "%Y-%m-%d %H:%M:%S", timeinfo);
+std::string get_stamp();
+std::ostream& out(std::ostream* os = 0);
 
-	return std::string(buffer);
-}
-
-inline
-std::ostream& out(std::ostream* os = 0)
-{
-	static std::ostream* osp = 0;
-
-	// initialize
-	if(!osp)
-		if(!os)
-			osp = &std::cout;
-
-	// change
-	if(os)
-		osp = os;
-
-	return *osp;
-}
-
-#define log(m) do{sookee::log::out() << oa::get_stamp() << ": " << m << std::endl;}while(false)
-
-// Console output
+#define log(m) do{sookee::log::out() << sookee::log::get_stamp() << ": " << m << std::endl;}while(false)
 #define con(m) do{std::cout << m << std::endl;}while(false)
 
 }} // sookee::log
