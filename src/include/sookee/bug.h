@@ -58,42 +58,14 @@ void stack_handler(int sig);
 #define bug(m)
 #define bug_var(v)
 #define bug_func()
+#define ADD_STACK_HANDLER() do{}while(false)
 #else
 #define bug(m) do{sookee::bug::botbug() << m << std::endl;}while(false)
 #define QUOTE(s) #s
 #define bug_var(v) bug(QUOTE(v:) << std::boolalpha << " " << v)
 #define bug_func() __scope__bomb__ __scoper__(__PRETTY_FUNCTION__)
+#define ADD_STACK_HANDLER() signal(SIGSEGV, sookee::bug::stack_handler)
 #endif
-
-//inline
-//std::string get_stamp()
-//{
-//	time_t rawtime = std::time(0);
-//	tm* timeinfo = std::localtime(&rawtime);
-//	char buffer[32];
-//	std::strftime(buffer, 32, "%Y-%m-%d %H:%M:%S", timeinfo);
-//
-//	return std::string(buffer);
-//}
-//
-//inline
-//std::ostream& botlog(std::ostream* os = 0)
-//{
-//	static std::ostream* osp = 0;
-//
-//	// initialize
-//	if(!osp) if(!os) osp = &std::cout;
-//
-//	// change
-//	if(os) osp = os;
-//
-//	return *osp;
-//}
-//
-//#define log(m) do{sookee::bug::botlog() << sookee::bug::get_stamp() << ": " << m << std::endl;}while(false)
-
-// Console output
-//#define con(m) do{std::cout << m << std::endl;}while(false)
 
 }} // sookee::bug
 
