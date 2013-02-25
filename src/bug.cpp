@@ -190,11 +190,11 @@ __scope__bomb__::~__scope__bomb__()
 
 void stack_handler(int sig)
 {
-	void *array[100];
+	void *array[2048];
 	size_t size;
 
 	// get void*'s for all entries on the stack
-	size = backtrace(array, 100);
+	size = backtrace(array, 2048);
 
 	// print out all the frames to stderr
 	fprintf(stderr, "Error: signal %d:\n", sig);
