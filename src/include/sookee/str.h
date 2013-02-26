@@ -35,6 +35,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 #include <functional>
 #include <algorithm>
+#include <sstream>
 
 namespace sookee { namespace string {
 
@@ -197,6 +198,44 @@ std::string join(const Container& c, const std::string& delim = " ")
 	for(const std::string& s: c)
 		{ ret += sep + s; sep = delim; }
 	return ret;
+}
+
+/**
+ * Facilitate easier type conversions
+ * <pre>
+ * eg.
+ * int i;
+ * (sss() << "9") >> i;
+ * </pre>
+ * @param o
+ * @param t
+ * @return
+ */
+template<typename T>
+std::stringstream& operator<<(std::stringstream&& ss, const T& t)
+{
+	ss << t;
+	return ss;
+}
+
+template<typename T>
+std::stringstream& operator>>(std::stringstream&& ss, T& t)
+{
+	ss >> t;
+	return ss;
+}
+
+inline
+std::stringstream& sgl(std::stringstream& ss, std::string& s, char d = '\n')
+{
+	std::getline(ss, s, d);
+	return ss;
+}
+
+inline
+std::stringstream& sgl(std::stringstream&& ss, std::string& s, char d = '\n')
+{
+	return sgl(ss, s, d);
 }
 
 }} // sookee::string

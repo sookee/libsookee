@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LIBSOOKEE_TYPES_H_
-#define __LIBSOOKEE_TYPES_H_
+#ifndef _LIBSOOKEE_TYPES_H_
+#define _LIBSOOKEE_TYPES_H_
 /*
  * tyoes.h
  *
@@ -140,4 +140,4 @@ typedef std::unique_ptr<char, malloc_deleter> cstring_uptr;
 
 namespace soo { using namespace sookee::types; }
 
-#endif /* __LIBSOOKEE_TYPES_H_ */
+#endif /* _LIBSOOKEE_TYPES_H_ */
