@@ -97,8 +97,10 @@ std::ostream& out(std::ostream* os)
 	if(!osp) // initialize
 		if(!os)
 			osp = &std::cout;
+
 	if(os) // change
 		osp = os;
+
 	return *osp;
 }
 
@@ -175,15 +177,15 @@ __scope__bomb__::__scope__bomb__(const char* name): name(name)
 {
 //	bug(name);
 	++indent;
-	bug("");
+	out() << std::endl;
 //	bug(get_col(name) << str(indent, '-') + "> " << fixname(name) << ' ' << get_col(THREAD, 1) << THREAD << ' '  << get_col(OBJECT, 2) << OBJECT << ansi_esc({NORM}));
-	bug(get_col(name) << str(indent, '-') + "> " << name << ' ' << get_col(THREAD, 1) << THREAD << ' '  << get_col(OBJECT, 2) << OBJECT);
+	out() << str(indent, '-') + "> " << name << ' ' << get_col(THREAD, 1) << THREAD << ' '  << get_col(OBJECT, 2) << OBJECT << std::endl;;
 }
 __scope__bomb__::~__scope__bomb__()
 {
-	bug(get_col(name) << "<" << str(indent, '-') << " " << name << ' ' << get_col(THREAD, 1) << THREAD << ' '  << get_col(OBJECT, 2) << OBJECT);
+	out() << "<" << str(indent, '-') << " " << name << ' ' << get_col(THREAD, 1) << THREAD << ' '  << get_col(OBJECT, 2) << OBJECT << std::endl;
 //	bug(get_col(name) << "<" << str(indent, '-') << " " << fixname(name) << ' ' << get_col(THREAD, 1) << THREAD << ' '  << get_col(OBJECT, 2) << OBJECT << ansi_esc({NORM}));
-	bug("");
+	out() << std::endl;
 	--indent;
 }
 

@@ -190,6 +190,15 @@ size_t extract_delimited_text(const std::string& in, const std::string& d1, cons
  */
 std::vector<std::string> split(const std::string& s, char d = ' ', bool fold = true);
 
+template<typename Container>
+std::string join(const Container& c, const std::string& delim = " ")
+{
+	std::string ret, sep;
+	for(const std::string& s: c)
+		{ ret += sep + s; sep = delim; }
+	return ret;
+}
+
 }} // sookee::string
 
 namespace soo { using namespace sookee::string; }
