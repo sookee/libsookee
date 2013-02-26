@@ -41,6 +41,8 @@ namespace sookee { namespace string {
 
 //using namespace sookee::types;
 
+extern const char* const ws;
+
 /**
  * Remove leading characters from a std::string.
  * @param s The std::string to be modified.
@@ -48,7 +50,7 @@ namespace sookee { namespace string {
  * of the string.
  * @return The same string passed in as a parameter reference.
  */
-inline std::string& ltrim(std::string& s, const char* t = " \t\n\r\f\v")
+inline std::string& ltrim(std::string& s, const char* t = ws)
 {
 	s.erase(0, s.find_first_not_of(t));
 	return s;
@@ -61,7 +63,7 @@ inline std::string& ltrim(std::string& s, const char* t = " \t\n\r\f\v")
  * of the string.
  * @return The same string passed in as a parameter reference.
  */
-inline std::string& rtrim(std::string& s, const char* t = " \t\n\r\f\v")
+inline std::string& rtrim(std::string& s, const char* t = ws)
 {
 	s.erase(s.find_last_not_of(t) + 1);
 	return s;
@@ -74,9 +76,24 @@ inline std::string& rtrim(std::string& s, const char* t = " \t\n\r\f\v")
  * of the string.
  * @return The same string passed in as a parameter reference.
  */
-inline std::string& trim(std::string& s, const char* t = " \t\n\r\f\v")
+inline std::string& trim(std::string& s, const char* t = ws)
 {
 	return ltrim(rtrim(s, t), t);
+}
+
+inline std::string ltrim_copy(std::string s, const char* t = ws)
+{
+	return ltrim(s, t);
+}
+
+inline std::string rtrim_copy(std::string s, const char* t = ws)
+{
+	return rtrim(s, t);
+}
+
+inline std::string trim_copy(std::string s, const char* t = ws)
+{
+	return trim(s, t);
 }
 
 /**
@@ -117,6 +134,21 @@ inline std::string& trim(std::string& s, char c)
 	return ltrim(rtrim(s, c), c);
 }
 
+inline std::string rtrim_copy(std::string s, char c)
+{
+	return rtrim(s, c);
+}
+
+inline std::string ltrim_copy(std::string s, char c)
+{
+	return ltrim(s, c);
+}
+
+inline std::string trim_copy(std::string s, char c)
+{
+	return trim(s, c);
+}
+
 std::string& replace(std::string& s, const std::string& from, const std::string& to);
 
 inline
@@ -150,19 +182,17 @@ std::string& upper(std::string&& s)
 	return upper(s);
 }
 
-//inline
-//str lowercase(str s)
-//{
-//	std::transform(s.begin(), s.end(), s.begin(), std::ptr_fun<int, int>(tolower));
-//	return s;
-//}
-//
-//inline
-//str uppercase(str s)
-//{
-//	std::transform(s.begin(), s.end(), s.begin(), std::ptr_fun<int, int>(toupper));
-//	return s;
-//}
+inline
+std::string lower_copy(std::string s)
+{
+	return lower(s);
+}
+
+inline
+std::string upper_copy(std::string s)
+{
+	return upper(s);
+}
 
 /**
  * Extract a substring from within a string that is delimited by a beginning

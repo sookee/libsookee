@@ -40,6 +40,8 @@ namespace sookee { namespace string {
 
 using namespace sookee::types;
 
+const char* const ws = " \t\n\r\f\v";
+
 str& replace(str& s, const str& from, const str& to)
 {
 	if(from.empty())
