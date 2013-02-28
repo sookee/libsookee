@@ -32,6 +32,7 @@ CXXFLAGS = \
 	
 SOFLAGS = \
 	-shared \
+	-pthread \
 	-Wl,-soname,libsookee.so.0 \
 	-rdynamic \
 	-Wl,-rpath,$(prefix)/lib/sookee
