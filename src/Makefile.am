@@ -56,12 +56,5 @@ libsookee_la_SOURCES = \
 	str.cpp \
 	types.cpp
 	
-libsookee_la_LIBADD = -lreadline
-libsookee_la_LDFLAGS = -version-info 0:0:0
-
-# Development utils
-noinst_PROGRAMS = \
-	test
-
-test_SOURCES = test.cpp
-test_LDADD =
+libsookee_la_LIBADD = -ldl -lreadline
+libsookee_la_LDFLAGS = -version-info 0:0:0 -Wl,export-dynamic -pthread
