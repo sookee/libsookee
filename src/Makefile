@@ -1,5 +1,5 @@
 
-prefix=install
+prefix = $(HOME)/dev/cpp/libsookee/install
 
 # requirements
 REQ_CXX11_TEST := $(shell echo "int main(){}" | g++ -o /dev/null -x c++ -std=c++11 - 2> /dev/null; echo $$?)
@@ -54,7 +54,8 @@ libsookee.so.0.0.0: $(OBJECTS)
 install: all
 	mkdir -p $(prefix)/lib/sookee
 	cp libsookee.so.0.0.0 $(prefix)/lib/sookee
-	/sbin/ldconfig -n $(prefix)/lib/sookee
+	/sbin/ldconfig -v -n $(prefix)/lib/sookee
+	ln -f -s $(prefix)/lib/sookee/libsookee.so.0 $(prefix)/lib/sookee/libsookee.so
 	mkdir -p $(prefix)/include/sookee
 	cp -r include/sookee $(prefix)/include
 	
