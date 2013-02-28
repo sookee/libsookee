@@ -1,5 +1,5 @@
 
-prefix = $(HOME)/dev/cpp/libsookee/install
+include Makefile.local
 
 # requirements
 REQ_CXX11_TEST := $(shell echo "int main(){}" | $(CXX) -o /dev/null -x c++ -std=c++11 - 2> /dev/null; echo $$?)
@@ -68,4 +68,3 @@ clean:
 	rm -fr *.o *.so.?.?.? install 
 	
 .PHONY: reqs install uninstall
-
