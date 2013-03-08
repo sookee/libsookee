@@ -57,4 +57,4 @@ libsookee_la_SOURCES = \
 	types.cpp
 	
 libsookee_la_LIBADD = -ldl -lreadline
-libsookee_la_LDFLAGS = -version-info 0:0:0 -Wl,export-dynamic -pthread
+libsookee_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
