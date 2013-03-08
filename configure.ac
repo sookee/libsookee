@@ -22,7 +22,7 @@
 # '-----------------------------------------------------------------*/
 
 AC_INIT([libsookee],[0.1],[oasookee@gmail.com],[libsookee])
-AC_CONFIG_SRCDIR([src/test.cpp])
+AC_CONFIG_SRCDIR([src/Makefile])
 AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE([1.10 foreign])

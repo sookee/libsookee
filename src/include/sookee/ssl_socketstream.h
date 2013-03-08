@@ -189,12 +189,12 @@ public:
 		stream_type::clear();
 	}
 
-	bool open(const std::string& host, uint16_t port)
+	bool open(const std::string& host, uint16_t port = 443)
 	{
 		close();
 		ssl_connection conn;
 		if(ssl_connect(host, port, conn))
-			buf.set_ssl_connection(ssl_connect(host, port));
+			buf.set_ssl_connection(conn);
 		return *this;
 	}
 

@@ -46,14 +46,18 @@ all: reqs libsookee.so.0.0.0
 reqs:
 	@if(($(REQ_CXX11_TEST))); then echo $(REQ_CXX11_FAIL); exit 1; fi
 
-libsookee.so.0.0.0: $(OBJECTS)
+libsookee.so.0.0.0: libsookee.a
 	$(CXX) $(SOFLAGS) -o $@ $(OBJECTS)
+
+libsookee.a: $(OBJECTS)
+	ar rvs $@ $(OBJECTS)
 
 %.o: %.cpp %.h
 	$(CXX) -c -o $@ $<
 
 install: all
 	mkdir -p $(prefix)/lib/sookee
+	cp libsookee.a $(prefix)/lib/sookee
 	cp libsookee.so.0.0.0 $(prefix)/lib/sookee
 	/sbin/ldconfig -v -n $(prefix)/lib/sookee
 	ln -f -s $(prefix)/lib/sookee/libsookee.so.0 $(prefix)/lib/sookee/libsookee.so
