@@ -59,12 +59,30 @@ void stack_handler(int sig);
 #define bug_var(v)
 #define bug_func()
 #define ADD_STACK_HANDLER() do{}while(false)
+#define bug_lock_guard(lock, mutex) lock_guard lock(mutex)
 #else
 #define bug(m) do{sookee::bug::out() << m << std::endl;}while(false)
 #define QUOTE(s) #s
 #define bug_var(v) bug(QUOTE(v:) << std::boolalpha << " " << v)
 #define bug_func() __scope__bomb__ __scoper__(__PRETTY_FUNCTION__)
 #define ADD_STACK_HANDLER() signal(SIGSEGV, sookee::bug::stack_handler)
+struct lock_guard_scope_bomb
+{
+	const std::string id;
+	lock_guard_scope_bomb(const std::string& id): id(id)
+	{
+		sookee::bug::out() << "LOCK  : " << id << std::endl;
+	}
+	~lock_guard_scope_bomb()
+	{
+		sookee::bug::out() << "UNLOCK: " << id << std::endl;
+	}
+};
+#define bug_lock_guard(lock, mutex) \
+	soss oss; \
+	oss << __func__ << ": " << __LINE__ << " (" << #mutex << ")" << std::endl; \
+	lock_guard_scope_bomb ____bomb_##lock(oss.str()); \
+	lock_guard lock(mutex)
 #endif
 
 }} // sookee::bug
