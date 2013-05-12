@@ -22,7 +22,19 @@ namespace sookee { namespace log {
 std::string get_stamp();
 std::ostream& out(std::ostream* os = 0);
 
+inline std::string get_filename(const std::string& path)
+{
+	std::string::size_type pos = path.find_last_of("/");
+	if(pos != std::string::npos)
+		return path.substr(pos + 1);
+	return path;
+}
+
+#ifndef DEBUG
 #define log(m) do{sookee::log::out() << sookee::log::get_stamp() << ": " << m << std::endl;}while(false)
+#else
+#define log(m) do{sookee::log::out() << sookee::log::get_stamp() << ": " << m << " [" << sookee::log::get_filename(__FILE__) << "]" << " (" << __LINE__ << ")" << std::endl;}while(false)
+#endif
 #define con(m) do{std::cout << m << std::endl;}while(false)
 
 }} // sookee::log

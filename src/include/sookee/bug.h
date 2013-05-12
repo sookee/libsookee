@@ -31,7 +31,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-//#include <sookee/types.h>
+#include <sookee/types.h>
 
 #include <iostream>
 //#include <ctime>
@@ -39,7 +39,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace bug {
 
-//using namespace sookee::types;
+using namespace sookee::types;
 
 //extern bool do_color;
 std::ostream& out(std::ostream* os = 0);
@@ -59,7 +59,7 @@ void stack_handler(int sig);
 #define bug_var(v)
 #define bug_func()
 #define ADD_STACK_HANDLER() do{}while(false)
-#define bug_lock_guard(lock, mutex) lock_guard lock(mutex)
+#define bug_lock_guard(lock, mutex) sookee::types::lock_guard lock(mutex)
 #else
 #define bug(m) do{sookee::bug::out() << m << std::endl;}while(false)
 #define QUOTE(s) #s
@@ -78,11 +78,14 @@ struct lock_guard_scope_bomb
 		sookee::bug::out() << "UNLOCK: " << id << std::endl;
 	}
 };
-#define bug_lock_guard(lock, mutex) \
-	soss oss; \
-	oss << __func__ << ": " << __LINE__ << " (" << #mutex << ")" << std::endl; \
-	lock_guard_scope_bomb ____bomb_##lock(oss.str()); \
-	lock_guard lock(mutex)
+#define bug_lock_guard(lock, mutex) sookee::types::lock_guard lock(mutex)
+/*
+//#define bug_lock_guard(lock, mutex) \
+//	sookee::types::soss oss; \
+//	oss << __FILE__ << ": " << __func__ << "() " << __LINE__ << " (" << #mutex << ")" << std::endl; \
+//	sookee::bug::lock_guard_scope_bomb ____bomb_##lock(oss.str()); \
+//	sookee::types::lock_guard lock(mutex)
+*/
 #endif
 
 }} // sookee::bug

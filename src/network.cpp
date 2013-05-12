@@ -36,6 +36,12 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <sookee/str.h>
 //#include <sookee/logrep.h>
 
+#include <sys/socket.h>
+#include <cerrno>
+#include <cstring>
+#include <netdb.h>	//hostent
+#include <arpa/inet.h>
+
 namespace sookee { namespace net {
 
 using namespace sookee::types;
@@ -373,6 +379,30 @@ str html_to_text(const str& html)
 	std::ostringstream o;
 	html_to_text(i, o);
 	return o.str();
+}
+
+bool hostname_to_ip(const str& hostname , str& ip)
+{
+	struct addrinfo hints, *servinfo, *p;
+	struct sockaddr_in *h;
+	int rv;
+
+	memset(&hints, 0, sizeof hints);
+	hints.ai_family = AF_UNSPEC; // use AF_INET6 to force IPv6
+	hints.ai_socktype = SOCK_STREAM;
+
+	if((rv = getaddrinfo(hostname.c_str(), "http", &hints, &servinfo)) != 0)
+		return false;
+
+	// loop through all the results and connect to the first we can
+	for(p = servinfo; p != NULL; p = p->ai_next)
+	{
+		h = (sockaddr_in*) p->ai_addr;
+		ip = inet_ntoa(h->sin_addr);
+	}
+
+	freeaddrinfo(servinfo); // all done with this structure
+	return true;
 }
 
 }} // sookee::net
