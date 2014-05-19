@@ -64,7 +64,7 @@ void stack_handler(int sig);
 #define bug(m) do{sookee::bug::out() << m << std::endl;}while(false)
 #define QUOTE(s) #s
 #define bug_var(v) bug(QUOTE(v:) << std::boolalpha << " " << v)
-#define bug_func() __scope__bomb__ __scoper__(__PRETTY_FUNCTION__)
+#define bug_func() sookee::bug::__scope__bomb__ __scoper__(__PRETTY_FUNCTION__)
 #define ADD_STACK_HANDLER() signal(SIGSEGV, sookee::bug::stack_handler)
 struct lock_guard_scope_bomb
 {

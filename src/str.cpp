@@ -28,6 +28,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
+#include <sookee/bug.h>
 #include <sookee/str.h>
 #include <sookee/types.h>
 
@@ -70,21 +71,64 @@ str::size_type extract_delimited_text(const str& in, const str& d1, const str& d
 	return str::npos;
 }
 
-str_vec split(const str& s, char d, bool fold)
+// TODO: This is broken. Vectors returned from here
+// cause sig 11
+//str_vec split(const str& s, char d, bool fold)
+//{
+////	bug_func();
+////	bug_var(s);
+////	bug_var(d);
+////	bug_var(fold);
+//	str_vec v;
+//	std::istringstream iss(s);
+//	str p;
+//	while(iss && fold && iss.peek() == d)
+//		iss.ignore();
+//	while(iss && std::getline(iss, p, d))
+//	{
+//		v.push_back(p);
+//		while(iss && fold && iss.peek() == d)
+//			iss.ignore();
+//	}
+//	return v;
+//}
+
+void split(const str& s, str_vec& v, char d, bool fold)
 {
-	str_vec v;
+//	bug_func();
+//	bug_var(s);
+//	bug_var(d);
+//	bug_var(fold);
 	std::istringstream iss(s);
 	str p;
-	while(fold && iss.peek() == d)
+	while(iss && fold && iss.peek() == d)
 		iss.ignore();
-	while(std::getline(iss, p, d))
+	while(iss && std::getline(iss, p, d))
 	{
 		v.push_back(p);
-		while(fold && iss.peek() == d)
+		while(iss && fold && iss.peek() == d)
 			iss.ignore();
 	}
-	return v;
 }
+
+
+//str_vec split(const str& s, char d, bool fold)
+//{
+//	str_vec v;
+//	std::istringstream iss(s);
+//
+//	str line;
+//	while(std::getline(iss, line, d))
+//	{
+//		if(fold)
+//			trim(line);
+//		if(fold && line.empty())
+//			continue;
+//		v.push_back(line);
+//	}
+//
+//	return v;
+//}
 
 //// TODO: Move this to <sookee/stl.h>
 //template<typename Container, typename Pred>

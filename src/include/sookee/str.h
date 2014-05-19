@@ -31,7 +31,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-//#include <sookee/types.h>
+#include <sookee/types.h>
 
 #include <functional>
 #include <algorithm>
@@ -39,7 +39,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace string {
 
-//using namespace sookee::types;
+using namespace sookee::types;
 
 extern const char* const ws;
 
@@ -219,7 +219,8 @@ size_t extract_delimited_text(const std::string& in, const std::string& d1, cons
  * as a single division. Otherwise each dividing character is one division.
  * @return A std::vector<std::string> containing all the substrings.
  */
-std::vector<std::string> split(const std::string& s, char d = ' ', bool fold = true);
+//str_vec split(const str& s, char d = ' ', bool fold = true);
+void split(const str& s, str_vec& v, char d = ' ', bool fold = true);
 
 template<typename Container>
 std::string join(const Container& c, const std::string& delim = " ")
