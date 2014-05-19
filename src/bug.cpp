@@ -89,17 +89,17 @@ str obj_name(void* id)
 const str COL = "\\[\\033[1;34m\\]";
 const str OFF = "\\[\\033[0m\\]";
 
-std::ostream& botbug(std::ostream* os)
+std::ostream& out(std::ostream* os)
 {
 	static std::ostream* osp = 0;
-//	static ansistream as(std::cout);
 
 	if(!osp) // initialize
 		if(!os)
 			osp = &std::cout;
-//			osp = &as;
+
 	if(os) // change
 		osp = os;
+
 	return *osp;
 }
 

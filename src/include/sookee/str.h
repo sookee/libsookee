@@ -137,6 +137,12 @@ str& lower(str&& s)
 }
 
 inline
+str lower_copy(str s)
+{
+	return lower(s);
+}
+
+inline
 str& upper(str& s)
 {
 	return transform(s, toupper);
@@ -144,6 +150,12 @@ str& upper(str& s)
 
 inline
 str& upper(str&& s)
+{
+	return upper(s);
+}
+
+inline
+str upper_copy(str s)
 {
 	return upper(s);
 }

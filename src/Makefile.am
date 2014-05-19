@@ -36,6 +36,7 @@ sookee_include_HEADERS = \
 	$(srcdir)/include/sookee/bug.h \
 	$(srcdir)/include/sookee/cal.h \
 	$(srcdir)/include/sookee/ios.h \
+	$(srcdir)/include/sookee/log.h \
 	$(srcdir)/include/sookee/socketstream.h \
 	$(srcdir)/include/sookee/ssl_socketstream.h \
 	$(srcdir)/include/sookee/stl.h \
@@ -50,6 +51,7 @@ libsookee_la_SOURCES = \
 	bug.cpp \
 	cal.cpp \
 	ios.cpp \
+	log.cpp \
 	network.cpp \
 	str.cpp \
 	types.cpp
