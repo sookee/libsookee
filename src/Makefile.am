@@ -25,12 +25,12 @@ sookee_includedir = $(prefix)/include/sookee
 sookee_librarydir = $(prefix)/lib/sookee
 
 DEF_FLAGS = \
-	-D _GLIBCXX_USE_NANOSLEEP
+	-D _GLIBCXX_USE_NANOSLEEP -D DEBUG
 	
-GEN_FLAGS = -Wl,-E -Wfatal-errors -Wall -Wextra -Winit-self -ansi -pedantic -pipe -pthread \
+GEN_FLAGS = -O0 -g3 -Wl,-E -Wfatal-errors -Wall -Wextra -Winit-self -Werror -ansi -pedantic -pipe -pthread \
 	-I$(top_srcdir)/src/include
 
-AM_CXXFLAGS = -std=gnu++11 $(GEN_FLAGS) $(DEF_FLAGS) $(LIBXML2_FLAG)
+AM_CXXFLAGS = -std=gnu++0x $(GEN_FLAGS) $(DEF_FLAGS) $(LIBXML2_FLAG)
 
 sookee_include_HEADERS = \
 	$(srcdir)/include/sookee/bug.h \
@@ -56,12 +56,11 @@ libsookee_la_SOURCES = \
 	str.cpp \
 	types.cpp
 	
-libsookee_la_LIBADD = -lreadline
-libsookee_la_LDFLAGS = -version-info 0:0:0
+libsookee_la_LIBADD = -ldl -lreadline
+libsookee_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
 
-# Development utils
-noinst_PROGRAMS = \
-	test
+noinst_PROGRAMS = test
 
 test_SOURCES = test.cpp
-test_LDADD =
+test_LDADD = -L.libs -lsookee
+

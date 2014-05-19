@@ -33,7 +33,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 #include <sookee/str.h>
 #include <sookee/types.h>
-#include <sookee/logrep.h>
+#include <sookee/log.h>
 #include <sookee/socketstream.h>
 
 namespace sookee { namespace email {

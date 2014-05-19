@@ -1,17 +1,19 @@
 /*
  * test.cpp
  *
- *  Created on: Feb 4, 2013
+ *  Created on: 23 Apr 2014
  *      Author: oasookee@gmail.com
  */
 
-#include <sookee/socketstream.h>
+#include <sookee/types.h>
+#include <sookee/str.h>
+
+using namespace soo;
 
 int main()
 {
-	soo::netstream ns;
+	str data = "";
+	str_vec list;
 
-	ns.open("localhost", "6667", std::ios::in|std::ios::out);
+	split(data, list, '\n');
 }
-
-

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __LIBSOOKEE_TYPES_H_
-#define __LIBSOOKEE_TYPES_H_
+#ifndef _LIBSOOKEE_TYPES_H_
+#define _LIBSOOKEE_TYPES_H_
 /*
  * tyoes.h
  *
@@ -98,7 +98,8 @@ typedef std::lock_guard<std::mutex> lock_guard;
 typedef std::unique_lock<std::mutex> unique_lock;
 
 // time
-typedef std::chrono::steady_clock st_clk;
+//typedef std::chrono::steady_clock st_clk;
+typedef std::chrono::system_clock st_clk;
 typedef st_clk::period st_period;
 typedef st_clk::time_point st_time_point;
 
@@ -140,4 +141,4 @@ typedef std::unique_ptr<char, malloc_deleter> cstring_uptr;
 
 namespace soo { using namespace sookee::types; }
 
-#endif /* __LIBSOOKEE_TYPES_H_ */
+#endif /* _LIBSOOKEE_TYPES_H_ */

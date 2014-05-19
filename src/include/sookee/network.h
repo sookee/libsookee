@@ -114,6 +114,8 @@ str urldecode(std::string s);
 str html_to_text(const str& html);
 void html_to_text(std::istream& i, std::ostream& o);
 
+bool hostname_to_ip(const str& hostname , str& ip);
+
 }} // sookee::net
 
 namespace soo { using namespace sookee::net; }

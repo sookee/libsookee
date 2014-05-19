@@ -33,15 +33,15 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 #include <sookee/types.h>
 
-#include <ostream>
-#include <ctime>
-#include <csignal>
+#include <iostream>
+//#include <ctime>
+//#include <csignal>
 
 namespace sookee { namespace bug {
 
 using namespace sookee::types;
 
-extern bool do_color;
+//extern bool do_color;
 std::ostream& out(std::ostream* os = 0);
 
 struct __scope__bomb__
@@ -58,43 +58,38 @@ void stack_handler(int sig);
 #define bug(m)
 #define bug_var(v)
 #define bug_func()
+#define ADD_STACK_HANDLER() do{}while(false)
+#define bug_lock_guard(lock, mutex) sookee::types::lock_guard lock(mutex)
 #else
 #define bug(m) do{sookee::bug::out() << m << std::endl;}while(false)
 #define QUOTE(s) #s
 #define bug_var(v) bug(QUOTE(v:) << std::boolalpha << " " << v)
-#define bug_func() __scope__bomb__ __scoper__(__PRETTY_FUNCTION__)
+#define bug_func() sookee::bug::__scope__bomb__ __scoper__(__PRETTY_FUNCTION__)
+#define ADD_STACK_HANDLER() signal(SIGSEGV, sookee::bug::stack_handler)
+struct lock_guard_scope_bomb
+{
+	const std::string id;
+	lock_guard_scope_bomb(const std::string& id): id(id)
+	{
+		sookee::bug::out() << "LOCK  : " << id << std::endl;
+	}
+	~lock_guard_scope_bomb()
+	{
+		sookee::bug::out() << "UNLOCK: " << id << std::endl;
+	}
+};
+#define bug_lock_guard(lock, mutex) sookee::types::lock_guard lock(mutex)
+/*
+//#define bug_lock_guard(lock, mutex) \
+//	sookee::types::soss oss; \
+//	oss << __FILE__ << ": " << __func__ << "() " << __LINE__ << " (" << #mutex << ")" << std::endl; \
+//	sookee::bug::lock_guard_scope_bomb ____bomb_##lock(oss.str()); \
+//	sookee::types::lock_guard lock(mutex)
+*/
 #endif
 
-//inline
-//std::string get_stamp()
-//{
-//	time_t rawtime = std::time(0);
-//	tm* timeinfo = std::localtime(&rawtime);
-//	char buffer[32];
-//	std::strftime(buffer, 32, "%Y-%m-%d %H:%M:%S", timeinfo);
-//
-//	return std::string(buffer);
-//}
-//
-//inline
-//std::ostream& botlog(std::ostream* os = 0)
-//{
-//	static std::ostream* osp = 0;
-//
-//	// initialize
-//	if(!osp) if(!os) osp = &std::cout;
-//
-//	// change
-//	if(os) osp = os;
-//
-//	return *osp;
-//}
-//
-//#define log(m) do{sookee::bug::botlog() << sookee::bug::get_stamp() << ": " << m << std::endl;}while(false)
-
-// Console output
-//#define con(m) do{std::cout << m << std::endl;}while(false)
-
 }} // sookee::bug
+
+namespace soo { using namespace sookee::bug; }
 
 #endif // _LIBSOOKEE_BUG_H_

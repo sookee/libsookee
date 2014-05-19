@@ -28,6 +28,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
+#include <sookee/types.h>
 #include <sookee/bug.h>
 #include <sookee/str.h>
 //#include <sookee/ansi.h>
@@ -126,7 +127,7 @@ str embellish(siz indent)
 
 bool do_color = true;
 
-str get_col(const str& name, int seed = 0)
+str get_col(const str& /*name*/, int /*seed = 0*/)
 {
 //	static str_map m;
 //
@@ -151,9 +152,9 @@ size_t __scope__bomb__::indent = 0;
 //	, {"skivvy::ircbot::", ""}
 //};
 
-static str fixname(const char* name)
-{
-	str fixed = name;
+//static str fixname(const char* name)
+//{
+//	str fixed = name;
 //
 //	if(fixed.find(']') > fixed.find('['))
 //	{
@@ -169,36 +170,36 @@ static str fixname(const char* name)
 //	for(const std::pair<const str, str>& p: replacements)
 //		replace(fixed, p.first, p.second);
 //
-	return fixed;
-}
+//	return fixed;
+//}
 
 __scope__bomb__::__scope__bomb__(const char* name): name(name)
 {
 //	bug(name);
 	++indent;
-	bug("");
+	out() << std::endl;
 //	bug(get_col(name) << str(indent, '-') + "> " << fixname(name) << ' ' << get_col(THREAD, 1) << THREAD << ' '  << get_col(OBJECT, 2) << OBJECT << ansi_esc({NORM}));
-	bug(get_col(name) << str(indent, '-') + "> " << fixname(name) << ' ' << get_col(THREAD, 1) << THREAD << ' '  << get_col(OBJECT, 2) << OBJECT);
+	out() << str(indent, '-') + "> " << name << ' ' << get_col(THREAD, 1) << THREAD << ' '  << get_col(OBJECT, 2) << OBJECT << std::endl;;
 }
 __scope__bomb__::~__scope__bomb__()
 {
-	bug(get_col(name) << "<" << str(indent, '-') << " " << fixname(name) << ' ' << get_col(THREAD, 1) << THREAD << ' '  << get_col(OBJECT, 2) << OBJECT);
+	out() << "<" << str(indent, '-') << " " << name << ' ' << get_col(THREAD, 1) << THREAD << ' '  << get_col(OBJECT, 2) << OBJECT << std::endl;
 //	bug(get_col(name) << "<" << str(indent, '-') << " " << fixname(name) << ' ' << get_col(THREAD, 1) << THREAD << ' '  << get_col(OBJECT, 2) << OBJECT << ansi_esc({NORM}));
-	bug("");
+	out() << std::endl;
 	--indent;
 }
 
 void stack_handler(int sig)
 {
-	void *array[100];
+	void *array[2048];
 	size_t size;
 
 	// get void*'s for all entries on the stack
-	size = backtrace(array, 100);
+	size = backtrace(array, 2048);
 
 	// print out all the frames to stderr
 	fprintf(stderr, "Error: signal %d:\n", sig);
-	//backtrace_symbols_fd(array, size, 2);
+
 	char** trace = backtrace_symbols(array, size);
 
 	int status;
@@ -209,8 +210,6 @@ void stack_handler(int sig)
 
 		cstring_uptr func_name(abi::__cxa_demangle(func.c_str(), 0, 0, &status));
 		std::cerr << "function: " << func_name.get() << '\n';
-//		std::cerr << "info    : " << trace[i] << '\n';
-//		std::cerr << '\n';
 	}
 	free(trace);
 
