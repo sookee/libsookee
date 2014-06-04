@@ -30,7 +30,7 @@ DEF_FLAGS = \
 GEN_FLAGS = -O0 -g3 -Wfatal-errors -Wall -Wextra -Winit-self -Werror -pedantic -pipe -pthread \
 	-I$(top_srcdir)/src/include
 
-AM_CXXFLAGS = -std=gnu++0x $(GEN_FLAGS) $(DEF_FLAGS) $(LIBXML2_FLAG)
+AM_CXXFLAGS = -std=gnu++11 $(GEN_FLAGS) $(DEF_FLAGS) $(LIBXML2_FLAG)
 
 sookee_include_HEADERS = \
 	$(srcdir)/include/sookee/bug.h \
