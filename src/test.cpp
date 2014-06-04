@@ -15,5 +15,5 @@ int main()
 	str data = "";
 	str_vec list;
 
-	split(data, list, '\n');
+	//split(data, list, '\n');
 }
