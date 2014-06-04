@@ -12,6 +12,7 @@
 #include <cmath>
 #include <algorithm>
 #include <iostream>
+#include <string>
 
 namespace sookee { namespace log {
 
@@ -24,10 +25,15 @@ std::ostream& out(std::ostream* os = 0);
 
 inline std::string get_filename(const std::string& path)
 {
-	std::string::size_type pos = path.find_last_of("/");
-	if(pos != std::string::npos)
-		return path.substr(pos + 1);
-	return path;
+	std::size_t pos = path.rfind("/");
+	if(pos + 1 >= path.size())
+		return path;
+
+	return path.substr(pos + 1);
+//	std::string::size_type pos = path.find_last_of("/");
+//	if(pos != std::string::npos)
+//		return path.substr(pos + 1);
+//	return path;
 }
 
 #ifndef DEBUG

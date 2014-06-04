@@ -103,7 +103,7 @@ cookie::cookie(const str& data)
 
 bool cookie::is_expired()
 {
-	return !expires > time(0);
+	return !(expires > time(0));
 }
 
 str urlencode(const str& url)
