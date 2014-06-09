@@ -44,66 +44,66 @@ using namespace sookee::types;
 extern const char* const ws;
 
 /**
- * Remove leading characters from a std::string.
- * @param s The std::string to be modified.
+ * Remove leading characters from a str.
+ * @param s The str to be modified.
  * @param t The set of characters to delete from the beginning
  * of the string.
  * @return The same string passed in as a parameter reference.
  */
-inline std::string& ltrim(std::string& s, const char* t = ws)
+inline str& ltrim(str& s, const char* t = ws)
 {
 	s.erase(0, s.find_first_not_of(t));
 	return s;
 }
 
 /**
- * Remove trailing characters from a std::string.
- * @param s The std::string to be modified.
+ * Remove trailing characters from a str.
+ * @param s The str to be modified.
  * @param t The set of characters to delete from the end
  * of the string.
  * @return The same string passed in as a parameter reference.
  */
-inline std::string& rtrim(std::string& s, const char* t = ws)
+inline str& rtrim(str& s, const char* t = ws)
 {
 	s.erase(s.find_last_not_of(t) + 1);
 	return s;
 }
 
 /**
- * Remove surrounding characters from a std::string.
+ * Remove surrounding characters from a str.
  * @param s The string to be modified.
  * @param t The set of characters to delete from each end
  * of the string.
  * @return The same string passed in as a parameter reference.
  */
-inline std::string& trim(std::string& s, const char* t = ws)
+inline str& trim(str& s, const char* t = ws)
 {
 	return ltrim(rtrim(s, t), t);
 }
 
-inline std::string ltrim_copy(std::string s, const char* t = ws)
+inline str ltrim_copy(str s, const char* t = ws)
 {
 	return ltrim(s, t);
 }
 
-inline std::string rtrim_copy(std::string s, const char* t = ws)
+inline str rtrim_copy(str s, const char* t = ws)
 {
 	return rtrim(s, t);
 }
 
-inline std::string trim_copy(std::string s, const char* t = ws)
+inline str trim_copy(str s, const char* t = ws)
 {
 	return trim(s, t);
 }
 
 /**
  * Remove all leading characters of a given value
- * from a std::string.
+ * from a str.
  * @param s The string to be modified.
  * @param c The character value to delete.
  * @return The same string passed in as a parameter reference.
  */
-inline std::string& ltrim(std::string& s, char c)
+inline str& ltrim(str& s, char c)
 {
 	s.erase(0, s.find_first_not_of(c));
 	return s;
@@ -111,12 +111,12 @@ inline std::string& ltrim(std::string& s, char c)
 
 /**
  * Remove all trailing characters of a given value
- * from a std::string.
+ * from a str.
  * @param s The string to be modified.
  * @param c The character value to delete.
  * @return The same string passed in as a parameter reference.
  */
-inline std::string& rtrim(std::string& s, char c)
+inline str& rtrim(str& s, char c)
 {
 	s.erase(s.find_last_not_of(c) + 1);
 	return s;
@@ -124,72 +124,72 @@ inline std::string& rtrim(std::string& s, char c)
 
 /**
  * Remove all surrounding characters of a given value
- * from a std::string.
+ * from a str.
  * @param s The string to be modified.
  * @param c The character value to delete.
  * @return The same string passed in as a parameter reference.
  */
-inline std::string& trim(std::string& s, char c)
+inline str& trim(str& s, char c)
 {
 	return ltrim(rtrim(s, c), c);
 }
 
-inline std::string rtrim_copy(std::string s, char c)
+inline str rtrim_copy(str s, char c)
 {
 	return rtrim(s, c);
 }
 
-inline std::string ltrim_copy(std::string s, char c)
+inline str ltrim_copy(str s, char c)
 {
 	return ltrim(s, c);
 }
 
-inline std::string trim_copy(std::string s, char c)
+inline str trim_copy(str s, char c)
 {
 	return trim(s, c);
 }
 
-std::string& replace(std::string& s, const std::string& from, const std::string& to);
+str& replace(str& s, const str& from, const str& to);
 
 inline
-std::string& transform(std::string& s, const std::function<int(int)>& func)
+str& transform(str& s, const std::function<int(int)>& func)
 {
 	std::transform(s.begin(), s.end(), s.begin(), func);
 	return s;
 }
 
 inline
-std::string& lower(std::string& s)
+str& lower(str& s)
 {
 	return transform(s, tolower);
 }
 
 inline
-std::string& lower(std::string&& s)
+str& lower(str&& s)
 {
 	return lower(s);
 }
 
 inline
-std::string& upper(std::string& s)
+str& upper(str& s)
 {
 	return transform(s, toupper);
 }
 
 inline
-std::string& upper(std::string&& s)
+str& upper(str&& s)
 {
 	return upper(s);
 }
 
 inline
-std::string lower_copy(std::string s)
+str lower_copy(str s)
 {
 	return lower(s);
 }
 
 inline
-std::string upper_copy(std::string s)
+str upper_copy(str s)
 {
 	return upper(s);
 }
@@ -205,9 +205,9 @@ std::string upper_copy(std::string s)
  * search is to begin. This allows for repeated calls to this function to extract
  * more than one matching substring.
  * @return On success the position of the character fllowing the end of the end delimiter (d2).
- * On failure returns std::string::npos.
+ * On failure returns str::npos.
  */
-size_t extract_delimited_text(const std::string& in, const std::string& d1, const std::string& d2, std::string& out, size_t pos = 0);
+size_t extract_delimited_text(const str& in, const str& d1, const str& d2, str& out, size_t pos = 0);
 
 /**
  * Split a string into an array of substringd by
@@ -217,16 +217,16 @@ size_t extract_delimited_text(const std::string& in, const std::string& d1, cons
  * @param d The dividing character.
  * @param fold If true, treat any number of the dividing character
  * as a single division. Otherwise each dividing character is one division.
- * @return A std::vector<std::string> containing all the substrings.
+ * @return A std::vector<str> containing all the substrings.
  */
 str_vec split(const str& s, char d = ' ', bool fold = true);
 //void split(const str& s, str_vec& v, char d = ' ', bool fold = true);
 
 template<typename Container>
-std::string join(const Container& c, const std::string& delim = " ")
+str join(const Container& c, const str& delim = " ")
 {
-	std::string ret, sep;
-	for(const std::string& s: c)
+	str ret, sep;
+	for(const str& s: c)
 		{ ret += sep + s; sep = delim; }
 	return ret;
 }
@@ -243,30 +243,39 @@ std::string join(const Container& c, const std::string& delim = " ")
  * @return
  */
 template<typename T>
-std::stringstream& operator<<(std::stringstream&& ss, const T& t)
+sss& operator<<(sss&& ss, const T& t)
 {
 	ss << t;
 	return ss;
 }
 
 template<typename T>
-std::stringstream& operator>>(std::stringstream&& ss, T& t)
+sss& operator>>(sss&& ss, T& t)
 {
 	ss >> t;
 	return ss;
 }
 
 inline
-std::stringstream& sgl(std::stringstream& ss, std::string& s, char d = '\n')
+sss& sgl(sss& ss, str& s, char d = '\n')
 {
 	std::getline(ss, s, d);
 	return ss;
 }
 
 inline
-std::stringstream& sgl(std::stringstream&& ss, std::string& s, char d = '\n')
+sss& sgl(sss&& ss, str& s, char d = '\n')
 {
 	return sgl(ss, s, d);
+}
+
+template<typename T>
+T to(const str& s)
+{
+	T t;
+	siss iss(s);
+	iss >> t;
+	return t;
 }
 
 }} // sookee::string

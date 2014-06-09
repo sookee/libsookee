@@ -65,8 +65,8 @@ typedef std::vector<siz> siz_vec;
 typedef std::map<siz, siz> siz_map;
 
 typedef std::vector<str> str_vec;
-typedef str_vec::iterator str_vec_itr;
-typedef str_vec::const_iterator str_vec_citr;
+typedef str_vec::iterator str_vec_iter;
+typedef str_vec::const_iterator str_vec_citer;
 
 typedef std::list<str> str_list;
 typedef str_list::iterator str_list_iter;
