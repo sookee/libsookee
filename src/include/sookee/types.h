@@ -54,11 +54,36 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace types {
 
+#define TYPEDEF_CONTAINER_T(def) \
+typedef def::value_type def##_vt; \
+typedef def::iterator def##_iter; \
+typedef def::const_iterator def##_citer; \
+typedef def::reverse_iterator def##_riter; \
+typedef def::const_reverse_iterator def##_criter
+
+/**
+ * Single parameter containers
+ */
+#define TYPEDEF_CONTAINER_1(type, p, def) \
+typedef type<p> def; \
+TYPEDEF_CONTAINER_T(def)
+
+/**
+ * Two parameter containers
+ */
+#define TYPEDEF_CONTAINER_2(type, p1, p2, def) \
+typedef type<p1,p2> def; \
+TYPEDEF_CONTAINER_T(def)
+
 typedef std::size_t siz;
 
 typedef std::string str;
 typedef str::iterator str_iter;
 typedef str::const_iterator str_citer;
+
+#include "types/vec.h"
+#include "types/set.h"
+#include "types/lst.h"
 
 typedef std::vector<int> int_vec;
 typedef std::vector<siz> siz_vec;
