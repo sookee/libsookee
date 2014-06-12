@@ -1,5 +1,5 @@
-#ifndef _LIBSOOKEE_TYPES_VEC_H_
-#define _LIBSOOKEE_TYPES_VEC_H_
+#ifndef _LIBSOOKEE_TYPES_PAIR_H_
+#define _LIBSOOKEE_TYPES_PAIR_H_
 /*
  *  Created on: 10 June 2014
  *      Author: SooKee oasookee@gmail.com
@@ -30,15 +30,9 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 #include "basic.h"
 
-#include <vector>
+#include <utility>
 
-#define TYPEDEF_VEC(def, name) \
-	TYPEDEF_CONTAINER_1(std::vector, def, name)
+#define TYPEDEF_PAIR(type1, type2, name) \
+	typedef std::pair<type1,type2> name
 
-#include "str_vec.h"
-#include "int_vec.h"
-#include "siz_vec.h"
-#include "flt_vec.h"
-#include "dbl_vec.h"
-
-#endif // _LIBSOOKEE_TYPES_VEC_H_
+#endif // _LIBSOOKEE_TYPES_PAIR_H_

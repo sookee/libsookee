@@ -1,5 +1,5 @@
-#ifndef _LIBSOOKEE_TYPES_VEC_H_
-#define _LIBSOOKEE_TYPES_VEC_H_
+#ifndef _LIBSOOKEE_TYPES_INT_MAP_H_
+#define _LIBSOOKEE_TYPES_INT_MAP_H_
 /*
  *  Created on: 10 June 2014
  *      Author: SooKee oasookee@gmail.com
@@ -28,17 +28,15 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include "basic.h"
+#include "map.h"
 
-#include <vector>
+namespace sookee { namespace types {
 
-#define TYPEDEF_VEC(def, name) \
-	TYPEDEF_CONTAINER_1(std::vector, def, name)
+TYPEDEF_MAP(int, int, int_map);
+TYPEDEF_MMAP(int, int, int_mmap);
 
-#include "str_vec.h"
-#include "int_vec.h"
-#include "siz_vec.h"
-#include "flt_vec.h"
-#include "dbl_vec.h"
+}} // sookee::types
 
-#endif // _LIBSOOKEE_TYPES_VEC_H_
+namespace soo { using namespace sookee::types; }
+
+#endif // _LIBSOOKEE_TYPES_INT_MAP_H_

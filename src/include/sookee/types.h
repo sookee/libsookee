@@ -58,6 +58,7 @@ TYPEDEF_CONTAINER_T(def)
 
 #include "types/basic.h"
 #include "types/vec.h"
+#include "types/map.h"
 #include "types/set.h"
 #include "types/lst.h"
 

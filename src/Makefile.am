@@ -34,39 +34,9 @@ GEN_FLAGS = -O0 -g3 -Wl,-E -Wfatal-errors -Wall -Wextra -Winit-self -Werror -ans
 
 AM_CXXFLAGS = -std=gnu++0x $(GEN_FLAGS) $(DEF_FLAGS) $(LIBXML2_FLAG)
 
-sookee_include_HEADERS = \
-	$(srcdir)/include/sookee/bug.h \
-	$(srcdir)/include/sookee/cal.h \
-	$(srcdir)/include/sookee/ios.h \
-	$(srcdir)/include/sookee/log.h \
-	$(srcdir)/include/sookee/socketstream.h \
-	$(srcdir)/include/sookee/ssl_socketstream.h \
-	$(srcdir)/include/sookee/stl.h \
-	$(srcdir)/include/sookee/str.h \
-	$(srcdir)/include/sookee/types.h
-	
-sookee_include_types_HEADERS = \
-	$(srcdir)/include/sookee/types/basic.h \
-	$(srcdir)/include/sookee/types/dbl_lst.h \
-	$(srcdir)/include/sookee/types/dbl_set.h \
-	$(srcdir)/include/sookee/types/dbl_vec.h \
-	$(srcdir)/include/sookee/types/flt_lst.h \
-	$(srcdir)/include/sookee/types/flt_set.h \
-	$(srcdir)/include/sookee/types/flt_vec.h \
-	$(srcdir)/include/sookee/types/int_lst.h \
-	$(srcdir)/include/sookee/types/int_set.h \
-	$(srcdir)/include/sookee/types/int_vec.h \
-	$(srcdir)/include/sookee/types/lst.h \
-	$(srcdir)/include/sookee/types/set.h \
-	$(srcdir)/include/sookee/types/siz_lst.h \
-	$(srcdir)/include/sookee/types/siz_set.h \
-	$(srcdir)/include/sookee/types/siz_vec.h \
-	$(srcdir)/include/sookee/types/str_lst.h \
-	$(srcdir)/include/sookee/types/str_set.h \
-	$(srcdir)/include/sookee/types/str_vec.h \
-	$(srcdir)/include/sookee/types/vec.h
-	
-	
+sookee_include_HEADERS = $(wildcard $(srcdir)/include/sookee/*.h)	
+sookee_include_types_HEADERS = $(wildcard $(srcdir)/include/sookee/types/*.h)
+
 sookee_library_LTLIBRARIES = \
 	libsookee.la
 

@@ -1,5 +1,5 @@
-#ifndef _LIBSOOKEE_TYPES_VEC_H_
-#define _LIBSOOKEE_TYPES_VEC_H_
+#ifndef _LIBSOOKEE_TYPES_MAP_H_
+#define _LIBSOOKEE_TYPES_MAP_H_
 /*
  *  Created on: 10 June 2014
  *      Author: SooKee oasookee@gmail.com
@@ -29,16 +29,22 @@ http://www.gnu.org/licenses/gpl-2.0.html
 '-----------------------------------------------------------------*/
 
 #include "basic.h"
+#include "pair.h"
 
-#include <vector>
+#include <map>
 
-#define TYPEDEF_VEC(def, name) \
-	TYPEDEF_CONTAINER_1(std::vector, def, name)
+#define TYPEDEF_MAP(type1, type2, name) \
+	TYPEDEF_CONTAINER_2(std::map, type1, type2, name); \
+	TYPEDEF_PAIR(name##_iter, name##_iter, name##_range)
 
-#include "str_vec.h"
-#include "int_vec.h"
-#include "siz_vec.h"
-#include "flt_vec.h"
-#include "dbl_vec.h"
+#define TYPEDEF_MMAP(type1, type2, name) \
+	TYPEDEF_CONTAINER_2(std::multimap, type1, type2, name); \
+	TYPEDEF_PAIR(name##_iter, name##_iter, name##_range)
 
-#endif // _LIBSOOKEE_TYPES_VEC_H_
+#include "str_map.h"
+#include "int_map.h"
+#include "siz_map.h"
+#include "flt_map.h"
+#include "dbl_map.h"
+
+#endif // _LIBSOOKEE_TYPES_MAP_H_
