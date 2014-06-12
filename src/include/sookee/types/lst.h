@@ -28,12 +28,12 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include <sookee/types.h>
+#include "basic.h"
 
 #include <list>
 
 #define TYPEDEF_LST(def, name) \
-	TYPEDEF_CONTAINER_1(std::list, def, name##_lst)
+	TYPEDEF_CONTAINER_1(std::list, def, name)
 
 #include "str_lst.h"
 #include "int_lst.h"

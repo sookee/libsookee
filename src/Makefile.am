@@ -22,6 +22,8 @@
 # '-----------------------------------------------------------------*/
 
 sookee_includedir = $(prefix)/include/sookee
+sookee_include_typesdir = $(prefix)/include/sookee/types
+
 sookee_librarydir = $(prefix)/lib/sookee
 
 DEF_FLAGS = \
@@ -42,6 +44,28 @@ sookee_include_HEADERS = \
 	$(srcdir)/include/sookee/stl.h \
 	$(srcdir)/include/sookee/str.h \
 	$(srcdir)/include/sookee/types.h
+	
+sookee_include_types_HEADERS = \
+	$(srcdir)/include/sookee/types/basic.h \
+	$(srcdir)/include/sookee/types/dbl_lst.h \
+	$(srcdir)/include/sookee/types/dbl_set.h \
+	$(srcdir)/include/sookee/types/dbl_vec.h \
+	$(srcdir)/include/sookee/types/flt_lst.h \
+	$(srcdir)/include/sookee/types/flt_set.h \
+	$(srcdir)/include/sookee/types/flt_vec.h \
+	$(srcdir)/include/sookee/types/int_lst.h \
+	$(srcdir)/include/sookee/types/int_set.h \
+	$(srcdir)/include/sookee/types/int_vec.h \
+	$(srcdir)/include/sookee/types/lst.h \
+	$(srcdir)/include/sookee/types/set.h \
+	$(srcdir)/include/sookee/types/siz_lst.h \
+	$(srcdir)/include/sookee/types/siz_set.h \
+	$(srcdir)/include/sookee/types/siz_vec.h \
+	$(srcdir)/include/sookee/types/str_lst.h \
+	$(srcdir)/include/sookee/types/str_set.h \
+	$(srcdir)/include/sookee/types/str_vec.h \
+	$(srcdir)/include/sookee/types/vec.h
+	
 	
 sookee_library_LTLIBRARIES = \
 	libsookee.la

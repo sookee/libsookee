@@ -32,8 +32,8 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace types {
 
-TYPEDEF_SET(float, flt);
-TYPEDEF_MSET(float, flt);
+TYPEDEF_SET(float, flt_set);
+TYPEDEF_MSET(float, flt_mset);
 
 }} // sookee::types
 

@@ -28,15 +28,15 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include <sookee/types.h>
+#include "basic.h"
 
 #include <set>
 
 #define TYPEDEF_SET(def, name) \
-	TYPEDEF_CONTAINER_1(std::set, def, name##_set)
+	TYPEDEF_CONTAINER_1(std::set, def, name)
 
 #define TYPEDEF_MSET(def, name) \
-	TYPEDEF_CONTAINER_1(std::multiset, def, name##_mset)
+	TYPEDEF_CONTAINER_1(std::multiset, def, name)
 
 #include "str_set.h"
 #include "int_set.h"

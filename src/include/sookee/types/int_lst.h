@@ -32,7 +32,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace types {
 
-TYPEDEF_LST(int, int);
+TYPEDEF_LST(int, int_lst);
 
 }} // sookee::types
 

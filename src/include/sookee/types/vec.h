@@ -28,12 +28,12 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include <sookee/types.h>
+#include "basic.h"
 
 #include <vector>
 
 #define TYPEDEF_VEC(def, name) \
-	TYPEDEF_CONTAINER_1(std::vector, def, name##_vec)
+	TYPEDEF_CONTAINER_1(std::vector, def, name)
 
 #include "str_vec.h"
 #include "int_vec.h"

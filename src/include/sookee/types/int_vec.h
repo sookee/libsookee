@@ -32,7 +32,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace types {
 
-TYPEDEF_VEC(int, int);
+TYPEDEF_VEC(int, int_vec);
 
 }} // sookee::types
 

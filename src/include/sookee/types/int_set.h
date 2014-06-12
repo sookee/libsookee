@@ -32,8 +32,8 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace types {
 
-TYPEDEF_SET(int, int);
-TYPEDEF_MSET(int, int);
+TYPEDEF_SET(int, int_set);
+TYPEDEF_MSET(int, int_mset);
 
 }} // sookee::types
 
