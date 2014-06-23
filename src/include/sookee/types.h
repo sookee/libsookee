@@ -78,7 +78,7 @@ typedef std::deque<str> str_deq;
 typedef std::map<str, siz> str_siz_map;
 typedef std::pair<const str, siz> str_siz_pair;
 
-TYPEDEF_CONTAINER_2(std::map, str, str_set, str_set_map);
+TYPEDEF_MAP(str, str_set, str_set_map);
 //typedef std::map<str, str_set> str_set_map;
 //typedef std::pair<const str, str_set> str_set_pair;
 
