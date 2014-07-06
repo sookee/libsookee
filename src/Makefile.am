@@ -32,7 +32,7 @@ DEF_FLAGS = \
 GEN_FLAGS = -O0 -g3 -Wl,-E -Wfatal-errors -Wall -Wextra -Winit-self -Werror -ansi -pedantic -pipe -pthread \
 	-I$(top_srcdir)/src/include
 
-AM_CXXFLAGS = -std=gnu++0x $(GEN_FLAGS) $(DEF_FLAGS) $(LIBXML2_FLAG)
+AM_CXXFLAGS = -std=c++11 $(GEN_FLAGS) $(DEF_FLAGS) $(LIBXML2_FLAG)
 
 sookee_include_HEADERS = $(wildcard $(srcdir)/include/sookee/*.h)	
 sookee_include_types_HEADERS = $(wildcard $(srcdir)/include/sookee/types/*.h)
