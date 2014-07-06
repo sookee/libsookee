@@ -22,7 +22,7 @@
 # '-----------------------------------------------------------------*/
 
 AC_INIT([libsookee],[0.1],[oasookee@gmail.com],[libsookee])
-AC_CONFIG_SRCDIR([src/Makefile])
+AC_CONFIG_SRCDIR([src/Makefile.am])
 AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE([1.10 foreign])
@@ -35,7 +35,7 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 
 AC_LANG(C++)
-AC_MSG_CHECKING(if $CXX supports C++11)
+AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
 
 #CXXFLAGS="$CXXFLAGS -std=gnu++11"
 #AC_COMPILE_IFELSE(AC_LANG_PROGRAM([],[for(int i: {0})]),[cpp11=yes],[cpp11=no])

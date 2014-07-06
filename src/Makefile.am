@@ -27,12 +27,12 @@ sookee_include_typesdir = $(prefix)/include/sookee/types
 sookee_librarydir = $(prefix)/lib/sookee
 
 DEF_FLAGS = \
-	-D _GLIBCXX_USE_NANOSLEEP -D DEBUG
+	-D DEBUG
 	
-GEN_FLAGS = -O0 -g3 -Wl,-E -Wfatal-errors -Wall -Wextra -Winit-self -Werror -ansi -pedantic -pipe -pthread \
+GEN_FLAGS = -Wl,-E -Wfatal-errors -Wall -Wextra -Winit-self -Werror -ansi -pedantic -pipe -pthread \
 	-I$(top_srcdir)/src/include
 
-AM_CXXFLAGS = -std=c++11 $(GEN_FLAGS) $(DEF_FLAGS) $(LIBXML2_FLAG)
+AM_CXXFLAGS = $(GEN_FLAGS) $(DEF_FLAGS)
 
 sookee_include_HEADERS = $(wildcard $(srcdir)/include/sookee/*.h)	
 sookee_include_types_HEADERS = $(wildcard $(srcdir)/include/sookee/types/*.h)
@@ -40,7 +40,6 @@ sookee_include_types_HEADERS = $(wildcard $(srcdir)/include/sookee/types/*.h)
 sookee_library_LTLIBRARIES = \
 	libsookee.la
 
-# IrcBot framework
 libsookee_la_SOURCES = \
 	bug.cpp \
 	cal.cpp \
