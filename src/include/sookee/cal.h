@@ -40,41 +40,24 @@ day_t get_date(time_t u = time(0))
 	return gmtime(&u)->tm_mday;
 }
 
-static size_t dmap[] =
-{
-	31		// Jan
-	, 28	// Feb
-	, 31	// Mar
-	, 30	// Apr
-	, 31	// May
-	, 30	// Jun
-	, 31	// Jul
-	, 31	// Aug
-	, 30	// Sep
-	, 31	// Oct
-	, 30	// Nov
-	, 31	// Dec
-};
-
-static std::string mon_str_map[] =
-{
-	"January"
-	, "February"
-	, "March"
-	, "April"
-	, "May"
-	, "June"
-	, "July"
-	, "August"
-	, "September"
-	, "October"
-	, "November"
-	, "December"
-};
-
 inline std::string get_month_str(month_t m, bool full = false)
 {
-	assert(m < 12);
+	static std::string mon_str_map[] =
+	{
+		"January"
+		, "February"
+		, "March"
+		, "April"
+		, "May"
+		, "June"
+		, "July"
+		, "August"
+		, "September"
+		, "October"
+		, "November"
+		, "December"
+	};
+
 	return full ? mon_str_map[m] : mon_str_map[m].substr(0, 3);
 }
 
@@ -101,13 +84,29 @@ bool is_leap_year(year_t y)
 inline
 size_t days_in_month(year_t y, month_t m)
 {
+	static size_t dmap[] =
+	{
+		31		// Jan
+		, 28	// Feb
+		, 31	// Mar
+		, 30	// Apr
+		, 31	// May
+		, 30	// Jun
+		, 31	// Jul
+		, 31	// Aug
+		, 30	// Sep
+		, 31	// Oct
+		, 30	// Nov
+		, 31	// Dec
+	};
+
 	return dmap[m] + (m == 1 ? (cal::is_leap_year(y) ? 1 : 0) : 0);
 }
 
 inline
 size_t days_in_month(month_t m)
 {
-	return dmap[m] + (m == 1 ? (cal::is_leap_year(cal::get_year()) ? 1 : 0) : 0);
+	return days_in_month(m, cal::get_year());
 }
 
 

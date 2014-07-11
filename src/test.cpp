@@ -7,13 +7,21 @@
 
 #include <sookee/types.h>
 #include <sookee/str.h>
+#include <sookee/bug.h>
+#include <sookee/log.h>
 
 using namespace soo;
 
 int main()
 {
-	str data = "";
-	str_vec list;
+	ADD_STACK_HANDLER();
 
-	//split(data, list, '\n');
+	con("Hello world");
+
+	str_vec v(2);
+
+	for(siz i = 0; i < 10; ++i)
+		v[i] = 10;
+
+	con("Goodbye cruel world");
 }

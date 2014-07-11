@@ -34,8 +34,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <sookee/types.h>
 
 #include <iostream>
-//#include <ctime>
-//#include <csignal>
+#include <signal.h>
 
 namespace sookee { namespace bug {
 
