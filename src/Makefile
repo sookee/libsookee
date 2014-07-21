@@ -3,7 +3,7 @@
 
 # requirements
 REQ_CXX11_TEST := $(shell echo "int main(){}" | $(CXX) -o /dev/null -x c++ -std=c++11 - 2> /dev/null; echo $$?)
-REQ_CXX11_FAIL := "ERROR: Requires g++ v4.7 or above to comiile."
+REQ_CXX11_FAIL := "ERROR: Requires g++ v4.7 or above to compile."
 
 DEBUGFLAGS = \
 	-D _GLIBCXX_DEBUG \

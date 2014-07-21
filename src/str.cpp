@@ -71,8 +71,6 @@ str::size_type extract_delimited_text(const str& in, const str& d1, const str& d
 	return str::npos;
 }
 
-// TODO: This is broken. Vectors returned from here
-// cause sig 11
 str_vec split(const str& s, char d, bool fold)
 {
 	str_vec v;

@@ -1,12 +1,12 @@
-#ifndef _LIBSOOKEE_TYPES_STR_SET_H_
-#define _LIBSOOKEE_TYPES_STR_SET_H_
+#ifndef LIBSOOKEE_TYPES_STR_SET_H_
+#define LIBSOOKEE_TYPES_STR_SET_H_
 /*
  *  Created on: 10 June 2014
  *      Author: SooKee oasookee@gmail.com
  */
 
 /*-----------------------------------------------------------------.
-| Copyright (C) 2014 SooKee oasookee@gmail.com               |
+| Copyright (C) 2014 SooKee oasookee@gmail.com                     |
 '------------------------------------------------------------------'
 
 This program is free software; you can redistribute it and/or
@@ -28,7 +28,8 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include "set.h"
+#include "basic.h" // str
+#include "typedefs_set.h"
 
 namespace sookee { namespace types {
 
@@ -39,4 +40,4 @@ TYPEDEF_MSET(str, str_mset);
 
 namespace soo { using namespace sookee::types; }
 
-#endif // _LIBSOOKEE_TYPES_STR_SET_H_
+#endif // LIBSOOKEE_TYPES_STR_SET_H_

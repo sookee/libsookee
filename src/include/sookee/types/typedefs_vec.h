@@ -1,8 +1,8 @@
-#ifndef LIBSOOKEE_TYPES_DBL_MAP_H_
-#define LIBSOOKEE_TYPES_DBL_MAP_H_
+#ifndef LIBSOOKEE_TYPES_TYPEDEFS_VEC_H_
+#define LIBSOOKEE_TYPES_TYPEDEFS_VEC_H_
 /*
- *  Created on: 10 June 2014
- *      Author: SooKee oasookee@gmail.com
+ *  Created on: 21 Jul 2014
+ *      Author: oasookee@gmail.com
  */
 
 /*-----------------------------------------------------------------.
@@ -28,15 +28,11 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include "typedefs_map.h"
+#include "typedefs_cnt.h"
 
-namespace sookee { namespace types {
+#include <vector>
 
-TYPEDEF_MAP(double, double, dbl_map);
-TYPEDEF_MMAP(double, double, dbl_mmap);
+#define TYPEDEF_VEC(def, name) \
+	TYPEDEF_CONTAINER_1(std::vector, def, name)
 
-}} // ::sookee::types
-
-namespace soo { using namespace sookee::types; }
-
-#endif // LIBSOOKEE_TYPES_DBL_MAP_H_
+#endif // LIBSOOKEE_TYPES_TYPEDEFS_VEC_H_

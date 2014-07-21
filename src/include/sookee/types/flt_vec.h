@@ -1,12 +1,12 @@
-#ifndef _LIBSOOKEE_TYPES_FLT_VEC_H_
-#define _LIBSOOKEE_TYPES_FLT_VEC_H_
+#ifndef LIBSOOKEE_TYPES_FLT_VEC_H_
+#define LIBSOOKEE_TYPES_FLT_VEC_H_
 /*
  *  Created on: 10 June 2014
  *      Author: SooKee oasookee@gmail.com
  */
 
 /*-----------------------------------------------------------------.
-| Copyright (C) 2014 SooKee oasookee@gmail.com               |
+| Copyright (C) 2014 SooKee oasookee@gmail.com                     |
 '------------------------------------------------------------------'
 
 This program is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include "vec.h"
+#include "typedefs_vec.h"
 
 namespace sookee { namespace types {
 
@@ -38,4 +38,4 @@ TYPEDEF_VEC(float, flt_vec);
 
 namespace soo { using namespace sookee::types; }
 
-#endif // _LIBSOOKEE_TYPES_FLT_VEC_H_
+#endif // LIBSOOKEE_TYPES_FLT_VEC_H_

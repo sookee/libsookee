@@ -1,5 +1,5 @@
-#ifndef _LIBSOOKEE_TYPES_MAP_H_
-#define _LIBSOOKEE_TYPES_MAP_H_
+#ifndef LIBSOOKEE_TYPES_MAP_H_
+#define LIBSOOKEE_TYPES_MAP_H_
 /*
  *  Created on: 10 June 2014
  *      Author: SooKee oasookee@gmail.com
@@ -28,18 +28,9 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include "basic.h"
+#include "typedefs_map.h"
+
 #include "pair.h"
-
-#include <map>
-
-#define TYPEDEF_MAP(type1, type2, name) \
-	TYPEDEF_CONTAINER_2(std::map, type1, type2, name); \
-	TYPEDEF_PAIR(name##_iter, name##_iter, name##_range)
-
-#define TYPEDEF_MMAP(type1, type2, name) \
-	TYPEDEF_CONTAINER_2(std::multimap, type1, type2, name); \
-	TYPEDEF_PAIR(name##_iter, name##_iter, name##_range)
 
 #include "str_map.h"
 #include "int_map.h"
@@ -47,4 +38,4 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include "flt_map.h"
 #include "dbl_map.h"
 
-#endif // _LIBSOOKEE_TYPES_MAP_H_
+#endif // LIBSOOKEE_TYPES_MAP_H_

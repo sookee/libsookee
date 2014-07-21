@@ -1,12 +1,12 @@
-#ifndef _LIBSOOKEE_TYPES_SIZ_MAP_H_
-#define _LIBSOOKEE_TYPES_SIZ_MAP_H_
+#ifndef LIBSOOKEE_TYPES_SIZ_MAP_H_
+#define LIBSOOKEE_TYPES_SIZ_MAP_H_
 /*
  *  Created on: 10 June 2014
  *      Author: SooKee oasookee@gmail.com
  */
 
 /*-----------------------------------------------------------------.
-| Copyright (C) 2014 SooKee oasookee@gmail.com               |
+| Copyright (C) 2014 SooKee oasookee@gmail.com                     |
 '------------------------------------------------------------------'
 
 This program is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include "map.h"
+#include "typedefs_map.h"
 
 namespace sookee { namespace types {
 
@@ -39,4 +39,4 @@ TYPEDEF_MMAP(siz, siz, siz_mmap);
 
 namespace soo { using namespace sookee::types; }
 
-#endif // _LIBSOOKEE_TYPES_SIZ_MAP_H_
+#endif // LIBSOOKEE_TYPES_SIZ_MAP_H_

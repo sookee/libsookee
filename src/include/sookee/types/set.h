@@ -1,12 +1,12 @@
-#ifndef _LIBSOOKEE_TYPES_SET_H_
-#define _LIBSOOKEE_TYPES_SET_H_
+#ifndef LIBSOOKEE_TYPES_SET_H_
+#define LIBSOOKEE_TYPES_SET_H_
 /*
  *  Created on: 10 June 2014
  *      Author: SooKee oasookee@gmail.com
  */
 
 /*-----------------------------------------------------------------.
-| Copyright (C) 2014 SooKee oasookee@gmail.com               |
+| Copyright (C) 2014 SooKee oasookee@gmail.com                     |
 '------------------------------------------------------------------'
 
 This program is free software; you can redistribute it and/or
@@ -28,15 +28,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include "basic.h"
-
-#include <set>
-
-#define TYPEDEF_SET(def, name) \
-	TYPEDEF_CONTAINER_1(std::set, def, name)
-
-#define TYPEDEF_MSET(def, name) \
-	TYPEDEF_CONTAINER_1(std::multiset, def, name)
+#include "typedefs_set.h"
 
 #include "str_set.h"
 #include "int_set.h"
@@ -44,5 +36,4 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include "flt_set.h"
 #include "dbl_set.h"
 
-
-#endif // _LIBSOOKEE_TYPES_SET_H_
+#endif // LIBSOOKEE_TYPES_SET_H_

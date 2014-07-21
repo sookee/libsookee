@@ -1,8 +1,8 @@
-#ifndef LIBSOOKEE_TYPES_DBL_MAP_H_
-#define LIBSOOKEE_TYPES_DBL_MAP_H_
+#ifndef LIBSOOKEE_TYPES_TYPEDEFS_PAIR_H_
+#define LIBSOOKEE_TYPES_TYPEDEFS_PAIR_H_
 /*
- *  Created on: 10 June 2014
- *      Author: SooKee oasookee@gmail.com
+ *  Created on: 21 Jul 2014
+ *      Author: oasookee@gmail.com
  */
 
 /*-----------------------------------------------------------------.
@@ -28,15 +28,9 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include "typedefs_map.h"
+#include <utility>
 
-namespace sookee { namespace types {
+#define TYPEDEF_PAIR(type1, type2, name) \
+	typedef std::pair<type1,type2> name
 
-TYPEDEF_MAP(double, double, dbl_map);
-TYPEDEF_MMAP(double, double, dbl_mmap);
-
-}} // ::sookee::types
-
-namespace soo { using namespace sookee::types; }
-
-#endif // LIBSOOKEE_TYPES_DBL_MAP_H_
+#endif // LIBSOOKEE_TYPES_TYPEDEFS_PAIR_H_

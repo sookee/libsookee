@@ -1,12 +1,12 @@
-#ifndef _LIBSOOKEE_TYPES_VEC_H_
-#define _LIBSOOKEE_TYPES_VEC_H_
+#ifndef LIBSOOKEE_TYPES_VEC_H_
+#define LIBSOOKEE_TYPES_VEC_H_
 /*
  *  Created on: 10 June 2014
  *      Author: SooKee oasookee@gmail.com
  */
 
 /*-----------------------------------------------------------------.
-| Copyright (C) 2014 SooKee oasookee@gmail.com               |
+| Copyright (C) 2014 SooKee oasookee@gmail.com                     |
 '------------------------------------------------------------------'
 
 This program is free software; you can redistribute it and/or
@@ -28,12 +28,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include "basic.h"
-
-#include <vector>
-
-#define TYPEDEF_VEC(def, name) \
-	TYPEDEF_CONTAINER_1(std::vector, def, name)
+#include "typedefs_vec.h"
 
 #include "str_vec.h"
 #include "int_vec.h"
@@ -41,4 +36,4 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include "flt_vec.h"
 #include "dbl_vec.h"
 
-#endif // _LIBSOOKEE_TYPES_VEC_H_
+#endif // LIBSOOKEE_TYPES_VEC_H_

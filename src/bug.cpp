@@ -179,7 +179,7 @@ __scope__bomb__::__scope__bomb__(const char* name): name(name)
 	++indent;
 	out() << std::endl;
 //	bug(get_col(name) << str(indent, '-') + "> " << fixname(name) << ' ' << get_col(THREAD, 1) << THREAD << ' '  << get_col(OBJECT, 2) << OBJECT << ansi_esc({NORM}));
-	out() << str(indent, '-') + "> " << name << ' ' << get_col(THREAD, 1) << THREAD << ' '  << get_col(OBJECT, 2) << OBJECT << std::endl;;
+	out() << str(indent, '-') + "> " << name << ' ' << get_col(THREAD, 1) << THREAD << ' '  << get_col(OBJECT, 2) << OBJECT << std::endl;
 }
 __scope__bomb__::~__scope__bomb__()
 {

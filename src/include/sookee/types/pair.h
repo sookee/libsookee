@@ -1,5 +1,5 @@
-#ifndef _LIBSOOKEE_TYPES_PAIR_H_
-#define _LIBSOOKEE_TYPES_PAIR_H_
+#ifndef LIBSOOKEE_TYPES_PAIR_H_
+#define LIBSOOKEE_TYPES_PAIR_H_
 /*
  *  Created on: 10 June 2014
  *      Author: SooKee oasookee@gmail.com
@@ -28,11 +28,6 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include "basic.h"
+#include "typedefs_pair.h"
 
-#include <utility>
-
-#define TYPEDEF_PAIR(type1, type2, name) \
-	typedef std::pair<type1,type2> name
-
-#endif // _LIBSOOKEE_TYPES_PAIR_H_
+#endif // LIBSOOKEE_TYPES_PAIR_H_

@@ -1,12 +1,12 @@
-#ifndef _LIBSOOKEE_TYPES_LST_H_
-#define _LIBSOOKEE_TYPES_LST_H_
+#ifndef LIBSOOKEE_TYPES_LST_H_
+#define LIBSOOKEE_TYPES_LST_H_
 /*
  *  Created on: 10 June 2014
  *      Author: SooKee oasookee@gmail.com
  */
 
 /*-----------------------------------------------------------------.
-| Copyright (C) 2014 SooKee oasookee@gmail.com               |
+| Copyright (C) 2014 SooKee oasookee@gmail.com                     |
 '------------------------------------------------------------------'
 
 This program is free software; you can redistribute it and/or
@@ -28,12 +28,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include "basic.h"
-
-#include <list>
-
-#define TYPEDEF_LST(def, name) \
-	TYPEDEF_CONTAINER_1(std::list, def, name)
+#include "typedefs_lst.h"
 
 #include "str_lst.h"
 #include "int_lst.h"
@@ -41,4 +36,4 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include "flt_lst.h"
 #include "dbl_lst.h"
 
-#endif // _LIBSOOKEE_TYPES_LST_H_
+#endif // LIBSOOKEE_TYPES_LST_H_

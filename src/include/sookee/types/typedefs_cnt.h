@@ -1,8 +1,8 @@
-#ifndef LIBSOOKEE_TYPES_DBL_MAP_H_
-#define LIBSOOKEE_TYPES_DBL_MAP_H_
+#ifndef LIBSOOKEE_TYPES_TYPEDEFS_CNT_H_
+#define LIBSOOKEE_TYPES_TYPEDEFS_CNT_H_
 /*
- *  Created on: 10 June 2014
- *      Author: SooKee oasookee@gmail.com
+ *  Created on: 21 Jul 2014
+ *      Author: oasookee@gmail.com
  */
 
 /*-----------------------------------------------------------------.
@@ -28,15 +28,25 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include "typedefs_map.h"
+#define TYPEDEF_CONTAINER_T(def) \
+typedef def::value_type def##_vt; \
+typedef def::iterator def##_iter; \
+typedef def::const_iterator def##_citer; \
+typedef def::reverse_iterator def##_riter; \
+typedef def::const_reverse_iterator def##_criter
 
-namespace sookee { namespace types {
+/**
+ * Single parameter containers
+ */
+#define TYPEDEF_CONTAINER_1(type, p, def) \
+typedef type<p> def; \
+TYPEDEF_CONTAINER_T(def)
 
-TYPEDEF_MAP(double, double, dbl_map);
-TYPEDEF_MMAP(double, double, dbl_mmap);
+/**
+ * Two parameter containers
+ */
+#define TYPEDEF_CONTAINER_2(type, p1, p2, def) \
+typedef type<p1,p2> def; \
+TYPEDEF_CONTAINER_T(def)
 
-}} // ::sookee::types
-
-namespace soo { using namespace sookee::types; }
-
-#endif // LIBSOOKEE_TYPES_DBL_MAP_H_
+#endif // LIBSOOKEE_TYPES_TYPEDEFS_CNT_H_
