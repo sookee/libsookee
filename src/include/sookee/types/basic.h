@@ -41,8 +41,9 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace types {
 
-typedef std::size_t siz;
+typedef unsigned char byte;
 typedef std::string str;
+typedef str::size_type siz;
 typedef str::iterator str_iter;
 typedef str::const_iterator str_citer;
 

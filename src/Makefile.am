@@ -43,6 +43,7 @@ sookee_library_LTLIBRARIES = \
 libsookee_la_SOURCES = \
 	bug.cpp \
 	cal.cpp \
+	config.cpp \
 	ios.cpp \
 	log.cpp \
 	network.cpp \
