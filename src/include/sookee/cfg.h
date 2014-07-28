@@ -51,14 +51,13 @@ private:
 	 * Typically something like $HOME/.prog
 	 */
 	str dir;
-	bool load(const str& file, bool first = false);
+	bool load(const str& dir, const str& file, bool first);
 
 	str expand_env(const str& var, int flags = 0);
 
 public:
-	Config(const str& config_dir): dir(config_dir) {}
 
-	bool load(const str& file) { return load(file, true); }
+	bool load(const str& dir, const str& file) { return load(dir, file, true); }
 
 	/**
 	 * Get a type-converted config variable's value.

@@ -27,7 +27,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include <sookee/config.h>
+#include <sookee/cfg.h>
 #include <wordexp.h>
 
 namespace sookee { namespace props {
@@ -47,13 +47,16 @@ str Config::expand_env(const str& var, int flags)
 	return exp;
 }
 
-bool Config::load(const str& file, bool first)
+bool Config::load(const str& dir, const str& file, bool first)
 {
 	static str_set includes;
 
 	if(first)
+	{
+		this->dir = dir;
 		includes.clear();
-
+		props.clear();
+	}
 	str config_file = dir + "/" + expand_env(file);
 
 	if(!includes.insert(config_file).second)
@@ -97,7 +100,7 @@ bool Config::load(const str& file, bool first)
 		}
 
 		if(key == "include")
-			load(val, false);
+			load(dir,val, false);
 		else
 			props[key].push_back(val);
 	}
