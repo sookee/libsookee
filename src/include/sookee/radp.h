@@ -48,7 +48,7 @@ inline rad ps(rad s)
 }
 
 /**
- *
+ * Parse Character
  * @param s
  * @param c
  * @return returned value == s on error (EOS)
@@ -92,12 +92,22 @@ inline rad pu(rad s, int& i)
 	return s;
 }
 
+/**
+ * Parse Integer
+ * @param s pointer to integer data
+ * @param i out parameter
+ * @return
+ */
 inline rad pi(rad s, int& i)
 {
 	if(*s != '-')
 		return pu(s, i);
 
+	rad ss = s;
+
 	s = pu(adv(s, 1), i);
+	if(s == ss + 1)
+		return ss; // error s unchanged
 	i = -i;
 	return s;
 }
@@ -115,7 +125,26 @@ inline rad psi(rad s, int& i)
 
 static const siz pow10[] =
 {
-	1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
+	1u
+	, 10u
+	, 100u
+	, 1000u
+	, 10000u
+	, 100000u
+	, 1000000u
+	, 10000000u
+	, 100000000u
+	, 1000000000u
+	, 10000000000u
+	, 100000000000u
+	, 1000000000000u
+	, 10000000000000u
+	, 100000000000000u
+	, 1000000000000000u
+	, 10000000000000000u
+	, 100000000000000000u
+	, 1000000000000000000u
+	, 10000000000000000000u
 };
 
 inline rad pf(rad s, float& i)
@@ -123,11 +152,11 @@ inline rad pf(rad s, float& i)
 	rad x = s;
 	int num;
 	siz den;
-	int sgn = 1;
+	bool neg = false;
 
 	if(*s == '-')
 	{
-		sgn = -1;
+		neg = true;
 		s = adv(s, 1);
 	}
 
@@ -135,7 +164,7 @@ inline rad pf(rad s, float& i)
 
 	if(*s != '.')
 	{
-		i = sgn * num;
+		i = neg ? -num : num;
 		return s;
 	}
 
@@ -146,7 +175,10 @@ inline rad pf(rad s, float& i)
 	if(exp > 9)
 		return x; // error
 
-	i = sgn * (num + ((float) den) / pow10[exp]);
+	i = num + (double(den) / double(pow10[exp]));
+
+	if(neg)
+		i = -i;
 
 	return p;
 }
@@ -281,6 +313,8 @@ struct m
 
 // rsp(line.c_str(), i1, f1, mpt('\\'), w1);
 
-}} // sookee::rad
+}} // sookee::radp
+
+namespace soo { using namespace sookee::radp; }
 
 #endif // LIBSOOKEE_RAD_PARSER_H_

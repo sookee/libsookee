@@ -36,6 +36,8 @@ inline std::string get_filename(const std::string& path)
 #define log(m) do{sookee::log::out() << sookee::log::get_stamp() << ": " << m << " [" << sookee::log::get_filename(__FILE__) << "]" << " (" << __LINE__ << ")" << std::endl;}while(false)
 #endif
 #define con(m) do{std::cout << m << std::endl;}while(false)
+#define con_s(m) do{std::cout << m;}while(false)
+#define con_e() do{std::cout << std::endl;}while(false)
 
 }} // sookee::log
 

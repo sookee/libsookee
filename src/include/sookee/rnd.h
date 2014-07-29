@@ -9,8 +9,10 @@
 
 #include <random>
 
-template<typename RandomEngine>
-int rnd(int a, int b, RandomEngine &e = std::default_random_engine())
+namespace sookee { namespace rnd {
+
+template<typename RandomEngine = std::default_random_engine>
+int rnd(int a, int b, RandomEngine e = RandomEngine())
 {
 	static std::uniform_int_distribution<> d;
 	std::uniform_int_distribution<>::param_type p{a, b};
@@ -22,5 +24,9 @@ int rnd(int a, int b, RandomEngine &e = std::default_random_engine())
 //std::default_random_engine eng{rd()};
 //std::uniform_int_distribution<> dist;
 //int n = dist(eng, decltype(dist)::param_type{0, A});
+
+}} // ::sookee::rnd
+
+namespace soo { using namespace sookee::rnd; }
 
 #endif /* RND_H_ */
