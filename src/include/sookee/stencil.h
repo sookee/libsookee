@@ -10,6 +10,7 @@
 #include <sookee/types/str_vec.h>
 #include <sookee/str.h>
 #include <sookee/radp.h>
+#include <string>
 
 namespace sookee { namespace string {
 
@@ -34,8 +35,7 @@ private:
 		return "";
 	}
 
-	template<typename Arg>
-	str get_arg(siz idx, Arg arg)
+	str get_arg(siz idx, const char* arg)
 	{
 		if(!idx)
 			return arg;
@@ -43,11 +43,29 @@ private:
 		return "";
 	}
 
+	template<typename Arg>
+	str get_arg(siz idx, Arg arg)
+	{
+		if(!idx)
+			return std::to_string(arg);
+		log("ERROR: idx out of range");
+		return "";
+	}
+
+	template<typename... Args>
+	str get_arg(siz idx, const char* arg, Args... args)
+	{
+		if(!idx)
+			return arg;
+		else
+			return get_arg(idx - 1, args...);
+	}
+
 	template<typename Arg, typename... Args>
 	str get_arg(siz idx, Arg arg, Args... args)
 	{
 		if(!idx)
-			return arg;
+			return std::to_string(arg);
 		else
 			return get_arg(idx - 1, args...);
 	}
@@ -75,6 +93,9 @@ public:
 	str create(Args... args)
 	{
 		str s;
+		// TODO: figure best way to guess capacity
+		//s.reserve(size + params.size() * 64);
+//		siz c = s.capacity();
 
 		siz_vec_citer v = params.cbegin();
 		siz_vec_citer vend = params.cend();
@@ -96,6 +117,8 @@ public:
 		while(v != vend)
 			s.append(get_arg((*v++) - 1, args...));
 
+//		if(s.capacity() > c)
+//			log("WARN: capacity (" << c << ") exceeded by " << (s.capacity() - c));
 		return s;
 	}
 
