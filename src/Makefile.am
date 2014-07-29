@@ -54,7 +54,7 @@ libsookee_la_SOURCES = \
 libsookee_la_LIBADD = 
 libsookee_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
 
-noinst_PROGRAMS = test test-radp time-radp
+noinst_PROGRAMS = test test-radp time-radp test-stencil
 
 test_SOURCES = test.cpp
 test_LDADD = -L.libs -lsookee
@@ -65,3 +65,6 @@ test_radp_LDADD = -L.libs -lsookee
 time_radp_SOURCES = time-radp.cpp
 time_radp_LDADD = -L.libs -lsookee
 
+
+test_stencil_SOURCES = test-stencil.cpp
+test_stencil_LDADD = -L.libs -lsookee

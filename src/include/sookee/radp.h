@@ -172,7 +172,7 @@ inline rad pf(rad s, float& i)
 
 	siz exp = p - adv(s, 1);
 
-	if(exp > 9)
+	if(exp >= sizeof(pow10))
 		return x; // error
 
 	i = num + (double(den) / double(pow10[exp]));
