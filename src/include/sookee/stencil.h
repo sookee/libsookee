@@ -10,20 +10,30 @@
 #include <sookee/types/str_vec.h>
 #include <sookee/str.h>
 #include <sookee/radp.h>
+#include <sookee/bug.h>
+#include <sookee/log.h>
 #include <string>
 
 namespace sookee { namespace string {
 
-//using namespace sookee::radp;
+using namespace sookee::bug;
+using namespace sookee::log;
 using namespace sookee::types;
 using namespace sookee::string;
 
+/**
+ * Stencils are string templates with replaceable sections.
+ *
+ *
+ */
 class stencil
 {
 private:
 	siz size = 0;
 	str_vec pieces;
 	siz_vec params;
+
+	str_vec args; // prepared args
 
 	const str d1 = "${";
 	const str d2 = "}";
@@ -35,7 +45,15 @@ private:
 		return "";
 	}
 
-	str get_arg(siz idx, const char* arg)
+	str get_arg(siz idx, const char* arg) const
+	{
+		if(!idx)
+			return arg;
+		log("ERROR: idx out of range");
+		return "";
+	}
+
+	str get_arg(siz idx, const str& arg) const
 	{
 		if(!idx)
 			return arg;
@@ -44,7 +62,7 @@ private:
 	}
 
 	template<typename Arg>
-	str get_arg(siz idx, Arg arg)
+	str get_arg(siz idx, Arg arg) const
 	{
 		if(!idx)
 			return std::to_string(arg);
@@ -53,7 +71,16 @@ private:
 	}
 
 	template<typename... Args>
-	str get_arg(siz idx, const char* arg, Args... args)
+	str get_arg(siz idx, const char* arg, Args... args) const
+	{
+		if(!idx)
+			return arg;
+		else
+			return get_arg(idx - 1, args...);
+	}
+
+	template<typename... Args>
+	str get_arg(siz idx, const str& arg, Args... args) const
 	{
 		if(!idx)
 			return arg;
@@ -62,7 +89,7 @@ private:
 	}
 
 	template<typename Arg, typename... Args>
-	str get_arg(siz idx, Arg arg, Args... args)
+	str get_arg(siz idx, Arg arg, Args... args) const
 	{
 		if(!idx)
 			return std::to_string(arg);
@@ -71,26 +98,74 @@ private:
 	}
 
 public:
+	/**
+	 * Create an empty stencil
+	 */
 	stencil() {}
+
+	/**
+	 * Create a stencil whose parameter markers are delimited
+	 * as beginning with @param d1 and ending with @param d2.
+	 *
+	 * e.g. ${n} (where n is the parameter number
+	 *
+	 * d1 = "${", d2 = "}"
+	 *
+	 * @param d1 the start delimiter of embedded parameters
+	 * @param d2 the end delimiter of embedded parameters
+	 */
 	stencil(const str& d1, const str& d2): d1(d1), d2(d2) {}
 
+	/**
+	 * Clear the stencil of all data,
+	 */
 	void clear()
 	{
 		size = 0;
 		pieces.clear();
 		params.clear();
+		args.clear();
 	}
 
-	void dump()
+	/**
+	 * Add a constant argument for this stencil
+	 *
+	 * These arguments are matched first (in order they are added)
+	 * before arguments supplied to the create() function.
+	 *
+	 * @param arg The argument to add to the list of constant args.
+	 */
+	void add(const str& arg)
+	{
+		args.push_back(arg);
+	}
+
+	template<typename Arg>
+	void add(const Arg& arg)
+	{
+		add(std::to_string(arg));
+	}
+
+	void dump() const
 	{
 		for(const auto& v: params)
 			con("param: " << v);
 		for(const auto& p: pieces)
 			con("piece: " << p);
+		for(const auto& a: args)
+			con("args : " << a);
 	}
 
+	/**
+	 * Create a string from this template mathing first the internal
+	 * args added using the add() function and then the args supplied
+	 * as parameters to this function.
+	 *
+	 * @param args
+	 * @return
+	 */
 	template<typename... Args>
-	str create(Args... args)
+	str create(Args... args) const
 	{
 		str s;
 		// TODO: figure best way to guess capacity
@@ -102,44 +177,62 @@ public:
 		str_vec_citer p = pieces.cbegin();
 		str_vec_citer pend = pieces.cend();
 
+		siz arg;
 		while(v != vend && p != pend)
 		{
 			if(p != pend)
 				s.append(*p++);
 
 			if(v != vend)
-				s.append(get_arg((*v++) - 1, args...));
+			{
+				arg = (*v++) - 1;
+//				bug_var(arg);
+//				bug_var(this->args.size());
+				if(arg < this->args.size())
+					s.append(this->args[arg]);
+				else
+					s.append(get_arg(arg - this->args.size(), args...));
+			}
 		}
 
 		while(p != pend)
 			s.append(*p++);
 
 		while(v != vend)
-			s.append(get_arg((*v++) - 1, args...));
+		{
+			arg = (*v++) - 1;
+			if(arg < this->args.size())
+				s.append(this->args[arg]);
+			else
+				s.append(get_arg(arg - this->args.size(), args...));
+		}
 
 //		if(s.capacity() > c)
 //			log("WARN: capacity (" << c << ") exceeded by " << (s.capacity() - c));
 		return s;
 	}
 
+	/**
+	 * Prepare the stencil's data.
+	 * @param tmp
+	 * @return
+	 */
 	bool compile(const str& tmp)
 	{
 		clear();
+
 		size = tmp.size();
+
 		siz cur, end;
 		siz pos = cur = 0;
+
 		while(pos != str::npos)
 		{
-//			bug("-------------------------");
 			if((pos = tmp.find(d1, cur)) == str::npos)
 			{
 				pieces.emplace_back(tmp.substr(cur));
 				break;
 			}
-
-//			bug_var(pos);
-
-			// "Some ${1} text to rep${2s}"
 
 			if((end = tmp.find(d2, pos)) == str::npos)
 			{
@@ -147,20 +240,16 @@ public:
 				return false;
 			}
 
-//			bug_var(end);
-
 			siz param;
 			str param_spec = tmp.substr(pos + d1.size(), end - (pos  + d1.size()));
-//			bug_var(param_spec);
+
 			if(soo::psz(param_spec.c_str(), param) == param_spec.c_str())
 			{
 				log("ERROR: parsing <?soo ?> parameter value: " << pos);
 				return false;
 			}
-//			bug_var(param);
 
 			pieces.emplace_back(tmp.substr(cur, pos - cur));
-			//vars.emplace_back(tmp.substr(pos + 2, end - pos - 2));
 			params.push_back(param);
 			cur = end + d2.size();
 			pos = cur;
