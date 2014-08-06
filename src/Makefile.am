@@ -44,6 +44,7 @@ libsookee_la_SOURCES = \
 	bug.cpp \
 	cal.cpp \
 	cfg.cpp \
+	i18n.cpp \
 	ios.cpp \
 	log.cpp \
 	network.cpp \
@@ -51,7 +52,8 @@ libsookee_la_SOURCES = \
 	str.cpp \
 	types.cpp
 	
-libsookee_la_LIBADD = 
+libsookee_la_CFLAGS = $(ICU_CFLAGS)
+libsookee_la_LIBADD = $(ICU_LIBS)
 libsookee_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
 
 noinst_PROGRAMS = test test-radp time-radp test-stencil

@@ -6,67 +6,117 @@
  */
 
 #include <sookee/types.h>
-#include <sookee/str.h>
+//#include <sookee/str.h>
 #include <sookee/bug.h>
 #include <sookee/log.h>
 #include <sookee/radp.h>
 
-#include <ctime>
+const char* const ws = " \t\n\r\f\v";
 
-using namespace soo;
+inline str& ltrim_mute(str& s, const char* t = ws)
+{
+	bug_func();
+	s.erase(0, s.find_first_not_of(t));
+	return s;
+}
+
+inline str ltrim_move(str&& s, const char* t = ws)
+{
+	bug_func();
+	return std::move(ltrim_mute(s, t));
+}
+
+inline str ltrim_cref(const str& s, const char* t = ws)
+{
+	bug_func();
+	return std::move(ltrim_move(str(s),t));
+}
+
+inline str ltrim_copy(str s, const char* t = ws)
+{
+	bug_func();
+	return std::move(ltrim_move(std::move(s),t));
+}
+
+/**
+ * Remove leading characters from a str.
+ * @param s The str to be modified.
+ * @param t The set of characters to delete from the beginning
+ * of the string.
+ * @return The same string passed in as a parameter reference.
+ */
+inline str& ltrim(str& s, const char* t = ws)
+{
+	bug_func();
+	return ltrim_mute(s, t);
+}
+
+inline str ltrim(str&& s, const char* t = ws)
+{
+	bug_func();
+	return ltrim_move(std::move(s), t);
+}
+
+inline str ltrim(const str& s, const char* t = ws)
+{
+	bug_func();
+	return ltrim_cref(s, t);
+}
+
+/**
+ * Remove trailing characters from a str.
+ * @param s The str to be modified.
+ * @param t The set of characters to delete from the end
+ * of the string.
+ * @return The same string passed in as a parameter reference.
+ */
+//inline str& rtrim(str& s, const char* t = ws)
+//{
+//	bug_func();
+//	s.erase(s.find_last_not_of(t) + 1);
+//	return s;
+//}
+
+/**
+ * Remove surrounding characters from a str.
+ * @param s The string to be modified.
+ * @param t The set of characters to delete from each end
+ * of the string.
+ * @return The same string passed in as a parameter reference.
+ */
+//inline str& trim(str& s, const char* t = ws)
+//{
+//	bug_func();
+//	return ltrim(rtrim(s, t), t);
+//}
+
+//inline str ltrim_copy(str s, const char* t = ws)
+//{
+//	bug_func();
+//	return ltrim(s, t);
+//}
+
+//inline str rtrim_copy(str s, const char* t = ws)
+//{
+//	bug_func();
+//	return rtrim(s, t);
+//}
+
+//inline str trim_copy(str s, const char* t = ws)
+//{
+//	bug_func();
+//	return trim(s, t);
+//}
 
 int main()
 {
-	timespec tsb;
-	timespec tse;
+	str a = " a ";
+	const str c = " c ";
 
-	str t1 = "-10245.00349";
+	ltrim(a);
+	ltrim(" b ");
+	ltrim(c);
 
-	rad pos = t1.data();
-	float v;
 
-	con("radp::pf()");
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tsb);
-	for(siz i = 0; i < 100000000; ++i)
-		pf(pos, v);
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tse);
 
-	double diff = (double) (tse.tv_nsec - tsb.tv_nsec) / 1000000000 + (double) (tse.tv_sec - tsb.tv_sec);
-	bug_var(diff);
-
-	con("std::sscanf()");
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tsb);
-	for(siz i = 0; i < 100000000; ++i)
-		std::sscanf(pos, "%f", &v);
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tse);
-
-	diff = (double) (tse.tv_nsec - tsb.tv_nsec) / 1000000000 + (double) (tse.tv_sec - tsb.tv_sec);
-	bug_var(diff);
-
-	con("std::stod()");
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tsb);
-	for(siz i = 0; i < 100000000; ++i)
-		v = std::stod(t1);
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tse);
-
-	diff = (double) (tse.tv_nsec - tsb.tv_nsec) / 1000000000 + (double) (tse.tv_sec - tsb.tv_sec);
-	bug_var(diff);
-
-	con("std::atof()");
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tsb);
-	for(siz i = 0; i < 100000000; ++i)
-		v = std::atof(pos);
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tse);
-
-	diff = (double) (tse.tv_nsec - tsb.tv_nsec) / 1000000000 + (double) (tse.tv_sec - tsb.tv_sec);
-	bug_var(diff);
-
-	con("std::strtod()");
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tsb);
-	for(siz i = 0; i < 100000000; ++i)
-		v = std::strtod(pos, 0);
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tse);
-
-	diff = (double) (tse.tv_nsec - tsb.tv_nsec) / 1000000000 + (double) (tse.tv_sec - tsb.tv_sec);
-	bug_var(diff);
 }

@@ -32,6 +32,12 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 #include <ctime>
 
+#include <queue>
+#include <mutex>
+#include <thread>
+#include <future>
+#include <condition_variable>
+
 namespace sookee { namespace log {
 
 std::string get_stamp()
@@ -58,6 +64,54 @@ std::ostream& out(std::ostream* os)
 		osp = os;
 
 	return *osp;
+}
+
+// NEW LOGWRITER
+
+void log_writer::sync()
+{
+	while(!done)
+	{
+		std::unique_lock<std::mutex> lock(mtx);
+
+		while(q.empty())
+			cv.wait(lock);
+
+		while(!q.empty())
+		{
+			sink << q.front() << this->endl;
+			q.pop();
+		}
+	}
+}
+
+void log_writer::start()
+{
+	done = false;
+	fut = std::async(std::launch::async, [this]{sync();});
+}
+
+void log_writer::stop()
+{
+	done = true;
+	if(fut.valid())
+		fut.get();
+	while(!q.empty())
+	{
+		sink << q.front() << '\n';
+		q.pop();
+	}
+}
+
+void log_writer::add_line(const std::string& msg)
+{
+	if(done)
+		return;
+
+	std::unique_lock<std::mutex> lock(mtx);
+
+	q.push(msg);
+	cv.notify_one();
 }
 
 }} // sookee::log

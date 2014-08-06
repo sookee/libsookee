@@ -45,6 +45,11 @@ private:
 		return "";
 	}
 
+	str get_arg(siz) const
+	{
+		return "";
+	}
+
 	str get_arg(siz idx, const char* arg) const
 	{
 		if(!idx)
