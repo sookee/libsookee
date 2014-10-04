@@ -27,9 +27,9 @@ sookee_include_typesdir = $(prefix)/include/sookee/types
 sookee_librarydir = $(prefix)/lib/sookee
 
 DEF_FLAGS = \
-	-D DEBUG
+	-D DEBUG -D LIBSOOKEE_COMPAT_LOG
 	
-GEN_FLAGS = -Wl,-E -Wfatal-errors -Wall -Wextra -Winit-self -Werror -ansi -pedantic -pipe -pthread \
+GEN_FLAGS = -Wl,-E -Wall -Wextra -Winit-self -pedantic -pipe -pthread \
 	-I$(top_srcdir)/src/include
 
 AM_CXXFLAGS = $(GEN_FLAGS) $(DEF_FLAGS)
@@ -56,10 +56,11 @@ libsookee_la_CFLAGS = $(ICU_CFLAGS)
 libsookee_la_LIBADD = $(ICU_LIBS)
 libsookee_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
 
-noinst_PROGRAMS = test test-radp time-radp test-stencil
+noinst_PROGRAMS = test test-radp time-radp test-stencil test-trim test-cal
 
 test_SOURCES = test.cpp
 test_LDADD = -L.libs -lsookee
+test_CFLAGS = -std=c++1y
 
 test_radp_SOURCES = test-radp.cpp
 test_radp_LDADD = -L.libs -lsookee
@@ -67,6 +68,11 @@ test_radp_LDADD = -L.libs -lsookee
 time_radp_SOURCES = time-radp.cpp
 time_radp_LDADD = -L.libs -lsookee
 
-
 test_stencil_SOURCES = test-stencil.cpp
 test_stencil_LDADD = -L.libs -lsookee
+
+test_trim_SOURCES = test-trim.cpp
+test_trim_LDADD = -L.libs -lsookee
+
+test_cal_SOURCES = test-cal.cpp
+test_cal_LDADD = -L.libs -lsookee

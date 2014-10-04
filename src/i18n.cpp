@@ -33,23 +33,62 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace i18n {
 
-i18n::utf8 i18n::to_utf8(const i18n::utf32& utf32)
+std::string to_utf8(const std::u32string& s)
 {
 	UErrorCode status = U_ZERO_ERROR;
-	char target[1024];
-	int32_t len = ucnv_convert("UTF-8", "UTF-32", target, 1024, (const char*)utf32.data(), utf32.size() * sizeof(char32_t), &status);
+	char buf[1024];
+	int32_t len = ucnv_convert("UTF-8", "UTF-32", buf, 1024, (const char*)s.data(), s.size() * 4, &status);
 //	con("status: " << status);
-	return i18n::utf8(target, len);
+	return std::string(buf, len);
 }
 
-i18n::utf32 i18n::to_utf32(const i18n::utf8& utf8)
+std::u32string to_utf32(const std::string& utf8)
 {
 	UErrorCode status = U_ZERO_ERROR;
 	char target[1024];
 	int32_t len = ucnv_convert("UTF-32", "UTF-8", target, 1024, utf8.data(), utf8.size(), &status);
 //	con("status: " << status);
-	return i18n::utf32((char32_t*) target, len / sizeof(char32_t));
+	return std::u32string((char32_t*) target, len / sizeof(char32_t));
 }
 
+std::u32string mb_to_utf32(const std::string& mb)
+{
+	std::u32string utf32;
+
+	char32_t pc32;
+	mbstate_t ps;
+
+	size_t len;
+	std::string::size_type pos;
+
+	mbrlen(0, 0, &ps);
+	for(pos = 0; (len = mbrtoc32(&pc32, mb.c_str() + pos, MB_CUR_MAX, &ps) != 0); pos += len)
+	{
+		if(pos == size_t(-1) || pos == size_t(-2) || pos == size_t(-3))
+			break;
+		utf32 += pc32;
+	}
+
+	return utf32;
+}
+
+std::string utf32_to_mb(const std::u32string& utf32)
+{
+	std::string mb;
+
+	char pmb[4];
+	mbstate_t ps;
+
+	size_t len;
+
+	mbrlen(0, 0, &ps);
+	for(size_t pos = 0; pos < utf32.size(); ++pos)
+	{
+		if((len = c32rtomb(pmb, utf32[pos], &ps)) <= 4)
+			mb.append(pmb, len);
+	}
+
+	return mb;
+}
 
 }} // sookee::i18n

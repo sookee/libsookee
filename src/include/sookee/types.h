@@ -33,11 +33,11 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 #include <map>
 #include <deque>
-#include <mutex>
 
 #include "types/typedefs.h"
 
 #include "types/basic.h"
+#include "types/stream.h"
 #include "types/vec.h"
 #include "types/map.h"
 #include "types/set.h"
@@ -65,10 +65,6 @@ TYPEDEF_MAP(str, str_set, str_set_map);
 
 typedef std::map<const str, str_vec> str_vec_map;
 typedef std::pair<const str, str_vec> str_vec_pair;
-
-typedef std::lock_guard<std::mutex> lock_guard;
-typedef std::unique_lock<std::mutex> unique_lock;
-
 
 }} // sookee::types
 

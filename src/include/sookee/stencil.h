@@ -121,6 +121,8 @@ public:
 	 */
 	stencil(const str& d1, const str& d2): d1(d1), d2(d2) {}
 
+	stencil(const str& text, const str& d1 = "${", const str& d2 = "}"): d1(d1), d2(d2) { compile(text); }
+
 	/**
 	 * Clear the stencil of all data,
 	 */

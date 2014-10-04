@@ -28,13 +28,15 @@ http://www.gnu.org/licenses/gpl-2.0.html
 '-----------------------------------------------------------------*/
 
 #include <sookee/cfg.h>
+#include <sookee/ios.h>
 #include <wordexp.h>
 
 namespace sookee { namespace props {
 
+using namespace sookee::ios;
 using namespace sookee::types;
 
-str Config::expand_env(const str& var, int flags)
+str Config::expand_env(const str& var, int flags) const
 {
 	str exp = var;
 	wordexp_t p;
@@ -95,7 +97,7 @@ bool Config::load(const str& dir, const str& file, bool first)
 		if(!sgl(sgl(iss, key, ':') >> std::ws, val))
 		{
 			log("ERROR: parsing config file: " << file << " at: " << no);
-			log("ERROR:					: " << line);
+			log("     :					   : " << line);
 			continue;
 		}
 

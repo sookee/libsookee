@@ -31,7 +31,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <sookee/types.h>
 #include <sookee/bug.h>
 #include <sookee/str.h>
-//#include <sookee/ansi.h>
+#include <sookee/ios.h>
 
 //#include <cctype>
 //#include <sstream>
@@ -49,7 +49,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace bug {
 
-//using namespace sookee::ansi;
+using namespace sookee::ios;
 using namespace sookee::types;
 using namespace sookee::string;
 

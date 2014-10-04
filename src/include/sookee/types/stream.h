@@ -1,9 +1,7 @@
 #pragma once
-#ifndef _LIBSOOKEE_TYPES_BASIC_H_
-#define _LIBSOOKEE_TYPES_BASIC_H_
+#ifndef LIBSOOKEE_TYPES_STREAM_H_
+#define LIBSOOKEE_TYPES_STREAM_H_
 /*
- * tyoes.h
- *
  *  Created on: 9 Jan 2012
  *      Author: oasookee@gmail.com
  */
@@ -31,32 +29,13 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include <string>
-#include <chrono>
-#include <istream>
-#include <ostream>
 #include <fstream>
 #include <sstream>
-#include <memory>
-#include <mutex>
 
 namespace sookee { namespace types {
 
-typedef unsigned char byte;
-typedef std::string str;
-typedef str::size_type siz;
-typedef str::iterator str_iter;
-typedef str::const_iterator str_citer;
-
-// time
-//typedef std::chrono::steady_clock st_clk;
-typedef std::chrono::system_clock st_clk;
-typedef st_clk::period st_period;
-typedef st_clk::time_point st_time_point;
-
-typedef std::chrono::high_resolution_clock hr_clk;
-typedef hr_clk::period hr_period;
-typedef hr_clk::time_point hr_time_point;
+typedef std::istream sis;
+typedef std::ostream sos;
 
 typedef std::stringstream sss;
 typedef std::istringstream siss;
@@ -66,22 +45,8 @@ typedef std::fstream sfs;
 typedef std::ifstream sifs;
 typedef std::ofstream sofs;
 
-typedef std::stringstream sss;
-
-typedef std::lock_guard<std::mutex> lock_guard;
-typedef std::unique_lock<std::mutex> unique_lock;
-typedef std::lock_guard<std::recursive_mutex> recursive_lock_guard;
-
-struct malloc_deleter
-{
-	template <class T>
-	void operator()(T* p) { std::free(p); }
-};
-
-typedef std::unique_ptr<char, malloc_deleter> cstring_uptr;
-
 }} // sookee::types
 
 namespace soo { using namespace sookee::types; }
 
-#endif /* _LIBSOOKEE_TYPES_BASIC_H_ */
+#endif // LIBSOOKEE_TYPES_STREAM_H_

@@ -139,6 +139,40 @@ void copy(const Container& c1, Container& c2)
 	std::copy(c1.begin(), c1.end(), c2.begin());
 }
 
+namespace experimental {
+
+template<typename Type, unsigned SIZE>
+class circular
+{
+	size_t pos = 0;
+	std::array<Type, SIZE> data;
+
+	void add(const Type& v)
+	{
+		data[pos++] = v;
+		if(pos == SIZE)
+			pos = 0;
+	}
+
+	const Type& operator[](size_t idx) const { idx += pos; if(idx >= SIZE) idx -= SIZE; return data[idx]; }
+
+	struct iterator
+	{
+		size_t pos = 0;
+		circular* c;
+		iterator(): c(nullptr) {}
+		iterator(circular* c): pos(c->pos), c(c) {}
+
+	    iterator(const iterator& i): pos(i.pos), c(i.c) {}
+
+	    iterator& operator=(const iterator& i) { pos = i.pos; c = i.c; return *this; }
+	    iterator& operator++() { ++pos; if(pos == SIZE) pos = 0; if(pos == c->pos) c = nullptr; return *this; } //prefix increment
+	    Type& operator*() const { return c->data[pos]; }
+	};
+};
+
+} // experimental
+
 }} // sookee::stl
 
 namespace soo { using namespace sookee::stl; }

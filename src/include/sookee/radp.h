@@ -21,7 +21,7 @@ namespace sookee { namespace radp {
  * @param n
  * @return
  */
-inline rad adv(rad s, siz n)
+inline rad adv(rad s, siz n = 1)
 {
 	while(*s && n--)
 		++s;

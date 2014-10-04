@@ -10,6 +10,7 @@
 #include <sookee/bug.h>
 #include <sookee/log.h>
 #include <sookee/radp.h>
+#include <sookee/test.h>
 
 #include <ctime>
 
@@ -17,56 +18,49 @@ using namespace soo;
 
 int main()
 {
-	timespec tsb;
-	timespec tse;
-
+	Timer timer;
 	str t1 = "-10245.00349";
 
 	rad pos = t1.data();
 	float v;
 
 	con("radp::pf()");
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tsb);
+	timer.start();
 	for(siz i = 0; i < 100000000; ++i)
 		pf(pos, v);
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tse);
+	timer.stop();
 
-	double diff = (double) (tse.tv_nsec - tsb.tv_nsec) / 1000000000 + (double) (tse.tv_sec - tsb.tv_sec);
-	bug_var(diff);
+	bug_var(timer);
 
 	con("std::sscanf()");
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tsb);
+	timer.start();
 	for(siz i = 0; i < 100000000; ++i)
 		std::sscanf(pos, "%f", &v);
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tse);
+	timer.stop();
 
-	diff = (double) (tse.tv_nsec - tsb.tv_nsec) / 1000000000 + (double) (tse.tv_sec - tsb.tv_sec);
-	bug_var(diff);
+	bug_var(timer);
 
 	con("std::stod()");
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tsb);
+	timer.start();
 	for(siz i = 0; i < 100000000; ++i)
 		v = std::stod(t1);
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tse);
+	timer.stop();
 
-	diff = (double) (tse.tv_nsec - tsb.tv_nsec) / 1000000000 + (double) (tse.tv_sec - tsb.tv_sec);
-	bug_var(diff);
+	bug_var(timer);
 
 	con("std::atof()");
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tsb);
+	timer.start();
 	for(siz i = 0; i < 100000000; ++i)
 		v = std::atof(pos);
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tse);
+	timer.stop();
 
-	diff = (double) (tse.tv_nsec - tsb.tv_nsec) / 1000000000 + (double) (tse.tv_sec - tsb.tv_sec);
-	bug_var(diff);
+	bug_var(timer);
 
 	con("std::strtod()");
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tsb);
+	timer.start();
 	for(siz i = 0; i < 100000000; ++i)
 		v = std::strtod(pos, 0);
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tse);
+	timer.stop();
 
-	diff = (double) (tse.tv_nsec - tsb.tv_nsec) / 1000000000 + (double) (tse.tv_sec - tsb.tv_sec);
-	bug_var(diff);
+	bug_var(timer);
 }

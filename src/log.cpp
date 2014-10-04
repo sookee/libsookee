@@ -68,50 +68,66 @@ std::ostream& out(std::ostream* os)
 
 // NEW LOGWRITER
 
-void log_writer::sync()
-{
-	while(!done)
-	{
-		std::unique_lock<std::mutex> lock(mtx);
-
-		while(q.empty())
-			cv.wait(lock);
-
-		while(!q.empty())
-		{
-			sink << q.front() << this->endl;
-			q.pop();
-		}
-	}
-}
-
-void log_writer::start()
-{
-	done = false;
-	fut = std::async(std::launch::async, [this]{sync();});
-}
-
-void log_writer::stop()
-{
-	done = true;
-	if(fut.valid())
-		fut.get();
-	while(!q.empty())
-	{
-		sink << q.front() << '\n';
-		q.pop();
-	}
-}
-
-void log_writer::add_line(const std::string& msg)
-{
-	if(done)
-		return;
-
-	std::unique_lock<std::mutex> lock(mtx);
-
-	q.push(msg);
-	cv.notify_one();
-}
+//std::recursive_mutex mapper::mtx;
+//mapper::logmap mapper::logs;
+//writer mapper::err(std::cerr);
+//
+//std::mutex writer::ctx_mtx;
+//writer::context_map writer::ctxs;
+//
+//void writer::set(std::ostream* os)
+//{
+//	this->ctx = &get_context(*os);
+//}
+//
+//void writer::write_queue()
+//{
+////	message_que& q = get_q(sink);
+//	while(ctx && !ctx->q.empty())
+//	{
+//		ctx->sink << ctx->q.front().stamp << " [" << id << "] " << ctx->q.front().stream->rdbuf() << this->endl << std::flush;
+//		ctx->q.pop();
+//	}
+//}
+//
+//void writer::sync()
+//{
+////	message_que& q = get_q(sink);
+//	while(ctx && !done)
+//	{
+//		std::unique_lock<std::mutex> lock(ctx->mtx);
+//		while(!done && ctx && ctx->q.empty())
+//			cv.wait(lock);
+//		write_queue();
+//	}
+//}
+//
+//void writer::start()
+//{
+//	done = false;
+//	fut = std::async(std::launch::async, [this]{sync();});
+//}
+//
+//void writer::stop()
+//{
+//	done = true;
+//
+//	cv.notify_one();
+//
+//	if(fut.valid())
+//		fut.get();
+//
+//	write_queue();
+//}
+//
+//void writer::add_line(sss* ss)
+//{
+//	if(done || !ctx)
+//		return;
+//	std::unique_lock<std::mutex> lock(ctx->mtx);
+////	message_que& q = get_q(sink);
+//	ctx->q.push({get_stamp(), sss_uptr(ss)});
+//    cv.notify_one();
+//}
 
 }} // sookee::log

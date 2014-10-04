@@ -3,8 +3,8 @@
  *	  Author: SooKee <oasookee@gmail.com>
  */
 
-#ifndef LIBSOOKEE_PROPS_H_
-#define LIBSOOKEE_PROPS_H_
+#ifndef LIBSOOKEE_CONFIG_H_
+#define LIBSOOKEE_CONFIG_H_
 
 /*-----------------------------------------------------------------.
 | Copyright (C) 2014 SooKee <oasookee@gmail.com>				   |
@@ -53,7 +53,7 @@ private:
 	str dir;
 	bool load(const str& dir, const str& file, bool first);
 
-	str expand_env(const str& var, int flags = 0);
+	str expand_env(const str& var, int flags = 0) const;
 
 public:
 
@@ -70,12 +70,15 @@ public:
 	 * file else dflt if not present.
 	 */
 	template<typename T>
-	T get(const str& s, const T& dflt = T())
+	T get(const str& s, const T& dflt = T()) const
 	{
-		if(!have(s))
+		const auto found = props.find(s);
+
+		if(found == props.end())
 			return dflt;
+
 		T t;
-		std::istringstream(props[s][0]) >> std::boolalpha >> t;
+		std::istringstream(*(found->second.begin())) >> std::boolalpha >> t;
 		return t;
 	}
 
@@ -89,9 +92,10 @@ public:
 	 * @return The value that the variable s is set to in the config
 	 * file else dflt if not present.
 	 */
-	str get(const str& s, const str& dflt = "")
+	str get(const str& s, const str& dflt = "") const
 	{
-		return have(s) ? props[s][0] : dflt;
+		const auto found = props.find(s);
+		return found != props.end() ? *(found->second.begin()) : dflt;
 	}
 
 	/**
@@ -105,9 +109,10 @@ public:
 	 * file after file glob explnsion has been applied else dflt if
 	 * not present.
 	 */
-	str get_exp(const str& s, const str& dflt = "")
+	str get_exp(const str& s, const str& dflt = "") const
 	{
-		return have(s) ? expand_env(props[s][0], WRDE_SHOWERR|WRDE_UNDEF) : dflt;
+		const auto found = props.find(s);
+		return found != props.end() ? expand_env(*(found->second.begin()), WRDE_SHOWERR|WRDE_UNDEF) : dflt;
 	}
 
 	/**
@@ -121,9 +126,16 @@ public:
 	 * file as a vector of strings (str_vec). May be empty if variable is
 	 * not present.
 	 */
-	const str_vec& get_vec(const str& s)
+	const str_vec& get_vec(const str& s) const
 	{
-		return props[s];
+		static const str_vec null_vec;
+
+		const auto found = props.find(s);
+
+		if(found == props.end())
+			return null_vec;
+
+		return found->second;
 	}
 
 	/**
@@ -138,7 +150,7 @@ public:
 	 * of strings (str_vec). May be empty if variable is
 	 * not present.
 	 */
-	str_vec get_exp_vec(const str& s)
+	str_vec get_exp_vec(const str& s) const
 	{
 		str_vec v = get_vec(s);
 		for(siz i = 0; i < v.size(); ++i)
@@ -149,19 +161,19 @@ public:
 	/**
 	 * Check if the config file has a given variable set.
 	 */
-	bool has(const str& s)
+	bool has(const str& s) const
 	{
-		return(props.find(s) != props.end() && !props[s].empty());
+		return props.find(s) != props.end();// && !props[s].empty();
 	}
 
 	/**
 	 * Synonym for bool has(const str& s).
 	 */
-	bool have(const str& s) { return has(s); }
+	bool have(const str& s) const { return has(s); }
 };
 
 }} // ::sookee::props
 
 namespace soo { using namespace sookee::props; }
 
-#endif // LIBSOOKEE_PROPS_H_
+#endif // LIBSOOKEE_CONFIG_H_

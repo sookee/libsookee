@@ -34,18 +34,21 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <iomanip>
 
 #include <sookee/str.h>
-//#include <sookee/logrep.h>
+#include <sookee/log.h>
 
 #include <sys/socket.h>
 #include <cerrno>
 #include <cstring>
 #include <netdb.h>	//hostent
 #include <arpa/inet.h>
+#include <netinet/in.h>
+
+
 
 namespace sookee { namespace net {
 
 using namespace sookee::types;
-//using namespace sookee::utils;
+using namespace sookee::log;
 using namespace sookee::string;
 
 cookie::cookie()
@@ -404,5 +407,129 @@ bool hostname_to_ip(const str& hostname , str& ip)
 	freeaddrinfo(servinfo); // all done with this structure
 	return true;
 }
+
+namespace bin {
+
+typedef unsigned char byte;
+
+// create overloads of these functions so that they
+// can be selected by type in templated functions
+inline uint16_t hton(uint16_t i) { return htons(i); }
+inline uint32_t hton(uint32_t i) { return htonl(i); }
+inline uint16_t ntoh(uint16_t i) { return ntohs(i); }
+inline uint32_t ntoh(uint32_t i) { return ntohl(i); }
+
+template<typename Type>
+byte* insert(byte* data, Type type)
+{
+	type = hton(type);
+	for(size_t i(0); i < sizeof(Type); ++i)
+		data[i] = reinterpret_cast<byte*>(&type)[i];
+	return data + sizeof(Type);
+}
+
+byte* insert(byte* data, char const* s)
+{
+	while((*reinterpret_cast<char*>(data++) = *s++)) {}
+	return data;
+}
+
+byte* insert(byte* data, const std::string& s)
+{
+	return insert(data, s.c_str());
+}
+
+/**
+ * General routing to extract aligned integral types
+ * from the UDP packet.
+ *
+ * @param data Pointer into the UDP packet data
+ * @param type Integral type to extract
+ *
+ * @return data pointer advanced to next position after extracted integral.
+ */
+template<typename Type>
+byte const* extract(byte const* data, Type& type)
+{
+	static_assert(std::is_integral<Type>::value, "");
+	// This union will ensure the integral data type is correctly aligned
+	union tx_t
+	{
+		byte cdata[sizeof(Type)];
+		Type tdata;
+	} tx;
+
+	for(size_t i(0); i < sizeof(Type); ++i)
+		tx.cdata[i] = data[i];
+
+	type = ntoh(tx.tdata);
+
+	return data + sizeof(Type);
+}
+
+/**
+ * If strings are null terminated in the buffer then this could be used to extract them.
+ *
+ * @param data Pointer into the UDP packet data
+ * @param s std::string type to extract
+ *
+ * @return data pointer advanced to next position after extracted std::string.
+ */
+byte const* extract(byte const* data, std::string& s)
+{
+	s.assign((char const*)data, std::strlen((char const*)data));
+	return data + s.size() + 1;
+}
+
+/**
+ *  Function to parse entire UDP packet
+ *
+ * @param data The entire UDP packet data
+ */
+void read_data(byte const* const data)
+{
+	std::string s0;
+	uint16_t i1;
+	std::string s1;
+	uint32_t i2;
+	std::string s2;
+
+	byte const* p;
+
+	p = extract(data, s0);
+	p = extract(p, i1); // p contains next position to read
+	p = extract(p, s1);
+	p = extract(p, i2);
+	p = extract(p, s2);
+
+	con("s0: " << s0);
+	con("i1: " << i1);
+	con("s1: " << s1);
+	con("i2: " << i2);
+	con("s2: " << s2);
+}
+
+void write_data(byte* const data)
+{
+	uint16_t i1 = 123;
+	std::string s1 = "456";
+	uint32_t i2 = 789;
+	std::string s2 = "012";
+
+	con("i1: " << i1);
+	con("s1: " << s1);
+	con("i2: " << i2);
+	con("s2: " << s2);
+
+	byte* p;
+
+	p = insert(data, "A");
+	p = insert(p, i1); // p contains next position to read
+	p = insert(p, s1);
+	p = insert(p, i2);
+	p = insert(p, s2);
+}
+
+} // bin
 
 }} // sookee::net

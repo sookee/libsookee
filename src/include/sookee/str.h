@@ -31,7 +31,9 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include <sookee/types.h>
+#include <sookee/types/basic.h>
+#include <sookee/types/stream.h>
+#include <sookee/types/vec.h>
 
 #include <functional>
 #include <algorithm>
@@ -149,6 +151,22 @@ inline str trim_copy(str s, char c)
 	return trim(s, c);
 }
 
+inline str ltrim_keep(str& s, const char* t = ws)
+{
+	str::size_type pos;
+	str keep = s.substr(0, (pos = s.find_first_not_of(t)));
+	s.erase(0, pos);
+	return keep;
+}
+
+inline str rtrim_keep(str& s, const char* t = ws)
+{
+	str::size_type pos;
+	str keep = s.substr((pos = s.find_last_not_of(t) + 1));
+	s.erase(pos);
+	return keep;
+}
+
 str& replace(str& s, const str& from, const str& to);
 
 inline
@@ -254,19 +272,6 @@ sss& operator>>(sss&& ss, T& t)
 {
 	ss >> t;
 	return ss;
-}
-
-inline
-sss& sgl(sss& ss, str& s, char d = '\n')
-{
-	std::getline(ss, s, d);
-	return ss;
-}
-
-inline
-sss& sgl(sss&& ss, str& s, char d = '\n')
-{
-	return sgl(ss, s, d);
 }
 
 template<typename T>

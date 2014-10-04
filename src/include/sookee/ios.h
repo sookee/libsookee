@@ -36,9 +36,6 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <istream>
 #include <ostream>
 
-#include <dirent.h>
-#include <sys/stat.h>
-
 namespace sookee { namespace ios {
 
 using namespace sookee::types;
@@ -51,100 +48,20 @@ std::istream& getstring(std::istream&& is, str& s) { return getstring(is, s); }
  * Get directory listing.
  * @return errno
  */
-inline
-int ls(const str& folder, str_vec &files)
-{
-    DIR* dir;
-	dirent* dirp;
-
-	if(!(dir = opendir(folder.c_str())))
-		return errno;
-
-	files.clear();
-	while((dirp = readdir(dir)))
-		files.push_back(dirp->d_name);
-
-	if(closedir(dir))
-		return errno;
-
-	return 0;
-}
+int ls(const str& folder, str_vec &files);
 
 /**
  * Get directory listing.
  * @return errno
  */
-inline
-bool ls(const str& folder, str_vec& folders, str_vec &files)
-{
-    DIR* dir;
-	dirent* dirp;
-
-	if(!(dir = opendir(folder.c_str())))
-		return false;
-
-	files.clear();
-	while((dirp = readdir(dir)))
-	{
-		if(dirp->d_type == DT_DIR)
-			folders.push_back(dirp->d_name);
-		else if(dirp->d_type == DT_REG)
-			files.push_back(dirp->d_name);
-		else if(dirp->d_type == DT_UNKNOWN)
-		{
-			struct stat s;
-			if(!stat(dirp->d_name, &s))
-			{
-				if(S_ISDIR(s.st_mode))
-					folders.push_back(dirp->d_name);
-				else if(S_ISREG(s.st_mode))
-					files.push_back(dirp->d_name);
-			}
-		}
-	}
-	if(closedir(dir))
-		return false;
-
-	return true;
-}
+bool ls(const str& folder, str_vec& folders, str_vec &files);
 
 enum class ftype
 {
 	unk, reg, dir, chr, blk, fifo, lnk, sock, all
 };
 
-inline
-str_vec ls(const str& folder, ftype t = ftype::reg)
-{
-    DIR* dir;
-	dirent* dirp;
-	str_vec files;
-
-	if(!(dir = opendir(folder.c_str())))
-		return files;
-
-	struct stat s;
-
-	while((dirp = readdir(dir)))
-	{
-		if(!stat(dirp->d_name, &s))
-		{
-			if((t == ftype::dir && S_ISDIR(s.st_mode))
-			|| (t == ftype::reg && S_ISREG(s.st_mode))
-			|| (t == ftype::chr && S_ISCHR(s.st_mode))
-			|| (t == ftype::blk && S_ISBLK(s.st_mode))
-			|| (t == ftype::fifo && S_ISFIFO(s.st_mode))
-			|| (t == ftype::lnk && S_ISLNK(s.st_mode))
-			|| (t == ftype::sock && S_ISSOCK(s.st_mode))
-			|| (t == ftype::all))
-				files.push_back(dirp->d_name);
-		}
-	}
-
-	closedir(dir);
-
-	return files;
-}
+str_vec ls(const str& folder, ftype t = ftype::reg);
 
 inline
 bool getargs(std::istream&) { return true; }
@@ -173,6 +90,46 @@ bool getargs(const str& s, Args&... args)
 {
 	std::istringstream iss(s);
 	return getargs(iss, args...);
+}
+
+/**
+ * Like std::ostream_iterator<> but doesn't
+ * leave a spare separator at the end.
+ */
+template<class T, class CharT = char, class Traits = std::char_traits<CharT>>
+class ostream_serializer
+: public std::iterator<std::output_iterator_tag, void, void, void, void>
+{
+	std::basic_ostream<CharT>& os;
+	std::basic_string<CharT> sep;
+	std::basic_string<CharT> worksep;
+
+public:
+	ostream_serializer(std::basic_ostream<CharT>& os
+		, const std::basic_string<CharT>& sep = " "): os(os), sep(sep) {}
+
+	ostream_serializer& operator=(const T& value)
+    {
+		os << worksep << value;
+		worksep = sep;
+		return *this;
+    }
+
+	ostream_serializer& operator*() { return *this; }
+	ostream_serializer& operator++() { return *this; }
+	ostream_serializer& operator++(int) { return *this; }
+};
+
+inline
+std::istream& sgl(std::istream& is, str& s, char d = '\n')
+{
+	return std::getline(is, s, d);
+}
+
+inline
+std::istream& sgl(std::istream&& is, str& s, char d = '\n')
+{
+	return sgl(is, s, d);
 }
 
 }} // sookee::ios

@@ -45,12 +45,7 @@ const char* const ws = " \t\n\r\f\v";
 
 str& replace(str& s, const str& from, const str& to)
 {
-	if(from.empty())
-		return s;
-	siz pos = 0;
-	if((pos = s.find(from)) != str::npos)
-		s.replace(pos, from.size(), to);
-	while((pos = s.find(from, pos + to.size())) != str::npos)
+	for(size_t pos = 0; (pos = s.find(from, pos)) != std::string::npos; pos += to.size())
 		s.replace(pos, from.size(), to);
 	return s;
 }
@@ -73,14 +68,15 @@ str::size_type extract_delimited_text(const str& in, const str& d1, const str& d
 
 str_vec split(const str& s, char d, bool fold)
 {
-	str_vec v;
+	static const str_vec base_v(20, str(0, 32));
+	str_vec v = base_v;
 	std::istringstream iss(s);
-	str p;
+	str p = base_v[0];
 	while(iss && fold && iss.peek() == d)
 		iss.ignore();
 	while(iss && std::getline(iss, p, d))
 	{
-		v.push_back(p);
+		v.emplace_back(std::move(p));
 		while(iss && fold && iss.peek() == d)
 			iss.ignore();
 	}

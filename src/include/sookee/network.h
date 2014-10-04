@@ -41,7 +41,7 @@ struct cookie
 	str val;
 	str domain;
 	str path;
-	time_t expires;
+	time_t expires = 0;
 	bool secure;
 	bool httponly;
 
