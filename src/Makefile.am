@@ -56,7 +56,14 @@ libsookee_la_CFLAGS = $(ICU_CFLAGS)
 libsookee_la_LIBADD = $(ICU_LIBS)
 libsookee_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
 
-noinst_PROGRAMS = test test-radp time-radp test-stencil test-trim test-cal
+noinst_PROGRAMS = \
+	test \
+	test-radp \
+	time-radp \
+	test-stencil \
+	test-stl \
+	test-trim \
+	test-cal
 
 test_SOURCES = test.cpp
 test_LDADD = -L.libs -lsookee
@@ -70,6 +77,9 @@ time_radp_LDADD = -L.libs -lsookee
 
 test_stencil_SOURCES = test-stencil.cpp
 test_stencil_LDADD = -L.libs -lsookee
+
+test_stl_SOURCES = test-stl.cpp
+test_stl_LDADD = -L.libs -lsookee
 
 test_trim_SOURCES = test-trim.cpp
 test_trim_LDADD = -L.libs -lsookee
