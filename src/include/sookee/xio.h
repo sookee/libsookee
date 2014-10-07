@@ -40,7 +40,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 #include <ext/stdio_filebuf.h>
 
-namespace sookee { namespace xos {
+namespace sookee { namespace xio {
 
 namespace client { typedef int socket; }
 namespace server { typedef int socket; }
@@ -179,8 +179,8 @@ int example()
 	return 0;
 }
 
-}} // sookee::xos
+}} // sookee::xio
 
-namespace soo { using namespace sookee::ios; }
+namespace soo { using namespace sookee::xio; }
 
 #endif // LIBSOOKEE_XIO_H_

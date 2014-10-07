@@ -37,88 +37,97 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace stl {
 
-template<typename Container, typename T>
-size_t count(const Container& c, const T& t)
+// count
+
+template<typename Container>
+typename Container::size_type count(const Container& c
+	, const typename Container::value_type& t)
 {
-	return std::count(c.begin(), c.end(), t);
+	return std::count(c.cbegin(), c.cend(), t);
 }
 
 template<typename Container, typename Pred>
-size_t count_if(const Container& c, Pred pred)
+typename Container::size_type count_if(const Container& c, Pred pred)
 {
-	return std::count_if(c.begin(), c.end(), pred);
+	return std::count_if(c.cbegin(), c.cend(), pred);
 }
 
-// map ready
-
-template<typename Container> inline
-typename Container::iterator find(Container& c, const typename Container::key_type& k)
+template<typename Container>
+typename Container::size_type count_key(const Container& c
+	, const typename Container::key_type& t)
 {
-	return c.find(k);
+	return c.count(t);
 }
 
-template<typename Container> inline
-typename Container::iterator find(Container& c, const typename Container::value_type& v)
+// find
+
+template<typename Container>
+typename Container::iterator find(Container& c
+	, const typename Container::value_type& v)
 {
 	return std::find(c.begin(), c.end(), v);
 }
 
-template<typename Container> inline
-typename Container::const_iterator find(const Container& c, const typename Container::key_type& k)
-{
-	return c.find(k);
-}
-
-template<typename Container> inline
-typename Container::const_iterator find(const Container& c, const typename Container::value_type& v)
-{
-	return std::find(c.cbegin(), c.cend(), v);
-}
-
-// TODO: found not working!!!
-template<typename Container> inline
-bool found(const Container& c, const typename Container::key_type& k)
-{
-	return c.find(k) != c.cend(); // find(c, k) != c.cend();
-}
-
-// TODO: found not working!!!
-template<typename Container> inline
-bool found(const Container& c, const typename Container::value_type& v)
-{
-	return std::find(c.cbegin(), c.cend(), v) != c.cend(); // find(c, v) != c.cend();
-}
-
-// end of map ready
-
-template<typename Container, typename Pred> inline
-typename Container::iterator find_if(const Container& c, Pred pred)
+template<typename Container, typename Pred>
+typename Container::iterator find_if(Container& c, Pred pred)
 {
 	return std::find_if(c.begin(), c.end(), pred);
 }
 
-template<typename Container, typename Pred> inline
-typename Container::const_iterator find_if(Container& c, Pred pred)
+template<typename Container>
+typename Container::iterator find_key(Container& c
+	, const typename Container::key_type& k)
+{
+	return c.find(k);
+}
+
+//// const find
+
+template<typename Container>
+typename Container::const_iterator find(const Container& c
+	, const typename Container::value_type& v)
+{
+	return std::find(c.cbegin(), c.cend(), v);
+}
+
+template<typename Container, typename Pred>
+typename Container::const_iterator find_if(const Container& c, Pred pred)
 {
 	return std::find_if(c.cbegin(), c.cend(), pred);
 }
 
-template<typename Container, typename Comp> inline
-void sort(Container& c, Comp& comp)
+template<typename Container>
+typename Container::const_iterator find_key(const Container& c
+	, const typename Container::key_type& k)
+{
+	return c.find(k);
+}
+
+// mutate
+
+template<typename Container, typename Comp>
+void sort(Container& c, Comp comp)
 {
 	std::sort(c.begin(), c.end(), comp);
 }
 
-template<typename Container> inline
+template<typename Container>
 void sort(Container& c)
 {
 	std::sort(c.begin(), c.end());
 }
 
-template<typename Container> inline
+template<typename Container>
 void random_shuffle(Container& c)
 {
 	std::random_shuffle(c.begin(), c.end());
+}
+
+template<typename Container, typename Pred>
+typename Container::iterator remove(Container& c
+	, const typename Container::value_type& t)
+{
+	return std::remove(c.begin(), c.end(), t);
 }
 
 template<typename Container, typename Pred>
@@ -126,6 +135,8 @@ typename Container::iterator remove_if(Container& c, Pred pred)
 {
 	return std::remove_if(c.begin(), c.end(), pred);
 }
+
+// untested
 
 template<typename Container, typename Pred>
 typename Container::iterator erase_if(Container& c, Pred pred)
@@ -172,6 +183,67 @@ class circular
 };
 
 } // experimental
+
+bool test()
+{
+	typedef std::vector<int> int_vec;
+	typedef std::map<std::string, std::string> str_map;
+	typedef str_map::value_type str_map_vt;
+
+	std::srand((unsigned)std::time(0));
+
+	int_vec ints {1, 4, 2, 3, 5, 4};
+	str_map strs {{"a", "1"}, {"b", "2"}, {"c", "3"}};
+
+	const int_vec cints {1, 4, 2, 3, 5, 4};
+	const str_map cstrs {{"a", "1"}, {"b", "2"}, {"c", "3"}};
+
+	con("count  1: " << stl::count(ints, 4));
+	con("count  2: " << stl::count(strs, {"b", "2"}));
+
+	con("count  3: " << stl::count_if(ints, [](int i){return i & 1;}));
+	con("count  4: " << stl::count_if(strs, [](const str_map_vt& v){return v.second <= "2";}));
+
+	con("count  5: " << stl::count_key(strs, "b"));
+
+	con("count  6: " << stl::count(cints, 4));
+	con("count  7: " << stl::count(cstrs, {"b", "2"}));
+
+	con("count  8: " << stl::count_if(cints, [](int i){return i & 1;}));
+	con("count  9: " << stl::count_if(cstrs, [](const str_map_vt& v){return v.second <= "2";}));
+
+	con("count 10: " << stl::count_key(cstrs, "b"));
+
+	con("find  1: " << *stl::find(ints, 4));
+	con("find  2: " << stl::find(strs, {"b", "2"})->first);
+
+	con("find  3: " << *stl::find_if(ints, [](int i){return i & 1;}));
+	con("find  4: " << stl::find_if(strs, [](const str_map_vt& v){return v.second <= "2";})->first);
+
+	con("count 5: " << stl::find_key(strs, "b")->second);
+
+	con("find  6: " << *stl::find(cints, 4));
+	con("find  7: " << stl::find(cstrs, {"b", "2"})->first);
+
+	con("find  8: " << *stl::find_if(cints, [](int i){return i & 1;}));
+	con("find  9: " << stl::find_if(cstrs, [](const str_map_vt& v){return v.second <= "2";})->first);
+
+	con("find 10: " << stl::find_key(strs, "b")->second);
+
+//	con("find 2: " << *(stl::find_if(cints, [](int i){return i & 1;})));
+//
+//	con("find 3: " << (*(stl::find(ints, 4)) = 9));
+//	con("find 4: " << (*(stl::find_if(ints, [](int i){return i & 1;})) = 11));
+
+	stl::sort(ints);
+	con("sort 1: " << ints);
+	stl::sort(ints, [](int a, int b){return (a^0xff) < (b^0xff);});
+	con("sort 2: " << ints);
+	stl::random_shuffle(ints);
+	con("sort 3: " << ints);
+
+	return true;
+}
 
 }} // sookee::stl
 
