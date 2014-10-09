@@ -72,7 +72,7 @@ public:
 	{
 	}
 
-	basic_netstream(const str& host, const siz port, const std::ios::openmode& mode)
+	basic_netstream(const str& host, const in_port_t port, const std::ios::openmode& mode)
 	: std::basic_iostream<Char>(0)
 	{
 		open(host, port, mode);
@@ -83,7 +83,7 @@ public:
 		close();
 	}
 
-	void open_old(const str& host, const siz port, const std::ios::openmode& mode)
+	void open_old(const str& host, const in_port_t port, const std::ios::openmode& mode)
 	{
 		hostent* he;
 		if(!(he = gethostbyname(host.c_str())))
@@ -219,7 +219,7 @@ protected:
 
 	int output_buffer()
 	{
-		int num = buf_type::pptr() - buf_type::pbase();
+		int num = (int)(buf_type::pptr() - buf_type::pbase());
 		if(send(sock, reinterpret_cast<char*>(obuf), num * char_size, 0) != num)
 			return traits_type::eof();
 		buf_type::pbump(-num);
@@ -230,7 +230,7 @@ protected:
 	{
 		if(c != traits_type::eof())
 		{
-			*buf_type::pptr() = c;
+			*buf_type::pptr() = (char_type)c;
 			buf_type::pbump(1);
 		}
 
@@ -290,7 +290,7 @@ public:
 		stream_type::clear();
 	}
 
-	bool open(const std::string& host, uint16_t port, int type = SOCK_STREAM, bool nb = false)
+	bool open(const std::string& host, in_port_t port, int type = SOCK_STREAM, bool nb = false)
 	{
 		close();
 

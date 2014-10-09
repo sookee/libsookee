@@ -77,11 +77,11 @@ const BaseTypeCreator<Message>* creators[] =
 	, new MessageCreator<Message3>()
 };
 
-void example()
-{
-	for(size_t id = 0; id < sizeof(creators)/sizeof(BaseTypeCreator<Message>*); ++id)
-		creators[id]->create()->print();
-}
+//void example()
+//{
+//	for(size_t id = 0; id < sizeof(creators)/sizeof(BaseTypeCreator<Message>*); ++id)
+//		creators[id]->create()->print();
+//}
 
 }} // sookee::factory
 

@@ -58,6 +58,7 @@ libsookee_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
 
 noinst_PROGRAMS = \
 	test \
+	test-ios \
 	test-radp \
 	time-radp \
 	test-stencil \
@@ -68,6 +69,9 @@ noinst_PROGRAMS = \
 test_SOURCES = test.cpp
 test_LDADD = -L.libs -lsookee
 test_CFLAGS = -std=c++1y
+
+test_ios_SOURCES = test-ios.cpp
+test_ios_LDADD = -L.libs -lsookee
 
 test_radp_SOURCES = test-radp.cpp
 test_radp_LDADD = -L.libs -lsookee

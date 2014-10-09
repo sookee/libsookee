@@ -152,10 +152,10 @@ int example()
 	if(!server.open(".socket"))
 		return -1;
 
-	char buf[1024];
+	//char buf[1024];
 	client::socket cs;
 	std::string message;
-	std::streamsize len;
+	//std::streamsize len;
 
 	while(server.accept(cs))
 	{

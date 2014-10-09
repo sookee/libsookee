@@ -32,7 +32,7 @@ std::string random_alphanum(size_t length, type t = type::both)
 
 
     static std::mt19937 rg(std::chrono::system_clock::now().time_since_epoch().count());
-    static std::uniform_int_distribution<> pick(0, an.size() - 1);
+    static std::uniform_int_distribution<> pick(0, (int)an.size() - 1);
 
     std::string s;
 

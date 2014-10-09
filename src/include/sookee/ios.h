@@ -1,15 +1,12 @@
-#pragma once
-#ifndef _LIBSOOKEE_IOS_H_
-#define _LIBSOOKEE_IOS_H_
+#ifndef LIBSOOKEE_IOS_H_
+#define LIBSOOKEE_IOS_H_
 /*
- * ios.h
- *
  *  Created on: 28 Jan 2012
  *      Author: oasookee@gmail.com
  */
 
 /*-----------------------------------------------------------------.
-| Copyright (C) 2012 SooKee oasookee@gmail.com               |
+| Copyright (C) 2012 SooKee oasookee@gmail.com                     |
 '------------------------------------------------------------------'
 
 This program is free software; you can redistribute it and/or
@@ -35,6 +32,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 #include <istream>
 #include <ostream>
+#include <limits>
 
 namespace sookee { namespace ios {
 
@@ -132,8 +130,45 @@ std::istream& sgl(std::istream&& is, str& s, char d = '\n')
 	return sgl(is, s, d);
 }
 
+inline
+std::istream& user_skip_line(std::istream& is)
+{
+	return is.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+template<typename Type>
+std::istream& user_get(std::istream& is, Type& t)
+{
+	if(user_skip_line(is >> t))
+		return is;
+
+	// Fix the stream
+	is.clear();
+	user_skip_line(is).setstate(std::ios::failbit);
+
+	return is;
+}
+
+template<typename Type>
+std::istream& user_insist(std::istream& is, std::ostream& os, Type& t
+	, const str& question, const str& error, siz retries)
+{
+	os << question;
+
+	while(retries-- && !ios::user_get<int>(is, t))
+	{
+		is.clear();
+		os << error << '\n' << question;
+	}
+
+	if(!retries)
+		is.setstate(std::ios::failbit);
+
+	return is;
+}
+
 }} // sookee::ios
 
 namespace soo { using namespace sookee::ios; }
 
-#endif // _LIBSOOKEE_IOS_H_
+#endif // LIBSOOKEE_IOS_H_

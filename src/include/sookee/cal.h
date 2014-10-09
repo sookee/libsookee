@@ -199,7 +199,7 @@ public:
 		if(tm_mday == 1)
 		{
 			dec_month();
-			tm_mday = days_in_month() + 1;
+			tm_mday = (int)days_in_month() + 1;
 		}
 		if(tm_yday == 0)
 		{

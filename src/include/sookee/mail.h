@@ -32,6 +32,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 '-----------------------------------------------------------------*/
 
 #include <sookee/str.h>
+#include <sookee/ios.h>
 #include <sookee/types.h>
 #include <sookee/log.h>
 #include <sookee/socketstream.h>
@@ -41,11 +42,12 @@ namespace sookee { namespace email {
 using namespace sookee;
 using namespace sookee::types;
 using namespace sookee::string;
+using namespace sookee::ios;
 
 class SMTP
 {
 	const str host;
-	const long port;
+	const in_port_t port;
 
 	bool tx(std::ostream& os, const str& data = "")
 	{
@@ -77,7 +79,7 @@ public:
 	str to;
 	str replyto;
 
-	SMTP(const str& host = "localhost", long port = 25): host(host), port(port) {}
+	SMTP(const str& host = "localhost", in_port_t port = 25): host(host), port(port) {}
 
 	bool sendmail(const str& subject, const str& data)
 	{

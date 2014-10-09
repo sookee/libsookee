@@ -164,7 +164,7 @@ inline rad pf(rad s, float& i)
 
 	if(*s != '.')
 	{
-		i = neg ? -num : num;
+		i = static_cast<float>(neg ? -num : num);
 		return s;
 	}
 
@@ -175,7 +175,7 @@ inline rad pf(rad s, float& i)
 	if(exp >= sizeof(pow10))
 		return x; // error
 
-	i = num + (double(den) / double(pow10[exp]));
+	i = static_cast<float>(num + (double(den) / double(pow10[exp])));
 
 	if(neg)
 		i = -i;
