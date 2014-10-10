@@ -167,6 +167,47 @@ std::istream& user_insist(std::istream& is, std::ostream& os, Type& t
 	return is;
 }
 
+// Allow for in >> ',' // parse literal comma
+inline std::istream& operator>>(std::istream& is, const char& c)
+{
+	char i;
+	if(is >> i && i != c)
+		is.setstate(std::ios::failbit);
+	return is;
+}
+
+inline std::istream& operator>>(std::istream& is, const char* s)
+{
+	char c;
+	if(is.setf(std::ios::fmtflags(0)) & std::ios::skipws)
+	{
+		is >> std::ws;
+		while(std::isspace(*s))
+			++s;
+	}
+	while(*s && is.get(c))
+		if(*s++ != c)
+			is.setstate(std::ios::failbit);
+	return is;
+}
+
+inline std::istream& operator>>(std::istream& is, const std::string& s)
+{
+	char c;
+	std::string::const_iterator i = s.begin();
+	std::string::const_iterator e = s.end();
+	if(is.setf(std::ios::fmtflags(0)) & std::ios::skipws)
+	{
+		is >> std::ws;
+		while(std::isspace(*i))
+			++i;
+	}
+	while(i != e && is.get(c))
+		if(*i++ != c)
+			is.setstate(std::ios::failbit);
+	return is;
+}
+
 }} // sookee::ios
 
 namespace soo { using namespace sookee::ios; }
