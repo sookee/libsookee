@@ -131,6 +131,18 @@ std::istream& sgl(std::istream&& is, str& s, char d = '\n')
 }
 
 inline
+std::istream& ign(std::istream& is, char c = '\n')
+{
+	return is.ignore(std::numeric_limits<std::streamsize>::max(), c);
+}
+
+inline
+std::istream& ign(std::istream&& is, char c = '\n')
+{
+	return ign(is, c);
+}
+
+inline
 std::istream& user_skip_line(std::istream& is)
 {
 	return is.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -176,6 +188,7 @@ inline std::istream& operator>>(std::istream& is, const char& c)
 	return is;
 }
 
+// Allow for in << "  ,  " parse literal string
 inline std::istream& operator>>(std::istream& is, const char* s)
 {
 	char c;
