@@ -44,7 +44,7 @@ int main()
 				assert(m == mp);
 				assert(d == dp);
 				unsigned wd = weekday_from_days(z);
-				assert(0 <= wd && wd <= 6);
+				assert(wd <= 6);
 				assert(wd == next_weekday(prev_wd));
 				assert(prev_wd == prev_weekday(wd));
 				prev_z = z;

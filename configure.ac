@@ -26,7 +26,7 @@ AC_CONFIG_SRCDIR([src/Makefile.am])
 AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE([1.10 foreign])
-
+AM_SILENT_RULES
 AM_PROG_LIBTOOL
 #AC_CHECK_LIB(pcre, main,, AC_MSG_ERROR([libpcre not found]))
 #AC_CHECK_LIB(pcrecpp, main,, AC_MSG_ERROR([libpcrecpp not found]))
@@ -36,7 +36,7 @@ AC_PROG_INSTALL
 
 AC_LANG(C++)
 AX_CXX_COMPILE_STDCXX_14([noext],[mandatory])
-
+ 
 AC_CONFIG_MACRO_DIR([m4])
 
 PKG_CHECK_MODULES([ICU], [icu-i18n icu-uc icu-io icu-le icu-lx])
