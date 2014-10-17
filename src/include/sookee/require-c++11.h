@@ -1,13 +1,13 @@
-#pragma once
-#ifndef LIBSOOKEE_TYPES_STREAM_H_
-#define LIBSOOKEE_TYPES_STREAM_H_
 /*
- *  Created on: 9 Jan 2012
- *      Author: oasookee@gmail.com
+ *  Created on: Oct 14, 2014
+ *	  Author: SooKee <oasookee@gmail.com>
  */
 
+#ifndef LIBSOOKEE_REQUIRE_CPP11_H_
+#define LIBSOOKEE_REQUIRE_CPP11_H_
+
 /*-----------------------------------------------------------------.
-| Copyright (C) 2011 SooKee oasookee@gmail.com               |
+| Copyright (C) 2014 SooKee <oasookee@gmail.com>				   |
 '------------------------------------------------------------------'
 
 This program is free software; you can redistribute it and/or
@@ -29,30 +29,8 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include <fstream>
-#include <sstream>
-#include <iterator>
+#if __cplusplus < 201103L
+#error "You need a C++11 compliant compiler."
+#endif
 
-namespace sookee { namespace types {
-
-typedef std::istream sis;
-typedef std::ostream sos;
-
-typedef std::stringstream sss;
-typedef std::istringstream siss;
-typedef std::ostringstream soss;
-
-typedef std::fstream sfs;
-typedef std::ifstream sifs;
-typedef std::ofstream sofs;
-
-typedef std::istream_iterator<char> sisi;
-typedef std::ostream_iterator<char> sosi;
-typedef std::istreambuf_iterator<char> sisbi;
-typedef std::ostreambuf_iterator<char> sosbi;
-
-}} // sookee::types
-
-namespace soo { using namespace sookee::types; }
-
-#endif // LIBSOOKEE_TYPES_STREAM_H_
+#endif // LIBSOOKEE_REQUIRE_CPP11_H_

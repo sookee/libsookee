@@ -42,6 +42,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace types {
 
+typedef unsigned uns;
 typedef unsigned char byte;
 typedef std::string str;
 typedef str::size_type siz;
