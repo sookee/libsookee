@@ -40,6 +40,7 @@ AX_CXX_COMPILE_STDCXX_14([noext],[mandatory])
 AC_CONFIG_MACRO_DIR([m4])
 
 PKG_CHECK_MODULES([ICU], [icu-i18n icu-uc icu-io icu-le icu-lx])
+AX_LIB_MYSQL([5.0])
 
 AC_LANG_CPLUSPLUS
 AC_CONFIG_FILES([Makefile src/Makefile])

@@ -11,6 +11,29 @@
 
 namespace sookee { namespace rnd {
 
+inline
+std::mt19937& mt_rng()
+{
+	static std::mt19937 rng((std::random_device())()); // to avoid keeping the file open
+	return rng;
+}
+
+template<typename Integral>
+Integral integral(Integral b, Integral e)
+{
+	static std::uniform_int_distribution<Integral> d;
+	typename std::uniform_int_distribution<Integral>::param_type p{b, e};
+	return d(mt_rng(), p);
+}
+
+template<typename Real>
+Real real(Real b, Real e)
+{
+	static std::uniform_real_distribution<Real> d;
+	typename std::uniform_real_distribution<Real>::param_type p{b, e};
+	return d(mt_rng(), p);
+}
+
 enum class type { lower, upper, both };
 
 std::string random_alphanum(size_t length, type t = type::both)
@@ -48,7 +71,7 @@ template<typename RandomEngine = std::default_random_engine>
 int rnd(int a, int b, RandomEngine e = RandomEngine())
 {
 	static std::uniform_int_distribution<> d;
-	std::uniform_int_distribution<>::param_type p{a, b};
+	typename std::uniform_int_distribution<>::param_type p{a, b};
 
     return d(e, p);
 }
