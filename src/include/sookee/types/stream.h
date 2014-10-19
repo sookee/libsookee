@@ -37,6 +37,7 @@ namespace sookee { namespace types {
 
 typedef std::istream sis;
 typedef std::ostream sos;
+typedef std::iostream sios;
 
 typedef std::stringstream sss;
 typedef std::istringstream siss;

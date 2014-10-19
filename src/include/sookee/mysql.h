@@ -49,6 +49,9 @@ using namespace sookee::log;
 
 typedef my_ulonglong row_count;
 
+TYPEDEF_VEC(str, str_row);
+TYPEDEF_VEC(str_row, str_table);
+
 typedef std::vector<str_vec> str_vec_vec;
 
 // TODO: Make this a superclass and have
@@ -152,6 +155,7 @@ public:
 	bool init_binds(std::array<MYSQL_BIND, SIZE>& binds)
 	{
 		memset(binds.data(), 0, binds.size() * sizeof(MYSQL_BIND));
+		return true;
 	}
 
 	void bind_param(MYSQL_BIND& bind, siz& s)

@@ -79,8 +79,10 @@ public: \
 	using std::string::size_type; \
 	using std::string::traits_type; \
 	using std::string::value_type; \
-	 \
-	friend std::istream& operator>>(std::istream& is, mystring& s) \
+	\
+	const std::string& str() const { return *static_cast<const std::string*>(this); } \
+	\
+	friend std::istream& operator>>(std::istream& is, name& s) \
 	{ \
 		std::string ss; \
 		is >> ss; \
@@ -88,10 +90,23 @@ public: \
 		return is; \
 	} \
 	 \
-	friend std::ostream& operator<<(std::ostream& os, const mystring& s) \
+	friend std::ostream& operator<<(std::ostream& os, const name& s) \
 	{ \
 		return os << static_cast<const std::string&>(s); \
 	} \
 }
+
+#ifndef NDEBUG
+#   define assert_msg(condition, message) \
+    do { \
+        if (! (condition)) { \
+            std::cerr << "Assertion `" #condition "` failed in " << __FILE__ \
+                      << " line " << __LINE__ << ": " << message << std::endl; \
+            std::exit(EXIT_FAILURE); \
+        } \
+    } while (false)
+#else
+#   define assert_msg(condition, message) do { } while (false)
+#endif
 
 #endif // LIBSOOKEE_MACROS_H_
