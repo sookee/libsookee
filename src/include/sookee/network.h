@@ -54,7 +54,7 @@ typedef std::map<str, cookie> cookie_map;
 typedef std::pair<const str, cookie> cookie_pair;
 typedef cookie_map cookie_jar;
 typedef str_mmap header_map;
-typedef str_pair header_pair;
+typedef str_map_vt header_pair;
 typedef header_pair header;
 typedef header_map::iterator header_iter;
 typedef header_map::const_iterator header_citer;

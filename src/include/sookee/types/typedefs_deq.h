@@ -1,7 +1,7 @@
-#ifndef _LIBSOOKEE_TYPES_TYPEDEFS_BASIC_H_
-#define _LIBSOOKEE_TYPES_TYPEDEFS_BASIC_H_
+#ifndef LIBSOOKEE_TYPES_TYPEDEFS_DEQ_H_
+#define LIBSOOKEE_TYPES_TYPEDEFS_DEQ_H_
 /*
- *  Created on: 21 Jul 2014
+ *  Created on: 19 Oct 2014
  *      Author: oasookee@gmail.com
  */
 
@@ -29,11 +29,10 @@ http://www.gnu.org/licenses/gpl-2.0.html
 '-----------------------------------------------------------------*/
 
 #include "typedefs_cnt.h"
-#include "typedefs_deq.h"
-#include "typedefs_map.h"
-#include "typedefs_set.h"
-#include "typedefs_lst.h"
-#include "typedefs_vec.h"
-#include "typedefs_pair.h"
 
-#endif // _LIBSOOKEE_TYPES_TYPEDEFS_BASIC_H_
+#include <deque>
+
+#define TYPEDEF_DEQ(def, name) \
+	TYPEDEF_CONTAINER_1(std::deque, def, name)
+
+#endif // LIBSOOKEE_TYPES_TYPEDEFS_DEQ_H_

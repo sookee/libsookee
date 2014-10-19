@@ -32,12 +32,13 @@ http://www.gnu.org/licenses/gpl-2.0.html
 '-----------------------------------------------------------------*/
 
 #include <map>
-#include <deque>
+//#include <deque>
 
 #include "types/typedefs.h"
 
 #include "types/basic.h"
 #include "types/stream.h"
+#include "types/deq.h"
 #include "types/vec.h"
 #include "types/map.h"
 #include "types/set.h"
@@ -45,16 +46,16 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace types {
 
-typedef std::map<siz, siz> siz_map;
+//typedef std::map<siz, siz> siz_map;
 
 typedef std::map<str, time_t> str_time_map;
 typedef std::pair<const str, time_t> str_time_pair;
 
 
-typedef std::map<str, str> str_map;
-typedef std::multimap<str, str> str_mmap;
-typedef std::pair<const str, str> str_pair;
-typedef std::deque<str> str_deq;
+//typedef std::map<str, str> str_map;
+//typedef std::multimap<str, str> str_mmap;
+//typedef std::pair<const str, str> str_pair;
+//typedef std::deque<str> str_deq;
 
 typedef std::map<str, siz> str_siz_map;
 typedef std::pair<const str, siz> str_siz_pair;

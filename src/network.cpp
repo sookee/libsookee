@@ -249,7 +249,7 @@ str fix_entities(std::string s)
 {
 //	bug_func();
 	str::size_type p;
-	for(const str_pair& e: ents)
+	for(const str_map_vt& e: ents)
 		while((p = s.find(e.first)) != str::npos)
 			s.replace(p, e.first.size(), e.second);
 	return s;
@@ -273,7 +273,7 @@ str urldecode(std::string s)
 		}
 	}
 	str::size_type p;
-	for(const str_pair& e: urlism)
+	for(const str_map_vt& e: urlism)
 	{
 		while((p = s.find(e.first)) != str::npos)
 		{

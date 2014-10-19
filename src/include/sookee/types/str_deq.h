@@ -1,8 +1,8 @@
-#ifndef _LIBSOOKEE_TYPES_TYPEDEFS_BASIC_H_
-#define _LIBSOOKEE_TYPES_TYPEDEFS_BASIC_H_
+#ifndef LIBSOOKEE_TYPES_STR_DEQ_H_
+#define LIBSOOKEE_TYPES_STR_DEQ_H_
 /*
- *  Created on: 21 Jul 2014
- *      Author: oasookee@gmail.com
+ *  Created on: 19 Oct 2014
+ *      Author: SooKee oasookee@gmail.com
  */
 
 /*-----------------------------------------------------------------.
@@ -28,12 +28,15 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include "typedefs_cnt.h"
+#include "basic.h" // str
 #include "typedefs_deq.h"
-#include "typedefs_map.h"
-#include "typedefs_set.h"
-#include "typedefs_lst.h"
-#include "typedefs_vec.h"
-#include "typedefs_pair.h"
 
-#endif // _LIBSOOKEE_TYPES_TYPEDEFS_BASIC_H_
+namespace sookee { namespace types {
+
+TYPEDEF_DEQ(str, str_deq);
+
+}} // sookee::types
+
+namespace soo { using namespace sookee::types; }
+
+#endif // LIBSOOKEE_TYPES_STR_DEQ_H_
