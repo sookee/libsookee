@@ -1,10 +1,9 @@
+#ifndef LIBSOOKEE_MATH_H_
+#define LIBSOOKEE_MATH_H_
 /*
  *  Created on: 08 Oct 2014
  *	  Author: oasookee@gmail.com
  */
-
-#ifndef _LIBSOOKEE_MATH_H_
-#define _LIBSOOKEE_MATH_H_
 
 namespace sookee { namespace math {
 
@@ -27,8 +26,36 @@ bool is_prime(Integral n)
 	return true;
 }
 
+template<typename Numeric = double, size_t SIZE = 10>
+class MovingAverage
+{
+	std::deque<Numeric> data;
+
+	siz num = 0;
+	Numeric sum = {}; // cache sum(data)
+	Numeric ave = {};
+
+public:
+	MovingAverage() {}
+
+	void add(double num)
+	{
+		data.push_back(num);
+		sum += data.back();
+
+		if(data.size() > SIZE)
+		{
+			sum -= data.front();
+			data.pop_front();
+		}
+
+		ave = sum / data.size();
+	}
+	Numeric average() const { return ave; }
+};
+
 }} // sookee::math
 
 namespace soo { using namespace sookee::math; }
 
-#endif // _LIBSOOKEE_MATH_H_
+#endif // LIBSOOKEE_MATH_H_
