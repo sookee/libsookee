@@ -39,6 +39,19 @@ namespace sookee { namespace ios {
 
 using namespace sookee::types;
 
+str expand_env(const str& var, int flags)
+{
+	str exp = var;
+	wordexp_t p;
+	if(!wordexp(var.c_str(), &p, flags))
+	{
+		if(p.we_wordc && p.we_wordv[0])
+			exp = p.we_wordv[0];
+		wordfree(&p);
+	}
+	return exp;
+}
+
 std::istream& getstring(std::istream& is, str& s)
 {
 	char term = ' ';

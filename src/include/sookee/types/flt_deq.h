@@ -1,5 +1,5 @@
 #ifndef LIBSOOKEE_TYPES_FLT_DEQ_H_
-#define LIBSOOKEE_TYPES_FLT_VEC_H_
+#define LIBSOOKEE_TYPES_FLT_DEQ_H_
 /*
  *  Created on: 19 Oct 2014
  *      Author: SooKee oasookee@gmail.com
@@ -38,4 +38,4 @@ TYPEDEF_DEQ(float, flt_deq);
 
 namespace soo { using namespace sookee::types; }
 
-#endif // LIBSOOKEE_TYPES_FLT_VEC_H_
+#endif // LIBSOOKEE_TYPES_FLT_DEQ_H_

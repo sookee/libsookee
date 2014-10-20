@@ -1,15 +1,12 @@
-#pragma once
-#ifndef _LIBSOOKEE_STR_H_
-#define _LIBSOOKEE_STR_H_
+#ifndef LIBSOOKEE_STR_H_
+#define LIBSOOKEE_STR_H_
 /*
- * str.h
- *
  *  Created on: 28 Jan 2012
  *      Author: oasookee@gmail.com
  */
 
 /*-----------------------------------------------------------------.
-| Copyright (C) 2012 SooKee oasookee@gmail.com               |
+| Copyright (C) 2012 SooKee oasookee@gmail.com                     |
 '------------------------------------------------------------------'
 
 This program is free software; you can redistribute it and/or
@@ -287,4 +284,4 @@ T to(const str& s)
 
 namespace soo { using namespace sookee::string; }
 
-#endif /* _LIBSOOKEE_STR_H_ */
+#endif // LIBSOOKEE_STR_H_

@@ -39,7 +39,7 @@ template<typename Type, typename... Args>
 struct is_instantiable
 {
 	typedef Type type;
-	is_instantiable(Args... args) { Type type; }
+	is_instantiable(Args... /*args*/) { Type type; }
 	static constexpr bool value = true;
 };
 

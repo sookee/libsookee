@@ -31,12 +31,12 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 #include <sookee/str.h>
 #include <sookee/types/typedefs_map.h>
-#include <sookee/log.h>
-#include <wordexp.h>
+#include <sookee/ios.h>
 
 namespace sookee { namespace props {
 
 using namespace sookee;
+using namespace sookee::ios;
 using namespace sookee::types;
 using namespace sookee::string;
 
@@ -52,8 +52,6 @@ private:
 	 */
 	str dir;
 	bool load(const str& dir, const str& file, bool first);
-
-	str expand_env(const str& var, int flags = 0) const;
 
 public:
 

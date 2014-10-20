@@ -28,19 +28,29 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include <sookee/types.h>
+#include <sookee/types/basic.h>
+#include <sookee/types/str_vec.h>
+#include <sookee/log.h>
+
+#include <unistd.h>
+#include <ext/stdio_filebuf.h>
+#include <wordexp.h>
 
 #include <istream>
 #include <ostream>
 #include <limits>
+#include <cstring>
 
 namespace sookee { namespace ios {
 
+using namespace sookee::log;
 using namespace sookee::types;
 
 std::istream& getstring(std::istream& is, str& s);
 inline
 std::istream& getstring(std::istream&& is, str& s) { return getstring(is, s); }
+
+str expand_env(const str& var, int flags = 0);
 
 /**
  * Get directory listing.
@@ -220,6 +230,138 @@ inline std::istream& operator>>(std::istream& is, const std::string& s)
 			is.setstate(std::ios::failbit);
 	return is;
 }
+
+//using namespace __gnu_cxx;
+
+typedef __gnu_cxx::stdio_filebuf<char> stdiobuf;
+typedef __gnu_cxx::stdio_filebuf<wchar_t> wstdiobuf;
+
+template<typename Char>
+class basic_stdiostream
+: public std::basic_iostream<Char>
+{
+public:
+	typedef Char char_type;
+	typedef std::basic_iostream<char_type> stream_type;
+	typedef __gnu_cxx::stdio_filebuf<char_type> buf_type;
+
+protected:
+	buf_type buf;
+
+public:
+	basic_stdiostream(int fd, const std::ios::openmode& mode)
+	: stream_type(&buf)
+	, buf(fd, mode)
+	{
+	}
+
+	void close()
+	{
+		::close(buf.fd()); // interrupt blocking?
+	}
+};
+
+typedef basic_stdiostream<char> stdiostream;
+typedef basic_stdiostream<wchar_t> wstdiostream;
+typedef std::shared_ptr<stdiostream> stdiostream_sptr;
+typedef std::unique_ptr<stdiostream> stdiostream_uptr;
+
+class Fork
+{
+	stdiostream_uptr stdip;
+	stdiostream_uptr stdop;
+
+	bool log_report(const str& msg, bool state = false)
+	{
+		log(msg);
+		return state;
+	}
+
+	static std::iostream& get_null_iostream()
+	{
+		static stdiostream stdionull(-1, std::ios::in|std::ios::out);
+		stdionull.setstate(std::ios::failbit|std::ios::badbit);
+		return stdionull;
+	}
+
+public:
+
+	std::istream& istream()
+	{
+		if(!stdip.get())
+			return get_null_iostream();
+		return *stdip;
+	}
+
+	std::ostream& ostream()
+	{
+		if(!stdop.get())
+			return get_null_iostream();
+		return *stdop;
+	}
+
+	bool exec(const str& dir, const str& prog)
+	{
+		pid_t pid;
+
+		int pipe_w[2]; // write to child
+		int pipe_r[2]; // read from child
+
+		if(pipe(pipe_w) || pipe(pipe_r))
+			return log_report(strerror(errno));
+
+		if((pid = fork()) == -1)
+			return log_report(strerror(errno));
+
+		if(pid)
+		{
+			// parent
+			stdip.reset(new(std::nothrow) stdiostream(pipe_r[0], std::ios::in));
+			stdop.reset(new(std::nothrow) stdiostream(pipe_w[1], std::ios::out));
+
+			close(pipe_r[1]);
+			close(pipe_w[0]);
+
+			if(!stdip.get() || !stdop.get())
+				return log_report("Unable to create stdiostream object.");
+
+			return true;
+		}
+		else
+		{
+			// child
+
+//			rlimit lim;
+//			if(!getrlimit(RLIMIT_NPROC, &lim))
+//			{
+//				lim.rlim_max += 10;
+//				lim.rlim_cur += 10;
+//				setrlimit(RLIMIT_NPROC, &lim);
+//			}
+
+			close(1);
+			dup(pipe_r[1]); // lowest unused fd
+
+			close(0);
+			dup(pipe_w[0]); // lowest unused fd
+
+			close(pipe_r[0]);
+			close(pipe_r[1]);
+			close(pipe_w[0]);
+			close(pipe_w[1]);
+
+			str prog_name = dir + "/" + prog;
+
+			if(!dir.empty())
+				chdir(dir.c_str());
+			execlp(prog_name.c_str(), prog_name.c_str(), 0);
+			log("ERROR: " << strerror(errno));
+			return false; // execl() failed
+		}
+
+		return true;
+	}
+};
 
 }} // sookee::ios
 

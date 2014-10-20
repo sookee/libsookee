@@ -29,25 +29,13 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 #include <sookee/cfg.h>
 #include <sookee/ios.h>
+#include <sookee/types/str_set.h>
 #include <wordexp.h>
 
 namespace sookee { namespace props {
 
 using namespace sookee::ios;
 using namespace sookee::types;
-
-str Config::expand_env(const str& var, int flags) const
-{
-	str exp = var;
-	wordexp_t p;
-	if(!wordexp(var.c_str(), &p, flags))
-	{
-		if(p.we_wordc && p.we_wordv[0])
-			exp = p.we_wordv[0];
-		wordfree(&p);
-	}
-	return exp;
-}
 
 bool Config::load(const str& dir, const str& file, bool first)
 {
