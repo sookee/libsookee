@@ -157,4 +157,66 @@ str_vec ls(const str& folder, ftype t)
 	return files;
 }
 
+bool Fork::exec(const str& dir, const str& prog)
+{
+	pid_t pid;
+
+	int pipe_w[2]; // write to child
+	int pipe_r[2]; // read from child
+
+	if(pipe(pipe_w) || pipe(pipe_r))
+		return log_report(strerror(errno));
+
+	if((pid = fork()) == -1)
+		return log_report(strerror(errno));
+
+	if(pid)
+	{
+		// parent
+		stdip.reset(new(std::nothrow) stdiostream(pipe_r[0], std::ios::in));
+		stdop.reset(new(std::nothrow) stdiostream(pipe_w[1], std::ios::out));
+
+		close(pipe_r[1]);
+		close(pipe_w[0]);
+
+		if(!stdip.get() || !stdop.get())
+			return log_report("Unable to create stdiostream object.");
+
+		return true;
+	}
+	else
+	{
+		// child
+
+//			rlimit lim;
+//			if(!getrlimit(RLIMIT_NPROC, &lim))
+//			{
+//				lim.rlim_max += 10;
+//				lim.rlim_cur += 10;
+//				setrlimit(RLIMIT_NPROC, &lim);
+//			}
+
+		close(1);
+		dup(pipe_r[1]); // lowest unused fd
+
+		close(0);
+		dup(pipe_w[0]); // lowest unused fd
+
+		close(pipe_r[0]);
+		close(pipe_r[1]);
+		close(pipe_w[0]);
+		close(pipe_w[1]);
+
+		str prog_name = expand_env(dir + "/" + prog, WRDE_SHOWERR);
+
+		if(!dir.empty())
+			chdir(dir.c_str());
+		execlp(prog_name.c_str(), prog_name.c_str(), 0);
+		log("ERROR: " << strerror(errno));
+		return false; // execl() failed
+	}
+
+	return true;
+}
+
 }} // sookee::ios
