@@ -37,6 +37,6 @@ USING_VEC(str, str_vec);
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_STR_VEC_H_

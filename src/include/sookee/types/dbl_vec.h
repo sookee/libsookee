@@ -36,6 +36,6 @@ USING_VEC(double, dbl_vec);
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_DBL_VEC_H_

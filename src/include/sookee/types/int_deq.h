@@ -36,6 +36,6 @@ USING_DEQ(int, int_deq);
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_INT_DEQ_H_

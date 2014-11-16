@@ -49,6 +49,8 @@ typedef str::size_type siz;
 typedef str::iterator str_iter;
 typedef str::const_iterator str_citer;
 
+using str_pair = std::pair<str, str>;
+
 // time
 //typedef std::chrono::steady_clock st_clk;
 typedef std::chrono::system_clock st_clk;
@@ -60,16 +62,6 @@ typedef std::chrono::high_resolution_clock hr_clk;
 typedef hr_clk::period hr_period;
 typedef hr_clk::duration hr_duration;
 typedef hr_clk::time_point hr_time_point;
-
-typedef std::stringstream sss;
-typedef std::istringstream siss;
-typedef std::ostringstream soss;
-
-typedef std::fstream sfs;
-typedef std::ifstream sifs;
-typedef std::ofstream sofs;
-
-typedef std::stringstream sss;
 
 typedef std::lock_guard<std::mutex> lock_guard;
 typedef std::unique_lock<std::mutex> unique_lock;
@@ -85,6 +77,6 @@ typedef std::unique_ptr<char, malloc_deleter> cstring_uptr;
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif /* _LIBSOOKEE_TYPES_BASIC_H_ */

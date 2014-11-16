@@ -37,6 +37,6 @@ USING_MSET(int, int_mset);
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_INT_SET_H_

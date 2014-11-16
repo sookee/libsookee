@@ -85,6 +85,6 @@ public:
 
 }} // ::sookee::test
 
-// namespace soo { using namespace sookee::test; }
+namespace soo { using namespace sookee::test; }
 
 #endif // LIBSOOKEE_TEST_H_

@@ -38,6 +38,6 @@ USING_MSET(str, str_mset);
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_STR_SET_H_

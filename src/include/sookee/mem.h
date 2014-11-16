@@ -95,6 +95,6 @@ std::unique_ptr<Type[]> make_unique_array(size_t size)
 
 }} // sookee::bug
 
-// namespace soo { using namespace sookee::mem; }
+namespace soo { using namespace sookee::mem; }
 
 #endif // LIBSOOKEE_MEM_H_

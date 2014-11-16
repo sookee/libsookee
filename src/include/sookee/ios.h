@@ -401,6 +401,6 @@ public:
 
 }} // sookee::ios
 
-// namespace soo { using namespace sookee::ios; }
+namespace soo { using namespace sookee::ios; }
 
 #endif // LIBSOOKEE_IOS_H_

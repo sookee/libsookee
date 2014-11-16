@@ -71,6 +71,6 @@ constexpr float csin(float x)
 
 }} // sookee::math
 
-// namespace soo { using namespace sookee::math; }
+namespace soo { using namespace sookee::math; }
 
 #endif // LIBSOOKEE_MATH_H_

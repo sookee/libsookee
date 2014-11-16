@@ -348,6 +348,6 @@ public:
 
 }} // sookee::mysql
 
-// namespace soo { using namespace sookee::mysql; }
+namespace soo { using namespace sookee::mysql; }
 
 #endif // LIBSOOKEE_MYSQL_H_

@@ -46,6 +46,6 @@ typedef std::wsregex_token_iterator wsreg_titer;
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_REGEX_H_

@@ -282,6 +282,6 @@ T to(const str& s)
 
 }} // sookee::utils
 
-// namespace soo { using namespace sookee::utils; }
+namespace soo { using namespace sookee::utils; }
 
 #endif // LIBSOOKEE_STR_H_

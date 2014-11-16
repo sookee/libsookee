@@ -346,6 +346,6 @@ typedef basic_socketstream<wchar_t> wsocketstream;
 }} // sookee::net
 
 
-// namespace soo { using namespace sookee::net; }
+namespace soo { using namespace sookee::net; }
 
 #endif // _LIBSOOKEE_SOCKETSTREAM_H_

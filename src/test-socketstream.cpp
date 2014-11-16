@@ -208,7 +208,7 @@ public:
 
 }} // sookee::net
 
-// namespace soo { using namespace sookee::net; }
+namespace soo { using namespace sookee::net; }
 
 #include <algorithm>
 

@@ -37,6 +37,6 @@ USING_MMAP(int, int, int_mmap);
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_INT_MAP_H_

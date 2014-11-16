@@ -62,6 +62,6 @@ public: \
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // _LIBSOOKEE_TYPED_INTEGRAL_H_

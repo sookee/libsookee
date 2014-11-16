@@ -305,6 +305,6 @@ typedef basic_ssl_socketstream<wchar_t> ssl_wsocketstream;
 
 }} // sookee::net
 
-// namespace soo { using namespace sookee::net; }
+namespace soo { using namespace sookee::net; }
 
 #endif // _LIBSOOKEE_SSL_SOCKETSTREAM_H_

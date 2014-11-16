@@ -218,6 +218,6 @@ inline std::string get_filename(const std::string& path)
 
 }} // sookee::log
 
-// namespace soo { using namespace sookee::log; }
+namespace soo { using namespace sookee::log; }
 
 #endif /* _LIBSOOKEE_LOG_H_ */

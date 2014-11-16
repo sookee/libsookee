@@ -85,6 +85,6 @@ const BaseTypeCreator<Message>* creators[] =
 
 }} // sookee::factory
 
-// namespace soo { using namespace sookee::bug; }
+namespace soo { using namespace sookee::bug; }
 
 #endif // _LIBSOOKEE_BUG_H_

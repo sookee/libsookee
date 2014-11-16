@@ -162,6 +162,6 @@ public:
 
 }} // sookee::email
 
-// namespace soo { using namespace sookee::email; }
+namespace soo { using namespace sookee::email; }
 
 #endif /* _LIBSOOKEE_MAIL_H_ */

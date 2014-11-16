@@ -36,6 +36,6 @@ USING_VEC(float, flt_vec);
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_FLT_VEC_H_

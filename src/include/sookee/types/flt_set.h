@@ -37,6 +37,6 @@ USING_MSET(float, flt_mset);
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_FLT_SET_H_

@@ -98,6 +98,6 @@ public:
 
 }} // ::sookee::rnd
 
-// namespace soo { using namespace sookee::rnd; }
+namespace soo { using namespace sookee::rnd; }
 
 #endif /* RND_H_ */

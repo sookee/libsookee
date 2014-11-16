@@ -37,6 +37,6 @@ USING_LST(str, str_lst);
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_STR_LST_H_

@@ -36,6 +36,6 @@ USING_LST(float, flt_lst);
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_FLT_LST_H_

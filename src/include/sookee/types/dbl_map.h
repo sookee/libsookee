@@ -37,6 +37,6 @@ USING_MMAP(double, double, dbl_mmap);
 
 }} // ::sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_DBL_MAP_H_

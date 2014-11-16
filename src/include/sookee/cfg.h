@@ -177,6 +177,6 @@ public:
 
 }} // ::sookee::props
 
-// namespace soo { using namespace sookee::props; }
+namespace soo { using namespace sookee::props; }
 
 #endif // LIBSOOKEE_CONFIG_H_

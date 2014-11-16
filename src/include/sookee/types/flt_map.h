@@ -37,6 +37,6 @@ USING_MMAP(float, float, flt_mmap);
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_FLT_MAP_H_

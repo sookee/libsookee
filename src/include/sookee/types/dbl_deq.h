@@ -36,6 +36,6 @@ USING_DEQ(double, dbl_deq);
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_DBL_DEQ_H_

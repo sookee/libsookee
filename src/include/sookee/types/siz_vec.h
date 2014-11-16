@@ -36,6 +36,6 @@ USING_VEC(siz, siz_vec);
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_SIZ_VEC_H_

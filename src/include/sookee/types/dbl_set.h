@@ -37,6 +37,6 @@ USING_MSET(double, dbl_mset);
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_DBL_SET_H_

@@ -392,6 +392,6 @@ typedef basic_ansistream<wchar_t> wansistream;
 
 }} // sookee::ansi
 
-// namespace soo { using namespace sookee::ansi; }
+namespace soo { using namespace sookee::ansi; }
 
 #endif // LIBSOOKEE_ANSI_H

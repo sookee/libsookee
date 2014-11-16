@@ -37,6 +37,6 @@ USING_MSET(siz, siz_mset);
 
 }} // sookee::types
 
-// namespace soo { using namespace sookee::types; }
+namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_SIZ_SET_H_
