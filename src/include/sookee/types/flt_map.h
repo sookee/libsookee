@@ -32,11 +32,11 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace types {
 
-TYPEDEF_MAP(float, float, flt_map);
-TYPEDEF_MMAP(float, float, flt_mmap);
+USING_MAP(float, float, flt_map);
+USING_MMAP(float, float, flt_mmap);
 
 }} // sookee::types
 
-namespace soo { using namespace sookee::types; }
+// namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_FLT_MAP_H_

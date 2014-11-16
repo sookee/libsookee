@@ -54,8 +54,23 @@ public:
 	Numeric average() const { return ave; }
 };
 
+constexpr int cfct(int x)
+{
+	return x == 1 ? x : x * cfct(x - 1);
+}
+
+constexpr float cpow(float x, int p)
+{
+	return p == 1 ? x : x * cpow(x, p - 1);
+}
+
+constexpr float csin(float x)
+{
+	return x - (cpow(x, 3) / cfct(3)) + (cpow(x, 5) / cfct(5)) - (cpow(x, 7) / cfct(7));
+}
+
 }} // sookee::math
 
-namespace soo { using namespace sookee::math; }
+// namespace soo { using namespace sookee::math; }
 
 #endif // LIBSOOKEE_MATH_H_

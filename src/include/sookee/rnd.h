@@ -81,8 +81,23 @@ int rnd(int a, int b, RandomEngine e = RandomEngine())
 //std::uniform_int_distribution<> dist;
 //int n = dist(eng, decltype(dist)::param_type{0, A});
 
+// Linear Congruential Generator
+class lcg
+{
+	unsigned int seed = 0;
+
+public:
+	void srand(int seed) { this->seed = seed; }
+
+	int rand()
+	{
+		seed = (214013 * seed + 2531011);
+		return (seed >> 16) & 0x7FFF;
+	}
+};
+
 }} // ::sookee::rnd
 
-namespace soo { using namespace sookee::rnd; }
+// namespace soo { using namespace sookee::rnd; }
 
 #endif /* RND_H_ */

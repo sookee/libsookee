@@ -11,7 +11,12 @@
 
 #include <sookee/radp.h>
 
-using namespace soo;
+using namespace sookee::bug;
+using namespace sookee::log;
+using namespace sookee::rnd;
+using namespace sookee::radp;
+using namespace sookee::types;
+using namespace sookee::utils;
 
 static const siz max_ints = 1000;
 static const siz max_floats = 1000;

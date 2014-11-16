@@ -89,6 +89,6 @@ struct lock_guard_scope_bomb
 
 }} // sookee::bug
 
-namespace soo { using namespace sookee::bug; }
+// namespace soo { using namespace sookee::bug; }
 
 #endif // _LIBSOOKEE_BUG_H_

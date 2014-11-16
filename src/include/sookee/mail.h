@@ -41,7 +41,7 @@ namespace sookee { namespace email {
 
 using namespace sookee;
 using namespace sookee::types;
-using namespace sookee::string;
+using namespace sookee::utils;
 using namespace sookee::ios;
 
 class SMTP
@@ -162,6 +162,6 @@ public:
 
 }} // sookee::email
 
-namespace soo { using namespace sookee::email; }
+// namespace soo { using namespace sookee::email; }
 
 #endif /* _LIBSOOKEE_MAIL_H_ */

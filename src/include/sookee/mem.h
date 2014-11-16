@@ -87,8 +87,14 @@ std::unique_ptr<T> make_unique(Args&&... args)
     return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
+template<typename Type>
+std::unique_ptr<Type[]> make_unique_array(size_t size)
+{
+    return std::unique_ptr<Type[]>(new Type[size]);
+}
+
 }} // sookee::bug
 
-namespace soo { using namespace sookee::mem; }
+// namespace soo { using namespace sookee::mem; }
 
 #endif // LIBSOOKEE_MEM_H_

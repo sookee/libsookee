@@ -32,7 +32,10 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 #include <deque>
 
-#define TYPEDEF_DEQ(def, name) \
-	TYPEDEF_CONTAINER_1(std::deque, def, name)
+#define USING_DEQ(def, name) \
+	USING_CONTAINER_1(std::deque, def, name)
+
+#define USING_CC_DEQ(def, name) \
+	USING_CC_CONTAINER_1(std::deque, def, name)
 
 #endif // LIBSOOKEE_TYPES_TYPEDEFS_DEQ_H_

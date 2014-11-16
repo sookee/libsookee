@@ -31,11 +31,33 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include "typedefs_cnt.h"
 
 #include <set>
+#include <unordered_set>
 
-#define TYPEDEF_SET(type, name) \
-	TYPEDEF_CONTAINER_1(std::set, type, name)
+#define USING_SET(type, name) \
+	USING_CONTAINER_1(std::set, type, name)
 
-#define TYPEDEF_MSET(type, name) \
-	TYPEDEF_CONTAINER_1(std::multiset, type, name)
+#define USING_MSET(type, name) \
+	USING_CONTAINER_1(std::multiset, type, name)
+
+#define USING_USET(type, name) \
+	USING_CONTAINER_1(std::unordered_set, type, name)
+
+#define USING_UMSET(type, name) \
+	USING_CONTAINER_1(std::unordered_multiset, type, name)
+
+// CamelCase
+
+#define USING_CC_SET(type, name) \
+	USING_CC_CONTAINER_1(std::set, type, name)
+
+#define USING_CC_MSET(type, name) \
+	USING_CC_CONTAINER_1(std::multiset, type, name)
+
+#define USING_CC_USET(type, name) \
+	USING_CC_CONTAINER_1(std::unordered_set, type, name)
+
+#define USING_CC_UMSET(type, name) \
+	USING_CC_CONTAINER_1(std::unordered_multiset, type, name)
+
 
 #endif // LIBSOOKEE_TYPES_TYPEDEFS_SET_H_

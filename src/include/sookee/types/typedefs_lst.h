@@ -32,7 +32,10 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 #include <list>
 
-#define TYPEDEF_LST(def, name) \
-	TYPEDEF_CONTAINER_1(std::list, def, name)
+#define USING_LST(def, name) \
+	USING_CONTAINER_1(std::list, def, name)
+
+#define USING_CC_LST(def, name) \
+	USING_CC_CONTAINER_1(std::list, def, name)
 
 #endif // LIBSOOKEE_TYPES_TYPEDEFS_LST_H_

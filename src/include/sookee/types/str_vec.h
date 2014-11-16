@@ -33,10 +33,10 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace types {
 
-TYPEDEF_VEC(str, str_vec);
+USING_VEC(str, str_vec);
 
 }} // sookee::types
 
-namespace soo { using namespace sookee::types; }
+// namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_STR_VEC_H_

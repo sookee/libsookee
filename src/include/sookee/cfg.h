@@ -29,8 +29,12 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include <sookee/str.h>
-#include <sookee/types/typedefs_map.h>
+#include <SFML/Graphics.hpp>
+
+#include <sookee/types/basic.h>
+#include <sookee/types/stream.h>
+#include <sookee/types/map.h>
+#include <sookee/types/str_vec.h>
 #include <sookee/ios.h>
 
 namespace sookee { namespace props {
@@ -38,12 +42,11 @@ namespace sookee { namespace props {
 using namespace sookee;
 using namespace sookee::ios;
 using namespace sookee::types;
-using namespace sookee::string;
 
 class Config
 {
 private:
-	TYPEDEF_MAP(str, str_vec, property_map);
+	USING_MAP(str, str_vec, property_map);
 	property_map props;
 
 	/**
@@ -67,16 +70,18 @@ public:
 	 * @return The value that the variable s is set to in the config
 	 * file else dflt if not present.
 	 */
-	template<typename T>
-	T get(const str& s, const T& dflt = T()) const
+	template<typename Type>
+	Type get(const str& s, const Type& dflt = Type()) const
 	{
 		const auto found = props.find(s);
 
 		if(found == props.end())
 			return dflt;
 
-		T t;
-		std::istringstream(*(found->second.begin())) >> std::boolalpha >> t;
+		Type t;
+		std::istringstream iss(*(found->second.begin()));
+		iss >> std::boolalpha >> t;
+//		std::istringstream(*(found->second.begin())) >> std::boolalpha >> t;
 		return t;
 	}
 
@@ -172,6 +177,6 @@ public:
 
 }} // ::sookee::props
 
-namespace soo { using namespace sookee::props; }
+// namespace soo { using namespace sookee::props; }
 
 #endif // LIBSOOKEE_CONFIG_H_

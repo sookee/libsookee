@@ -118,6 +118,6 @@ bool hostname_to_ip(const str& hostname , str& ip);
 
 }} // sookee::net
 
-namespace soo { using namespace sookee::net; }
+// namespace soo { using namespace sookee::net; }
 
 #endif // _LIBSOOKEE_NETWORK_H

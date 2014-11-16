@@ -32,10 +32,10 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace types {
 
-TYPEDEF_DEQ(siz, siz_deq);
+USING_DEQ(siz, siz_deq);
 
 }} // sookee::types
 
-namespace soo { using namespace sookee::types; }
+// namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_SIZ_DEQ_H_

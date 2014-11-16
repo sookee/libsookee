@@ -14,7 +14,12 @@
 
 #include <ctime>
 
-using namespace soo;
+using namespace sookee::bug;
+using namespace sookee::log;
+using namespace sookee::test;
+using namespace sookee::radp;
+using namespace sookee::types;
+using namespace sookee::utils;
 
 int main()
 {

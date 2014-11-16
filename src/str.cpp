@@ -37,7 +37,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <algorithm>
 #include <thread>
 
-namespace sookee { namespace string {
+namespace sookee { namespace utils {
 
 using namespace sookee::types;
 
@@ -130,4 +130,4 @@ str_vec split(const str& s, char d, bool fold)
 //	return c.erase(std::remove_if(c.begin(), c.end(), pred), c.end());
 //}
 
-}} // sookee::string
+}} // sookee::utils

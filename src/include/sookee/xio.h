@@ -74,8 +74,6 @@ protected:
 		std::cerr << "ERROR: " << strerror(errno) << std::endl;
 		return false;
 	}
-
-
 };
 
 class xserver
@@ -181,6 +179,6 @@ int example()
 
 }} // sookee::xio
 
-namespace soo { using namespace sookee::xio; }
+// namespace soo { using namespace sookee::xio; }
 
 #endif // LIBSOOKEE_XIO_H_

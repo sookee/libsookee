@@ -33,7 +33,13 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <sookee/log.h>
 
 #include <unistd.h>
-#include <ext/stdio_filebuf.h>
+
+#ifdef __clang__
+#	include "stdio_filebuf.h"
+#else
+#	include <ext/stdio_filebuf.h>
+#endif
+
 #include <wordexp.h>
 
 #include <istream>
@@ -231,6 +237,15 @@ inline std::istream& operator>>(std::istream& is, const std::string& s)
 	return is;
 }
 
+// secure user input with sts::strings
+inline
+std::istream& getline(std::istream& is, std::string& s, std::streamsize num, char delim = '\n')
+{
+	s.resize(num);
+	return is.getline(&s[0], num, delim);
+}
+
+
 //using namespace __gnu_cxx;
 
 typedef __gnu_cxx::stdio_filebuf<char> stdiobuf;
@@ -268,6 +283,8 @@ typedef std::unique_ptr<stdiostream> stdiostream_uptr;
 
 class Fork
 {
+	pid_t pid = -1;
+
 	stdiostream_uptr stdip;
 	stdiostream_uptr stdop;
 
@@ -297,6 +314,13 @@ class Fork
 
 public:
 
+	explicit operator bool() const
+	{
+		return pid != -1 && stdip.get() && stdop.get() && *stdip && *stdop;
+	}
+
+	pid_t get_pid() { return pid; }
+
 	std::istream& istream()
 	{
 		if(!stdip.get())
@@ -314,8 +338,6 @@ public:
 	template<typename... Args>
 	bool exec(const str& dir, const str& prog, Args... args)
 	{
-		pid_t pid;
-
 		int pipe_w[2]; // write to child
 		int pipe_r[2]; // read from child
 
@@ -379,6 +401,6 @@ public:
 
 }} // sookee::ios
 
-namespace soo { using namespace sookee::ios; }
+// namespace soo { using namespace sookee::ios; }
 
 #endif // LIBSOOKEE_IOS_H_

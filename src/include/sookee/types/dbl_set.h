@@ -32,11 +32,11 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace types {
 
-TYPEDEF_SET(double, dbl_set);
-TYPEDEF_MSET(double, dbl_mset);
+USING_SET(double, dbl_set);
+USING_MSET(double, dbl_mset);
 
 }} // sookee::types
 
-namespace soo { using namespace sookee::types; }
+// namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_DBL_SET_H_

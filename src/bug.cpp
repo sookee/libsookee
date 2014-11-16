@@ -51,7 +51,7 @@ namespace sookee { namespace bug {
 
 using namespace sookee::ios;
 using namespace sookee::types;
-using namespace sookee::string;
+using namespace sookee::utils;
 
 //str thread_name();
 //str obj_name(void* id);
@@ -207,7 +207,8 @@ void stack_handler(int sig)
 	for(siz i = 0; i < size; ++i)
 	{
 		std::cerr << "raw: " << trace[i] << std::endl;
-		sgl(sgl(siss(trace[i]), obj, '('), func, '+');
+		siss iss(trace[i]);
+		sgl(sgl(iss, obj, '('), func, '+');
 
 		cstring_uptr func_name(abi::__cxa_demangle(func.c_str(), 0, 0, &status));
 		std::cerr << "function: " << func_name.get() << '\n';

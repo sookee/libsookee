@@ -49,7 +49,7 @@ namespace sookee { namespace net {
 
 using namespace sookee::types;
 using namespace sookee::log;
-using namespace sookee::string;
+using namespace sookee::utils;
 
 cookie::cookie()
 : secure(false)

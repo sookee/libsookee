@@ -71,6 +71,14 @@ inline std::string get_filename(const std::string& path)
 
 #define wcon(m) do{std::wcout << m << std::endl;}while(false)
 
+//template<typename Return>
+//Return& report_error(const str& msg, Return& ret)
+//{
+//	log(msg);
+//}
+
+#define log_return_error(msg, ret) do{log(msg); return ret;}while(0)
+
 //typedef std::unique_ptr<sss> sss_uptr;
 //
 //class writer
@@ -210,6 +218,6 @@ inline std::string get_filename(const std::string& path)
 
 }} // sookee::log
 
-namespace soo { using namespace sookee::log; }
+// namespace soo { using namespace sookee::log; }
 
 #endif /* _LIBSOOKEE_LOG_H_ */

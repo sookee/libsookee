@@ -32,7 +32,12 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 #include <vector>
 
-#define TYPEDEF_VEC(def, name) \
-	TYPEDEF_CONTAINER_1(std::vector, def, name)
+#define USING_VEC(def, name) \
+	USING_CONTAINER_1(std::vector, def, name)
+
+// CamelCase
+
+#define USING_CC_VEC(def, name) \
+	USING_CC_CONTAINER_1(std::vector, def, name)
 
 #endif // LIBSOOKEE_TYPES_TYPEDEFS_VEC_H_

@@ -14,12 +14,12 @@
 #include <sookee/log.h>
 #include <string>
 
-namespace sookee { namespace string {
+namespace sookee { namespace utils {
 
 using namespace sookee::bug;
 using namespace sookee::log;
 using namespace sookee::types;
-using namespace sookee::string;
+using namespace sookee::utils;
 
 /**
  * Stencils are string templates with replaceable sections.
@@ -107,6 +107,10 @@ public:
 	 * Create an empty stencil
 	 */
 	stencil() {}
+	stencil(stencil&& s): size(s.size), pieces(s.pieces), params(s.params)
+	, args(s.args), d1(s.d1), d2(s.d2) {}
+	stencil(const stencil& s): size(s.size), pieces(s.pieces), params(s.params)
+	, args(s.args), d1(s.d1), d2(s.d2) {}
 
 	/**
 	 * Create a stencil whose parameter markers are delimited
@@ -250,7 +254,7 @@ public:
 			siz param;
 			str param_spec = tmp.substr(pos + d1.size(), end - (pos  + d1.size()));
 
-			if(soo::psz(param_spec.c_str(), param) == param_spec.c_str())
+			if(sookee::radp::psz(param_spec.c_str(), param) == param_spec.c_str())
 			{
 				log("ERROR: parsing <?soo ?> parameter value: " << pos);
 				return false;
@@ -266,6 +270,6 @@ public:
 	}
 };
 
-}} // ::sookee::string
+}} // ::sookee::utils
 
 #endif /* LIBSOOKEE_TEMPLATE_H_ */

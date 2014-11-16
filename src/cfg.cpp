@@ -28,14 +28,20 @@ http://www.gnu.org/licenses/gpl-2.0.html
 '-----------------------------------------------------------------*/
 
 #include <sookee/cfg.h>
+#include <sookee/bug.h>
+#include <sookee/log.h>
 #include <sookee/ios.h>
 #include <sookee/types/str_set.h>
+#include <sookee/str.h>
 #include <wordexp.h>
 
 namespace sookee { namespace props {
 
+using namespace sookee::bug;
+using namespace sookee::log;
 using namespace sookee::ios;
 using namespace sookee::types;
+using namespace sookee::utils;
 
 bool Config::load(const str& dir, const str& file, bool first)
 {
@@ -92,7 +98,10 @@ bool Config::load(const str& dir, const str& file, bool first)
 		if(key == "include")
 			load(dir,val, false);
 		else
+		{
+			bug("CFG: " << key << ": " << val);
 			props[key].push_back(val);
+		}
 	}
 
 	ifs.close();
@@ -100,6 +109,5 @@ bool Config::load(const str& dir, const str& file, bool first)
 
 	return true;
 }
-
 
 }} // ::sookee::props

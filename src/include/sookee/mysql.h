@@ -43,14 +43,14 @@ namespace sookee { namespace mysql {
 
 //using namespace katina;
 using namespace sookee::types;
-using namespace sookee::string;
+using namespace sookee::utils;
 using namespace sookee::bug;
 using namespace sookee::log;
 
 typedef my_ulonglong row_count;
 
-TYPEDEF_VEC(str, str_row);
-TYPEDEF_VEC(str_row, str_table);
+USING_VEC(str, str_row);
+USING_VEC(str_row, str_table);
 
 typedef std::vector<str_vec> str_vec_vec;
 
@@ -348,6 +348,6 @@ public:
 
 }} // sookee::mysql
 
-namespace soo { using namespace sookee::mysql; }
+// namespace soo { using namespace sookee::mysql; }
 
 #endif // LIBSOOKEE_MYSQL_H_

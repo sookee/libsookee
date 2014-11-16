@@ -382,6 +382,6 @@ inline constexpr unsigned prev_weekday(unsigned wd) noexcept
 
 }} // sookee::cal
 
-namespace soo { using namespace sookee::cal; }
+// namespace soo { using namespace sookee::cal; }
 
 #endif /* _LIBSOOKEE_CAL_H_ */

@@ -9,7 +9,7 @@
 
 using namespace sookee::bug;
 using namespace sookee::log;
-using namespace sookee::string;
+using namespace sookee::utils;
 
 int main()
 {

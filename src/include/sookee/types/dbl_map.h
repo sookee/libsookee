@@ -32,11 +32,11 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace types {
 
-TYPEDEF_MAP(double, double, dbl_map);
-TYPEDEF_MMAP(double, double, dbl_mmap);
+USING_MAP(double, double, dbl_map);
+USING_MMAP(double, double, dbl_mmap);
 
 }} // ::sookee::types
 
-namespace soo { using namespace sookee::types; }
+// namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_DBL_MAP_H_

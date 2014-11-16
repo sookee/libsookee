@@ -315,6 +315,6 @@ struct m
 
 }} // sookee::radp
 
-namespace soo { using namespace sookee::radp; }
+// namespace soo { using namespace sookee::radp; }
 
 #endif // LIBSOOKEE_RAD_PARSER_H_

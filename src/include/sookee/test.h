@@ -72,27 +72,6 @@ public:
 
 	double diff() const { return (double) (tse.tv_nsec - tsb.tv_nsec) / 1000000000 + (double) (tse.tv_sec - tsb.tv_sec); }
 
-//	timespec diff() const
-//	{
-//		timespec temp;
-//		if((tse.tv_nsec - tsb.tv_nsec) < 0)
-//		{
-//			temp.tv_sec = tse.tv_sec - tsb.tv_sec - 1;
-//			temp.tv_nsec = 1000000000 + tse.tv_nsec - tsb.tv_nsec;
-//		}
-//		else
-//		{
-//			temp.tv_sec = tse.tv_sec - tsb.tv_sec;
-//			temp.tv_nsec = tse.tv_nsec - tsb.tv_nsec;
-//		}
-//		return temp;
-//	}
-//	template<typename Func, typename... Args>
-//	double run(Func func, Args&&... args)
-//	{
-//		return run(func, args...);
-//	}
-
 	siz get_iterations() const
 	{
 		return iterations;
@@ -106,6 +85,6 @@ public:
 
 }} // ::sookee::test
 
-namespace soo { using namespace sookee::test; }
+// namespace soo { using namespace sookee::test; }
 
 #endif // LIBSOOKEE_TEST_H_

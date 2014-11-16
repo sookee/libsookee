@@ -74,6 +74,7 @@ noinst_PROGRAMS = \
 	test-ios \
 	test-radp \
 	time-radp \
+	test-socketstream \
 	test-stencil \
 	test-stl \
 	test-trim \
@@ -91,6 +92,9 @@ test_radp_LDADD = -L.libs -lsookee
 
 time_radp_SOURCES = time-radp.cpp
 time_radp_LDADD = -L.libs -lsookee
+
+test_socketstream_SOURCES = test-socketstream.cpp
+test_socketstream_LDADD = -L.libs -lsookee
 
 test_stencil_SOURCES = test-stencil.cpp
 test_stencil_LDADD = -L.libs -lsookee

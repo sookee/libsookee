@@ -149,7 +149,7 @@ class writer
 	}
 
 	typedef std::queue<message> message_que;
-	TYPEDEF_MAP(sos*, message_que, queue_map);
+	USING_MAP(sos*, message_que, queue_map);
 
 	static std::mutex queues_mtx;
 	static queue_map queues;

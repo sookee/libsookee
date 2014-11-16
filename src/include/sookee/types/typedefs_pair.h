@@ -30,7 +30,11 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 #include <utility>
 
+// deprecated
 #define TYPEDEF_PAIR(type1, type2, name) \
 	typedef std::pair<type1,type2> name
+
+#define USING_PAIR(type1, type2, name) \
+	using name = std::pair<type1,type2>
 
 #endif // LIBSOOKEE_TYPES_TYPEDEFS_PAIR_H_

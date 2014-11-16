@@ -36,7 +36,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <algorithm>
 #include <sstream>
 
-namespace sookee { namespace string {
+namespace sookee { namespace utils {
 
 using namespace sookee::types;
 
@@ -257,19 +257,19 @@ str join(const Container& c, const str& delim = " ")
  * @param t
  * @return
  */
-template<typename T>
-sss& operator<<(sss&& ss, const T& t)
-{
-	ss << t;
-	return ss;
-}
-
-template<typename T>
-sss& operator>>(sss&& ss, T& t)
-{
-	ss >> t;
-	return ss;
-}
+//template<typename T>
+//sss& operator<<(sss&& ss, const T& t)
+//{
+//	ss << t;
+//	return ss;
+//}
+//
+//template<typename T>
+//sss& operator>>(sss&& ss, T& t)
+//{
+//	ss >> t;
+//	return ss;
+//}
 
 template<typename T>
 T to(const str& s)
@@ -280,8 +280,8 @@ T to(const str& s)
 	return t;
 }
 
-}} // sookee::string
+}} // sookee::utils
 
-namespace soo { using namespace sookee::string; }
+// namespace soo { using namespace sookee::utils; }
 
 #endif // LIBSOOKEE_STR_H_

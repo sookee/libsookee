@@ -30,6 +30,6 @@ std::string utf32_to_mb(const std::u32string& utf32);
 
 }} // ::sookee::i18n
 
-namespace soo { using namespace sookee::i18n; }
+// namespace soo { using namespace sookee::i18n; }
 
 #endif // LIBSOOKEE_I18N_H_

@@ -24,8 +24,8 @@ int main()
 	int ystart = -1000000;
 	int prev_z = days_from_civil(ystart, 1, 1) - 1;
 	assert(prev_z < 0);
-	int prev_wd = weekday_from_days(prev_z);
-	assert(0 <= prev_wd && prev_wd <= 6);
+	unsigned prev_wd = weekday_from_days(prev_z);
+	assert(prev_wd <= 6);
 	auto t0 = std::chrono::system_clock::now();
 	for (int y = ystart; y <= -ystart; ++y)
 	{

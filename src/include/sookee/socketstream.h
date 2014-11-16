@@ -55,7 +55,12 @@ is granted under the same conditions.
 #include <cerrno>
 
 #include <sookee/types.h>
-#include <ext/stdio_filebuf.h>
+
+#ifdef __clang__
+#	include "stdio_filebuf.h"
+#else
+#	include <ext/stdio_filebuf.h>
+#endif
 
 namespace sookee { namespace net {
 
@@ -122,7 +127,7 @@ public:
 	// TODO: decide how to handle err_message
 	str err_message;
 
-	void open(const str& host, const str port
+	void open(const str& host, const str& port
 		, const std::ios::openmode& mode = std::ios::in|std::ios::out)
 	{
 		addrinfo hints;
@@ -341,6 +346,6 @@ typedef basic_socketstream<wchar_t> wsocketstream;
 }} // sookee::net
 
 
-namespace soo { using namespace sookee::net; }
+// namespace soo { using namespace sookee::net; }
 
 #endif // _LIBSOOKEE_SOCKETSTREAM_H_

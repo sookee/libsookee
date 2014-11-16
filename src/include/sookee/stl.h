@@ -186,6 +186,6 @@ class circular
 
 }} // sookee::stl
 
-namespace soo { using namespace sookee::stl; }
+// namespace soo { using namespace sookee::stl; }
 
 #endif /* _LIBSOOKEE_STL_H_ */

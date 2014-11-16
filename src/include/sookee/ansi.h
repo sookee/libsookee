@@ -6,13 +6,42 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <sookee/types/basic.h>
+#include <sookee/types/str_vec.h>
 
 namespace sookee { namespace ansi {
 
+using namespace sookee::types;
+
 typedef std::numeric_limits<std::streamsize> streamlimits;
 
-const std::string norm = "\033[0m";
-const std::string col = "\033[";
+const str ESC = "\033[";
+const str CLS = ESC + "2J";
+const str FGC = ESC + "3";
+const str BGC = ESC + "4";
+const str HOME = ESC + "1;1H";
+
+enum COL
+{
+	black
+	, red
+	, green
+	, yellow
+	, blue
+	, magenta
+	, cyan
+	, white
+	, dflt
+};
+
+const str_vec colors = { "0m", "1m", "2m", "3m", "4m", "5m", "6m", "7m", "8m" };
+
+inline str fgcol(COL col) { return FGC + colors[col]; }
+inline str bgcol(COL col) { return BGC + colors[col]; }
+inline str posxy(uns x, uns y) { return ESC + std::to_string(y) + ";" + std::to_string(x) + "H"; }
+
+const str norm = ESC + "0m";
+const str col = ESC;
 
 enum ANSI
 {
@@ -363,6 +392,6 @@ typedef basic_ansistream<wchar_t> wansistream;
 
 }} // sookee::ansi
 
-namespace soo { using namespace sookee::ansi; }
+// namespace soo { using namespace sookee::ansi; }
 
 #endif // LIBSOOKEE_ANSI_H

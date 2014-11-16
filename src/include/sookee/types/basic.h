@@ -42,7 +42,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace types {
 
-typedef unsigned uns;
+typedef unsigned int uns;
 typedef unsigned char byte;
 typedef std::string str;
 typedef str::size_type siz;
@@ -53,10 +53,12 @@ typedef str::const_iterator str_citer;
 //typedef std::chrono::steady_clock st_clk;
 typedef std::chrono::system_clock st_clk;
 typedef st_clk::period st_period;
+typedef st_clk::duration st_duration;
 typedef st_clk::time_point st_time_point;
 
 typedef std::chrono::high_resolution_clock hr_clk;
 typedef hr_clk::period hr_period;
+typedef hr_clk::duration hr_duration;
 typedef hr_clk::time_point hr_time_point;
 
 typedef std::stringstream sss;
@@ -83,6 +85,6 @@ typedef std::unique_ptr<char, malloc_deleter> cstring_uptr;
 
 }} // sookee::types
 
-namespace soo { using namespace sookee::types; }
+// namespace soo { using namespace sookee::types; }
 
 #endif /* _LIBSOOKEE_TYPES_BASIC_H_ */

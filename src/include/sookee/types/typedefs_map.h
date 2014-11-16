@@ -32,13 +32,40 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include "typedefs_pair.h"
 
 #include <map>
+#include <unordered_map>
 
-#define TYPEDEF_MAP(type1, type2, name) \
-	TYPEDEF_CONTAINER_2(std::map, type1, type2, name); \
-	TYPEDEF_PAIR(name##_iter, name##_iter, name##_range)
+#define USING_MAP(type1, type2, name) \
+	USING_CONTAINER_2(std::map, type1, type2, name); \
+	USING_PAIR(name##_iter, name##_iter, name##_range)
 
-#define TYPEDEF_MMAP(type1, type2, name) \
-	TYPEDEF_CONTAINER_2(std::multimap, type1, type2, name); \
-	TYPEDEF_PAIR(name##_iter, name##_iter, name##_range)
+#define USING_MMAP(type1, type2, name) \
+	USING_CONTAINER_2(std::multimap, type1, type2, name); \
+	USING_PAIR(name##_iter, name##_iter, name##_range)
+
+#define USING_UMAP(type1, type2, name) \
+	USING_CONTAINER_2(std::unordered_map, type1, type2, name); \
+	USING_PAIR(name##_iter, name##_iter, name##_range)
+
+#define USING_UMMAP(type1, type2, name) \
+	USING_CONTAINER_2(std::unordered_multimap, type1, type2, name); \
+	USING_PAIR(name##_iter, name##_iter, name##_range)
+
+// CamelCase
+
+#define USING_CC_MAP(type1, type2, name) \
+	USING_CC_CONTAINER_2(std::map, type1, type2, name); \
+	USING_PAIR(name##Iter, name##Iter, name##Range)
+
+#define USING_CC_MMAP(type1, type2, name) \
+	USING_CC_CONTAINER_2(std::multimap, type1, type2, name); \
+	USING_PAIR(name##Iter, name##Iter, name##Range)
+
+#define USING_CC_UMAP(type1, type2, name) \
+	USING_CC_CONTAINER_2(std::unordered_map, type1, type2, name); \
+	USING_PAIR(name##Iter, name##Iter, name##Range)
+
+#define USING_CC_UMMAP(type1, type2, name) \
+	USING_CC_CONTAINER_2(std::unordered_multimap, type1, type2, name); \
+	USING_PAIR(name##Iter, name##Iter, name##Range)
 
 #endif // LIBSOOKEE_TYPES_TYPEDEFS_MAP_H_

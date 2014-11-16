@@ -1,8 +1,8 @@
-#ifndef LIBSOOKEE_TYPES_STR_MAP_H_
-#define LIBSOOKEE_TYPES_STR_MAP_H_
+#ifndef LIBSOOKEE_TYPES_REGEX_H_
+#define LIBSOOKEE_TYPES_REGEX_H_
 /*
- *  Created on: 10 June 2014
- *      Author: SooKee oasookee@gmail.com
+ *  Created on: 29 Oct 2014
+ *      Author: oasookee@gmail.com
  */
 
 /*-----------------------------------------------------------------.
@@ -28,16 +28,24 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include "basic.h" // str
-#include "typedefs_map.h"
+#include <regex>
 
 namespace sookee { namespace types {
 
-USING_MAP(str, str, str_map);
-USING_MMAP(str, str, str_mmap);
+typedef std::cregex_iterator creg_iter;
+typedef std::sregex_iterator sreg_iter;
+
+typedef std::wcregex_iterator wcreg_iter;
+typedef std::wsregex_iterator wsreg_iter;
+
+typedef std::cregex_token_iterator creg_titer;
+typedef std::sregex_token_iterator sreg_titer;
+
+typedef std::wcregex_token_iterator wcreg_titer;
+typedef std::wsregex_token_iterator wsreg_titer;
 
 }} // sookee::types
 
 // namespace soo { using namespace sookee::types; }
 
-#endif // LIBSOOKEE_TYPES_STR_MAP_H_
+#endif // LIBSOOKEE_TYPES_REGEX_H_

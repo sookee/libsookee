@@ -1,4 +1,3 @@
-#pragma once
 #ifndef LIBSOOKEE_TYPES_STREAM_H_
 #define LIBSOOKEE_TYPES_STREAM_H_
 /*
@@ -7,7 +6,7 @@
  */
 
 /*-----------------------------------------------------------------.
-| Copyright (C) 2011 SooKee oasookee@gmail.com               |
+| Copyright (C) 2011 SooKee oasookee@gmail.com                     |
 '------------------------------------------------------------------'
 
 This program is free software; you can redistribute it and/or
@@ -47,13 +46,13 @@ typedef std::fstream sfs;
 typedef std::ifstream sifs;
 typedef std::ofstream sofs;
 
-typedef std::istream_iterator<char> sisi;
-typedef std::ostream_iterator<char> sosi;
-typedef std::istreambuf_iterator<char> sisbi;
-typedef std::ostreambuf_iterator<char> sosbi;
+typedef std::istream_iterator<char> sis_iter;
+typedef std::ostream_iterator<char> sos_iter;
+typedef std::istreambuf_iterator<char> sisb_iter;
+typedef std::ostreambuf_iterator<char> sosb_iter;
 
 }} // sookee::types
 
-namespace soo { using namespace sookee::types; }
+// namespace soo { using namespace sookee::types; }
 
 #endif // LIBSOOKEE_TYPES_STREAM_H_
