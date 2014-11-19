@@ -61,6 +61,12 @@ inline rad pc(rad s, char& c)
 	return s;
 }
 
+/**
+ * Parse siz
+ * @param s
+ * @param i
+ * @return
+ */
 inline rad pz(rad s, siz& i)
 {
 	for(i = 0; *s >= '0' && *s <= '9'; ++s)
@@ -280,17 +286,52 @@ inline rad fnd(rad h, rad n)
 	return 0;
 }
 
+// parse literals
+
+inline rad pl(rad s, char c)
+{
+	if(*s && *s == c)
+		++s;
+	return s;
+}
+
+/**
+ * Parse literal.
+ * @param s
+ * @param l
+ * @return On failure returns s
+ */
+inline rad pl(rad s, rad l)
+{
+	rad e = s;
+	rad p = s;
+
+	while(*l && (p = pl(s, *l)) != s)
+		{++l; s = p;}
+
+	return *l ? e : p;
+}
+
 inline rad rsp(rad s) { return s; }
 inline rad rsp(rad s, int& a) { return psi(s, a); }
 inline rad rsp(rad s, siz& a) { return psz(s, a); }
 inline rad rsp(rad s, flt& a) { return psf(s, a); }
 inline rad rsp(rad s, str& a) { return psw(s, a); }
 
+//inline rad rsp(rad s, char a) { return pl(s, a); }
+//inline rad rsp(rad s, rad& a) { return pl(s, a); }
+
 template<typename T, typename... Args>
 inline rad rsp(rad s, T& t, Args&... args)
 {
 	return rsp(rsp(s, t), args...);
 }
+
+//template<typename T, typename... Args>
+//inline rad rsp(rad s, const T& t, const Args&... args)
+//{
+//	return rsp(rsp(s, t), args...);
+//}
 
 // manipulators
 

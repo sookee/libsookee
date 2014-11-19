@@ -56,8 +56,14 @@ std::istream& getstring(std::istream& is, str& s);
 inline
 std::istream& getstring(std::istream&& is, str& s) { return getstring(is, s); }
 
-str expand_env(const str& var, int flags = 0);
+str wordexp(const str& var, int flags = 0);
+// [[deprecated]]
+inline str expand_env(const str& var, int flags = 0) { return wordexp(var, flags); }
 
+// return vector
+str_vec wordexp_vec(const str& var, int flags = 0);
+// return error
+int wordexp_vec(const str& var, str_vec& vars, int flags = 0);
 /**
  * Get directory listing.
  * @return errno

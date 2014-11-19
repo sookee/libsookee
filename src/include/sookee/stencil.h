@@ -26,7 +26,7 @@ using namespace sookee::utils;
  *
  *
  */
-class stencil
+class arg_stencil
 {
 private:
 	siz size = 0;
@@ -106,10 +106,10 @@ public:
 	/**
 	 * Create an empty stencil
 	 */
-	stencil() {}
-	stencil(stencil&& s): size(s.size), pieces(s.pieces), params(s.params)
+	arg_stencil() {}
+	arg_stencil(arg_stencil&& s): size(s.size), pieces(s.pieces), params(s.params)
 	, args(s.args), d1(s.d1), d2(s.d2) {}
-	stencil(const stencil& s): size(s.size), pieces(s.pieces), params(s.params)
+	arg_stencil(const arg_stencil& s): size(s.size), pieces(s.pieces), params(s.params)
 	, args(s.args), d1(s.d1), d2(s.d2) {}
 
 	/**
@@ -123,9 +123,9 @@ public:
 	 * @param d1 the start delimiter of embedded parameters
 	 * @param d2 the end delimiter of embedded parameters
 	 */
-	stencil(const str& d1, const str& d2): d1(d1), d2(d2) {}
+	arg_stencil(const str& d1, const str& d2): d1(d1), d2(d2) {}
 
-	stencil(const str& text, const str& d1 = "${", const str& d2 = "}"): d1(d1), d2(d2) { compile(text); }
+	arg_stencil(const str& text, const str& d1 = "${", const str& d2 = "}"): d1(d1), d2(d2) { compile(text); }
 
 	/**
 	 * Clear the stencil of all data,
@@ -267,6 +267,131 @@ public:
 		}
 
 		return true;
+	}
+};
+
+class map_stencil
+{
+	// order: piece, var, piece, var, piece
+	str_vec pieces;
+	str_vec vars;
+
+	const str d1 = "${";
+	const str d2 = "}";
+
+public:
+	using dict = str_map;
+
+	/**
+	 * Create an empty stencil
+	 */
+	map_stencil() {}
+	map_stencil(map_stencil&& s): pieces(s.pieces), vars(s.vars)
+	, d1(s.d1), d2(s.d2) {}
+	map_stencil(const map_stencil& s): pieces(s.pieces), vars(s.vars)
+	, d1(s.d1), d2(s.d2) {}
+
+	/**
+	 * Create a stencil whose parameter markers are delimited
+	 * as beginning with @param d1 and ending with @param d2.
+	 *
+	 * e.g. ${n} (where n is the parameter number
+	 *
+	 * d1 = "${", d2 = "}"
+	 *
+	 * @param d1 the start delimiter of embedded parameters
+	 * @param d2 the end delimiter of embedded parameters
+	 */
+	map_stencil(const str& d1, const str& d2): d1(d1), d2(d2) {}
+
+	map_stencil(const str& text, const str& d1 = "${", const str& d2 = "}")
+	: d1(d1), d2(d2) { compile(text); }
+
+	// ${var}
+	void clear()
+	{
+		pieces.clear();
+		vars.clear();
+	}
+
+	bool compile(const str& text)
+	{
+		clear();
+		auto beg = text.begin();
+		auto pos = beg;
+		auto fin = text.end();
+		auto end = pos;
+
+		while(pos != fin)
+		{
+			end = std::search(pos, fin, d1.begin(), d1.end());
+
+//			if(end != beg)
+				pieces.emplace_back(pos, end);
+
+			if(end == fin)
+				break;
+
+			pos = std::next(end, d1.size());
+
+			if((end = std::search(pos, fin, d2.begin(), d2.end())) == fin)
+			{
+				log("ERROR: expected " << d2);
+				return false;
+			}
+
+			vars.emplace_back(pos, end);
+
+			pos = std::next(end, d2.size());
+
+//			if(pos == fin)
+//				pieces.emplace_back("");
+		}
+
+		return true;
+	}
+
+	void dump() const
+	{
+		auto p = pieces.begin();
+		auto v = vars.begin();
+
+		while(p != pieces.end())
+		{
+			con("p: " << *p++);
+			if(v != vars.end())
+				con("v: " << *v++);
+		}
+
+		while(v != vars.end())
+		{
+			con("v: " << *v++);
+			if(p != pieces.end())
+				con("p: " << *p++);
+		}
+	}
+
+	str create(const dict& d) const
+	{
+		str s;
+		auto p = pieces.begin();
+		auto v = vars.begin();
+
+		while(p != pieces.end())
+		{
+			s.append(*p++);
+			if(v != vars.end())
+				s.append(d.at(*v++));
+		}
+
+		while(v != vars.end())
+		{
+			s.append(d.at(*v++));
+			if(p != pieces.end())
+				s.append(*p++);
+		}
+
+		return s;
 	}
 };
 

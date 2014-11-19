@@ -23,7 +23,7 @@ static const siz max_floats = 1000;
 
 int main()
 {
-	bug_var(std::numeric_limits<siz>::max());
+//	bug_var(std::numeric_limits<siz>::max());
 	con("Testing radp");
 	std::random_device rd;
 	std::default_random_engine eng{rd()};
@@ -94,9 +94,9 @@ int main()
 		sep = " ";
 	}
 
-	bug_var(text);
-	bug_var(std::numeric_limits<int>::min());
-	bug_var(std::numeric_limits<int>::max());
+//	bug_var(text);
+//	bug_var(std::numeric_limits<int>::min());
+//	bug_var(std::numeric_limits<int>::max());
 	//return 1;
 
 	pos = text.data();
@@ -112,9 +112,9 @@ int main()
 		}
 		else if(v != vv)//(int(v * 10000000000) != int(vv * 10000000000))
 		{
-			bug_var(pos);
-			bug_var(int(v * 10000000000));
-			bug_var(int(vv * 10000000000));
+//			bug_var(pos);
+//			bug_var(int(v * 10000000000));
+//			bug_var(int(vv * 10000000000));
 			log("ERROR: parsed value (" << v << ") != expected value: " << vv);
 			++err;
 		}
@@ -122,6 +122,34 @@ int main()
 	}
 
 	con("\t\t\t" << (err ? "[FAIL]" : "[PASS]"));
+
+	con("Parsing literals:");
+
+	const str_vec literals {"", "a", "ab", "abc"};
+	const str_vec lit_data {"", "a", "ab", "abc", "abcd", "abcde", "f"};
+	const int_vec lit_fix
+	{
+		  0, 0, 0, 0
+		, 0, 1, 0, 0
+		, 0, 1, 2, 0
+		, 0, 1, 2, 3
+		, 0, 1, 2, 3
+		, 0, 1, 2, 3
+		, 0, 0, 0, 0
+	};
+
+	auto fix = lit_fix.begin();
+
+	for(auto&& data: lit_data)
+	{
+		for(auto&& lit: literals)
+		{
+			con_s(": \"" << data << "\", \"" << lit << "\": ");
+			rad s = pl(data.data(), lit.data());
+			con("\t\t\t\t" << ((*fix != s - data.data()) ? "[FAIL]" : "[PASS]"));
+			++fix;
+		}
+	}
 
 	con("End of testing:");
 }

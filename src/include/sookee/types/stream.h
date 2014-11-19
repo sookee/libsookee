@@ -34,22 +34,22 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace types {
 
-typedef std::istream sis;
-typedef std::ostream sos;
-typedef std::iostream sios;
+using sis = std::istream;
+using sos = std::ostream;
+using sios = std::iostream;
 
-typedef std::stringstream sss;
-typedef std::istringstream siss;
-typedef std::ostringstream soss;
+using sss = std::stringstream;
+using siss = std::istringstream;
+using soss = std::ostringstream;
 
-typedef std::fstream sfs;
-typedef std::ifstream sifs;
-typedef std::ofstream sofs;
+using sfs = std::fstream;
+using sifs = std::ifstream;
+using sofs = std::ofstream;
 
-typedef std::istream_iterator<char> sis_iter;
-typedef std::ostream_iterator<char> sos_iter;
-typedef std::istreambuf_iterator<char> sisb_iter;
-typedef std::ostreambuf_iterator<char> sosb_iter;
+using sis_iter = std::istream_iterator<char>;
+using sos_iter = std::ostream_iterator<char>;
+using sisb_iter = std::istreambuf_iterator<char>;
+using sosb_iter = std::ostreambuf_iterator<char>;
 
 }} // sookee::types
 

@@ -39,7 +39,7 @@ namespace sookee { namespace ios {
 
 using namespace sookee::types;
 
-str expand_env(const str& var, int flags)
+str wordexp(const str& var, int flags)
 {
 	str exp = var;
 	wordexp_t p;
@@ -52,6 +52,47 @@ str expand_env(const str& var, int flags)
 	return exp;
 }
 
+str_vec wordexp_vec(const str& var, int flags)
+{
+	str_vec vars;
+
+	wordexp_t p;
+	if(!wordexp(var.c_str(), &p, flags))
+	{
+		if(p.we_wordc)
+			for(char** exp = p.we_wordv; *exp; ++exp)
+				vars.push_back(exp[0]);
+		wordfree(&p);
+	}
+	return vars;
+}
+
+int wordexp_vec(const str& var, str_vec& vars, int flags)
+{
+	wordexp_t p;
+	if(int err = wordexp(var.c_str(), &p, flags) != 0)
+		return err;
+
+	vars.clear();
+	if(p.we_wordc)
+		for(char** exp = p.we_wordv; *exp; ++exp)
+			vars.push_back(exp[0]);
+
+	wordfree(&p);
+
+	return 0;
+}
+
+/**
+ * Read past whitespace then read in a string up to the
+ * nect space ' ' character or, if enclosed in single
+ * or double quotes '',"" read up to the terminating quite.
+ *
+ * The quotes are not included in the returned string.
+ * @param is
+ * @param s
+ * @return
+ */
 std::istream& getstring(std::istream& is, str& s)
 {
 	char term = ' ';

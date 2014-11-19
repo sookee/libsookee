@@ -81,6 +81,7 @@ public:
 		Type t;
 		std::istringstream iss(*(found->second.begin()));
 		iss >> std::boolalpha >> t;
+//		std::operator>>(iss, t);
 //		std::istringstream(*(found->second.begin())) >> std::boolalpha >> t;
 		return t;
 	}
