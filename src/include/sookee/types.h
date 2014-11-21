@@ -33,6 +33,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include "types/typedefs.h"
 
 #include "types/basic.h"
+#include "types/regex.h"
 #include "types/stream.h"
 #include "types/deq.h"
 #include "types/vec.h"

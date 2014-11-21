@@ -1,9 +1,8 @@
-#pragma once
-#ifndef _LIBSOOKEE_NETWORK_H
-#define _LIBSOOKEE_NETWORK_H
+#ifndef LIBSOOKEE_NETWORK_H
+#define LIBSOOKEE_NETWORK_H
 
 /*-----------------------------------------------------------------.
-| Copyright (C) 2011 SooKee oasookee@gmail.com               |
+| Copyright (C) 2011 SooKee oasookee@gmail.com                     |
 '------------------------------------------------------------------'
 
 This program is free software; you can redistribute it and/or
@@ -25,7 +24,9 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include <sookee/types.h>
+#include <sookee/types/basic.h>
+#include <sookee/socketstream.h>
+#include <sookee/log.h>
 
 #include <map>
 #include <string>
@@ -33,6 +34,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 namespace sookee { namespace net {
 
+using namespace sookee::log;
 using namespace sookee::types;
 
 struct cookie
@@ -116,8 +118,63 @@ void html_to_text(std::istream& i, std::ostream& o);
 
 bool hostname_to_ip(const str& hostname , str& ip);
 
+class http_stream
+: public net::socketstream
+{
+	str host;
+
+public:
+	using net::socketstream::socketstream;
+
+	str user_agent = "none";
+	str accept = "text/html";
+	net::header_map headers;
+
+	bool open(const std::string& host, in_port_t port, bool nb = false)
+	{
+		this->host.clear();
+		if(net::socketstream::open(host, port, SOCK_STREAM, nb))
+			this->host = host;
+		return is_open();
+	}
+
+	bool is_open() const { return !host.empty(); }
+
+	void close()
+	{
+		host.clear();
+		net::socketstream::close();
+	}
+
+	str get(const str& path)
+	{
+		net::socketstream& ss = *this;
+
+		ss << "GET " << path << " HTTP/1.1\r\n";
+		ss << "Host: " << host << "\r\n";
+		ss << "User-Agent: " << user_agent << "\r\n";
+		ss << "Accept: " << accept << "\r\n";
+		ss << "\r\n" << std::flush;
+
+		if(!net::read_http_headers(ss, headers))
+		{
+			log("ERROR reading headers.");
+			return false;
+		}
+
+		str html;
+		if(!net::read_http_response_data(ss, headers, html))
+		{
+			log("ERROR reading response data.");
+			return false;
+		}
+
+		return html;
+	}
+};
+
 }} // sookee::net
 
 namespace soo { using namespace sookee::net; }
 
-#endif // _LIBSOOKEE_NETWORK_H
+#endif // LIBSOOKEE_NETWORK_H

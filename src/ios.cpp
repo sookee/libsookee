@@ -39,6 +39,8 @@ namespace sookee { namespace ios {
 
 using namespace sookee::types;
 
+//sis&(&sgl)(sis&, str&, char) = std::getline;
+
 str wordexp(const str& var, int flags)
 {
 	str exp = var;
@@ -96,13 +98,53 @@ int wordexp_vec(const str& var, str_vec& vars, int flags)
 std::istream& getstring(std::istream& is, str& s)
 {
 	char term = ' ';
-	if((is >> std::ws).peek() == '"' || is.peek() == '\'')
-		is.get(term);
+	if(is.peek() != '"' && is.peek() != '\'')
+	{
+		is.setstate(std::ios::failbit);
+		return is;
+	}
+
+	is.get(term);
 
 	char c;
 	str n;
 	while(is.get(c) && c != term)
 		n.append(1, c);
+
+	if(n.empty())
+		is.setstate(std::ios::failbit);
+	else
+	{
+		s = n;
+		is.clear();
+	}
+
+	return is;
+}
+
+std::istream& getnested(std::istream& is, str& s, char d1, char d2)
+{
+	using std::ws;
+
+	if(is.peek() != d1)
+	{
+		is.setstate(std::ios::failbit);
+		return is;
+	}
+
+	str n;
+	uns d = 0;
+	char c;
+	while(is.get(c))// && (c != d2 || d))
+	{
+		n.append(1, c);
+		if(c == d1)
+			++d;
+		else if(c == d2)
+			--d;
+		if(!d)
+			break;
+	}
 
 	if(n.empty())
 		is.setstate(std::ios::failbit);

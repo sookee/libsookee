@@ -70,7 +70,12 @@ public:
 		return diff();
 	}
 
-	double diff() const { return (double) (tse.tv_nsec - tsb.tv_nsec) / 1000000000 + (double) (tse.tv_sec - tsb.tv_sec); }
+	double diff() const
+	{
+		return double(tse.tv_nsec - tsb.tv_nsec)
+			/ 1000000000
+			+ double(tse.tv_sec - tsb.tv_sec);
+	}
 
 	siz get_iterations() const
 	{

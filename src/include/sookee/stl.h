@@ -150,6 +150,25 @@ void copy(const Container& c1, Container& c2)
 	std::copy(c1.begin(), c1.end(), c2.begin());
 }
 
+template<typename Iter>
+class IterRange
+{
+	Iter s;
+	Iter e;
+
+public:
+	IterRange(const Iter& start, const Iter &end): s(start), e(end) {}
+
+	Iter begin() { return s; }
+	Iter end() { return e; }
+};
+
+template<typename T>
+IterRange<T> make_range(const T &start, const T &end)
+{
+	return IterRange<T>(start, end);
+}
+
 namespace experimental {
 
 template<typename Type, unsigned SIZE>

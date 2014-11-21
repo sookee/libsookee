@@ -29,6 +29,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 '-----------------------------------------------------------------*/
 
 #include <sookee/types/basic.h>
+#include <sookee/types/stream.h>
 #include <sookee/types/str_vec.h>
 #include <sookee/log.h>
 
@@ -55,6 +56,14 @@ using namespace sookee::types;
 std::istream& getstring(std::istream& is, str& s);
 inline
 std::istream& getstring(std::istream&& is, str& s) { return getstring(is, s); }
+
+std::istream& getnested(std::istream& is, str& s, char d1 = '{', char d2 = '}');
+inline
+std::istream& getnested(std::istream&& is, str& s, char d1 = '{', char d2 = '}')
+{
+	return getnested(is, s, d1, d2);
+}
+
 
 str wordexp(const str& var, int flags = 0);
 // [[deprecated]]
