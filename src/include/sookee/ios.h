@@ -263,25 +263,25 @@ std::istream& getline(std::istream& is, std::string& s, std::streamsize num, cha
 
 //using namespace __gnu_cxx;
 
-typedef __gnu_cxx::stdio_filebuf<char> stdiobuf;
-typedef __gnu_cxx::stdio_filebuf<wchar_t> wstdiobuf;
+typedef __gnu_cxx ::stdio_filebuf<char> stdiobuf;
+typedef __gnu_cxx ::stdio_filebuf<wchar_t> wstdiobuf;
 
 template<typename Char>
-class basic_stdiostream
-: public std::basic_iostream<Char>
+class basic_stdio_stream: public std::basic_iostream<Char>
 {
 public:
 	typedef Char char_type;
 	typedef std::basic_iostream<char_type> stream_type;
-	typedef __gnu_cxx::stdio_filebuf<char_type> buf_type;
+	typedef __gnu_cxx ::stdio_filebuf<char_type> buf_type;
 
 protected:
 	buf_type buf;
 
 public:
-	basic_stdiostream(int fd, const std::ios::openmode& mode)
-	: stream_type(&buf)
-	, buf(fd, mode)
+	basic_stdio_stream(int fd, const std::ios::openmode& mode)
+	:
+	stream_type(&buf),
+		buf(fd, mode)
 	{
 	}
 
@@ -291,17 +291,27 @@ public:
 	}
 };
 
-typedef basic_stdiostream<char> stdiostream;
-typedef basic_stdiostream<wchar_t> wstdiostream;
-typedef std::shared_ptr<stdiostream> stdiostream_sptr;
-typedef std::unique_ptr<stdiostream> stdiostream_uptr;
+typedef basic_stdio_stream<char> stdio_stream;
+typedef basic_stdio_stream<wchar_t> wstdio_stream;
+typedef std::shared_ptr<stdio_stream> stdiostream_sptr;
+typedef std::unique_ptr<stdio_stream> stdiostream_uptr;
+
+typedef std::vector<stdiostream_uptr> stdios_uptr_vec;
 
 class Fork
 {
+	typedef std::vector<stdiostream_uptr> stdios_uptr_vec;
+	typedef std::vector<std::array<int, 2>> pipe_vec;
+
+	typedef stdios_uptr_vec::size_type size_type;
+
+	enum { R = 0, W = 1, I = 0, O = 1, E = 2 };
+
 	pid_t pid = -1;
 
-	stdiostream_uptr stdip;
-	stdiostream_uptr stdop;
+	stdios_uptr_vec stdp;
+
+	char** env = nullptr;
 
 	bool log_report(const str& msg, bool state = false)
 	{
@@ -309,17 +319,14 @@ class Fork
 		return state;
 	}
 
-	static std::iostream& get_null_iostream()
+	static stdio_stream& get_null_iostream()
 	{
-		static stdiostream stdionull(-1, std::ios::in|std::ios::out);
-		stdionull.setstate(std::ios::failbit|std::ios::badbit);
+		static stdio_stream stdionull(-1, std::ios::in | std::ios::out);
+		stdionull.setstate(std::ios::failbit | std::ios::badbit);
 		return stdionull;
 	}
 
-	std::string convert(const std::string& s)
-	{
-		return s;
-	}
+	std::string convert(const std::string& s) { return s; }
 
 	template<typename Type>
 	std::string convert(Type t)
@@ -328,89 +335,115 @@ class Fork
 	}
 
 public:
+	/**
+	 * Currently not working for > 3 file descriptore
+	 * When a 4th is opened, 0 (stdin) fails and so does
+	 * the 4th (3)
+	 * @param fds
+	 */
+	Fork(size_type fds = 3): stdp(fds) {}
+
+	void setenv(char* env[]) { this->env = env; }
 
 	explicit operator bool() const
 	{
-		return pid != -1 && stdip.get() && stdop.get() && *stdip && *stdop;
+		for(auto& s: stdp)
+			if(!s || !*s)
+				return false;
+		return pid != -1;
 	}
 
-	pid_t get_pid() { return pid; }
+	pid_t get_pid() const { return pid; }
 
-	std::istream& istream()
+	/**
+	 * Get arbitrary file descriptor as stream
+	 */
+	stdio_stream& stdfd(int fd)
 	{
-		if(!stdip.get())
+		if(!(size_type(fd) < stdp.size()) || !stdp[fd])
 			return get_null_iostream();
-		return *stdip;
+		return *stdp[fd];
 	}
 
-	std::ostream& ostream()
-	{
-		if(!stdop.get())
-			return get_null_iostream();
-		return *stdop;
-	}
+	/**
+	 * Get named file descriptor 0 as stream
+	 */
+	stdio_stream& stdin() { return stdfd(I); }
+
+	/**
+	 * Get named file descriptor 1 as stream
+	 */
+	stdio_stream& stdout() { return stdfd(O); }
+
+	/**
+	 * Get named file descriptor 2 as stream
+	 */
+	stdio_stream& stderr() { return stdfd(E); }
 
 	template<typename... Args>
-	bool exec(const str& dir, const str& prog, Args... args)
+	bool exec(str dir, str prog, Args... args)
 	{
-		int pipe_w[2]; // write to child
-		int pipe_r[2]; // read from child
+		pipe_vec pipes(stdp.size());
 
-		if(pipe(pipe_w) || pipe(pipe_r))
-			return log_report(strerror(errno));
+		for(auto& a: pipes)
+			if(pipe(a.data()))
+				return log_report(strerror(errno));
 
-		if((pid = fork()) == -1)
-			return log_report(strerror(errno));
+		if(env)
+			environ = env;
 
-		if(pid)
+		if((pid = fork())) // parent
 		{
-			// parent
-			stdip.reset(new(std::nothrow) stdiostream(pipe_r[0], std::ios::in));
-			stdop.reset(new(std::nothrow) stdiostream(pipe_w[1], std::ios::out));
+			if(pid < 0)
+				return log_report(std::strerror(errno));
 
-			close(pipe_r[1]);
-			close(pipe_w[0]);
+			if(!stdp.empty())
+			{
+				stdp[0].reset(new (std::nothrow) stdio_stream(pipes[0][W], std::ios::out));
+				close(pipes[0][R]);
+			}
 
-			if(!stdip.get() || !stdop.get())
-				return log_report("Unable to create stdiostream object.");
+			for(unsigned p = 1; p < stdp.size(); ++p)
+			{
+				stdp[p].reset(new (std::nothrow) stdio_stream(pipes[p][R], std::ios::in));
+				close(pipes[p][W]);
+			}
+
+			for(const auto& s: stdp)
+				if(!s)
+					return log_report("Unable to create stdiostream object.");
 
 			return true;
 		}
-		else
+
+		// child
+
+		for(int fd = pipes.size() - 1; fd > 0; --fd)
 		{
-			// child
-
-	//			rlimit lim;
-	//			if(!getrlimit(RLIMIT_NPROC, &lim))
-	//			{
-	//				lim.rlim_max += 10;
-	//				lim.rlim_cur += 10;
-	//				setrlimit(RLIMIT_NPROC, &lim);
-	//			}
-
-			close(1);
-			dup(pipe_r[1]); // lowest unused fd
-
-			close(0);
-			dup(pipe_w[0]); // lowest unused fd
-
-			close(pipe_r[0]);
-			close(pipe_r[1]);
-			close(pipe_w[0]);
-			close(pipe_w[1]);
-
-			str prog_name = expand_env(dir + "/" + prog, WRDE_SHOWERR);
-
-			if(!dir.empty())
-				chdir(dir.c_str());
-
-			execlp(prog_name.c_str(), prog_name.c_str(), convert(args).c_str()..., 0);
-
-			log("ERROR: " << strerror(errno));
-			return false; // execl() failed
+			close(fd);
+			dup(pipes[fd][W]);
 		}
 
-		return true;
+		if(!pipes.empty())
+		{
+			close(0);
+			dup(pipes[0][R]);
+		}
+
+		for(auto& p: pipes)
+			for(auto& fd: p)
+				close(fd);
+
+		dir = expand_env(dir, WRDE_SHOWERR);
+		prog = expand_env(prog, WRDE_SHOWERR);
+
+		if(!dir.empty())
+			chdir(dir.c_str());
+
+		execlp(prog.c_str(), prog.c_str(), convert(args).c_str()..., (char*)0);
+
+		log("ERROR: [" << errno << "] " << strerror(errno));
+		return false; // execl() failed
 	}
 };
 

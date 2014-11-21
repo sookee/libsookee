@@ -34,6 +34,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <iomanip>
 
 #include <sookee/str.h>
+#include <sookee/bug.h>
 #include <sookee/log.h>
 
 #include <sys/socket.h>
@@ -43,12 +44,11 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
-
-
 namespace sookee { namespace net {
 
-using namespace sookee::types;
+using namespace sookee::bug;
 using namespace sookee::log;
+using namespace sookee::types;
 using namespace sookee::utils;
 
 cookie::cookie()
@@ -163,22 +163,37 @@ std::istream& read_http_headers(std::istream&is, header_map& headers)
 	return is;
 }
 
-
 std::istream& read_chunked_encoding(std::istream& is, str& data)
 {
 	data.clear();
 	size_t len = 0;
-	str line;
-	std::ostringstream oss;
 	while(is >> std::hex >> len && len)
 	{
-//		bug("len: " << len);
-		std::getline(is, line); // move to data start
-		oss.clear();
-		oss.str("");
-		for(char c; len && is.get(c); --len) oss.put(c);
-		data.append(oss.str());
+		is.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		for(char c; len && is.get(c); --len)
+			data += c;
 	}
+	return is;
+}
+
+std::istream& read_compress_encoding(std::istream& is, str& data)
+{
+	data.clear();
+	log("ERROR: compress encoding not implemented");
+	return is;
+}
+
+std::istream& read_deflate_encoding(std::istream& is, str& data)
+{
+	data.clear();
+	log("ERROR: deflate encoding not implemented");
+	return is;
+}
+
+std::istream& read_gzip_encoding(std::istream& is, str& data)
+{
+	data.clear();
+	log("ERROR: gzip encoding not implemented");
 	return is;
 }
 
@@ -186,16 +201,27 @@ std::istream& read_http_response_data(std::istream&is, const header_map& headers
 {
 	for(const net::header& h: headers)
 	{
-		if(h.first == "transfer-encoding" && h.second == "chunked")
-			return read_chunked_encoding(is, data);
+		if(h.first == "transfer-encoding")
+		{
+			if(h.second == "chunked")
+				return read_chunked_encoding(is, data);
+			else if(h.second == "compress" || h.second == "x-compress")
+				return read_compress_encoding(is, data);
+			else if(h.second == "deflate")
+				return read_deflate_encoding(is, data);
+			else if(h.second == "gzip" || h.second == "x-gzip")
+				return read_gzip_encoding(is, data);
+		}
 		else if(h.first == "content-length")
 		{
 			size_t len;
 			if(std::istringstream(h.second) >> len)
 			{
-				std::ostringstream oss;
-				for(char c; len && is.get(c); --len) oss.put(c);
-				data = oss.str();
+//				std::ostringstream oss;
+				data.clear();
+				for(char c; len && is.get(c); --len)
+					data += c;
+//				data = oss.str();
 				return is;
 			}
 		}
