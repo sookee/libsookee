@@ -34,6 +34,8 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <sookee/log.h>
 
 #include <unistd.h>
+#include <sys/stat.h>
+#include <signal.h>
 
 #ifdef __clang__
 #	include "stdio_filebuf.h"
@@ -293,14 +295,15 @@ public:
 
 typedef basic_stdio_stream<char> stdio_stream;
 typedef basic_stdio_stream<wchar_t> wstdio_stream;
-typedef std::shared_ptr<stdio_stream> stdiostream_sptr;
-typedef std::unique_ptr<stdio_stream> stdiostream_uptr;
 
-typedef std::vector<stdiostream_uptr> stdios_uptr_vec;
+typedef std::shared_ptr<stdio_stream> stdio_stream_sptr;
+typedef std::unique_ptr<stdio_stream> stdio_stream_uptr;
+
+//typedef std::vector<stdio_stream_uptr> stdios_uptr_vec;
 
 class Fork
 {
-	typedef std::vector<stdiostream_uptr> stdios_uptr_vec;
+	typedef std::vector<stdio_stream_uptr> stdios_uptr_vec;
 	typedef std::vector<std::array<int, 2>> pipe_vec;
 
 	typedef stdios_uptr_vec::size_type size_type;
@@ -335,13 +338,108 @@ class Fork
 	}
 
 public:
+	struct pipe_desc
+	{
+		int fd = -1;
+		uns io = I;
+		pipe_desc(uns io, int fd): fd(fd), io(io) {}
+	};
+private:
+
+	std::vector<pipe_desc> fds;
+
+	template<typename Arg, typename... Args>
+	void set_pipes_r(Arg arg, Args... args)
+	{
+		fds.push_back(arg);
+		set_pipes_r(args...);
+	}
+
+	void set_pipes_r()
+	{
+//		for(auto&& fd: fds)
+//			bug('{' << fd.fd << ", " << fd.io << '}');
+	}
+
+	static void killer(pid_t pid, st_duration wait)
+	{
+		st_time_point die_by = st_clk::now() + wait;
+
+		if(::kill(pid, SIGTERM) == -1)
+		{
+			if(::kill(pid, SIGKILL) == -1)
+			{
+				log("ERROR: Unable to kill process: " << pid);
+				return;
+			}
+		}
+
+		struct stat s;
+		str proc = "/proc/" + std::to_string(pid);
+
+		while(st_clk::now() < die_by)
+		{
+			if((stat(proc.c_str() , &s) == -1) && errno == ENOENT)
+				return; // killed
+			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		}
+
+		if(::kill(pid, SIGKILL) == -1)
+		{
+			log("ERROR: Unable to kill process: " << pid);
+			return;
+		}
+
+		while(st_clk::now() < die_by)
+		{
+			if((stat(proc.c_str() , &s) == -1) && errno == ENOENT)
+				return; // killed
+			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		}
+		log("ERROR: Unable to kill process: " << pid);
+	}
+
+public:
+
 	/**
 	 * Currently not working for > 3 file descriptore
 	 * When a 4th is opened, 0 (stdin) fails and so does
 	 * the 4th (3)
 	 * @param fds
 	 */
-	Fork(size_type fds = 3): stdp(fds) {}
+	Fork(): stdp(3) {}
+
+	Fork(Fork&& fork) { (*this) = std::move(fork); }
+
+	Fork& operator=(Fork&& fork)
+	{
+		if(&fork == this)
+			return *this;
+
+		this->kill();
+
+		for(auto&& s: fork.stdp)
+			stdp.emplace_back(s.release());
+
+		env = fork.env;
+		fork.env = nullptr;
+
+		pid = fork.pid;
+		fork.pid = -1;
+
+		return *this;
+	}
+
+	void kill(st_duration wait = std::chrono::seconds(3))
+	{
+		for(auto&& s: stdp)
+			s.release();
+		stdp.clear();
+
+		if(pid > 0)
+			std::thread(killer, pid, wait).detach();
+		pid = -1;
+	}
 
 	void setenv(char* env[]) { this->env = env; }
 
@@ -381,8 +479,16 @@ public:
 	stdio_stream& stderr() { return stdfd(E); }
 
 	template<typename... Args>
+	void set_pipes(Args... args)
+	{
+		fds.clear();
+		set_pipes_r(args...);
+	}
+
+	template<typename... Args>
 	bool exec(str dir, str prog, Args... args)
 	{
+		//bug_var(stdp.size());
 		pipe_vec pipes(stdp.size());
 
 		for(auto& a: pipes)
