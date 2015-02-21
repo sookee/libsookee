@@ -61,14 +61,19 @@ cookie::cookie(const str& data)
 : secure(false)
 , httponly(false)
 {
+//	bug_func();
 	std::istringstream iss(data);
 	std::getline(iss, key, '=');
 	std::getline(iss, val, ';');
 	iss >> std::ws;
 
+//	bug_var(key);
+//	bug_var(val);
+
 	str att;
 	while(std::getline(iss, att, '='))
 	{
+//		bug_var(att);
 		if(att == "Domain")
 			std::getline(iss, domain, ';');
 		else if(att == "Path")
@@ -139,6 +144,19 @@ std::string get_cookie_header(const cookie_jar& cookies, const str& /*domain*/)
 	}
 	return oss.str();
 }
+
+std::ostream& write_cookie_headers(std::ostream& os, const cookie_jar& cookies)
+{
+	str sep;
+	for(auto&& c: cookies)
+	{
+		os << sep << "Cookie: " << c.second.key << "=" << c.second.val;
+		sep = "\r\n";
+	}
+	return os;
+}
+
+
 
 std::istream& read_http_headers(std::istream&is, header_map& headers)
 {
@@ -236,7 +254,7 @@ std::istream& read_http_cookies(std::istream& is, const header_map& headers, coo
 		if(h.first == "set-cookie")
 		{
 			cookie c(h.second);
-			cookies[c.domain + "/" + c.path] = c;
+			cookies[c.key] = c;
 		}
 	}
 	return is;

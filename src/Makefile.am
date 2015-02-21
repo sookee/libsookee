@@ -1,25 +1,6 @@
-# /*-----------------------------------------------------------------.
-# | Copyright (C) 2013 SooKee oasookee@gmail.com                |
-# '------------------------------------------------------------------'
-# 
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-# 02110-1301, USA.
-# 
-# http://www.gnu.org/licenses/gpl-2.0.html
-# 
-# '-----------------------------------------------------------------*/
+pkgconfigdir = $(libdir)/pkgconfig
+
+pkgconfig_DATA = libsookee.pc
 
 sookee_includedir = $(prefix)/include/sookee
 sookee_include_typesdir = $(prefix)/include/sookee/types
@@ -79,10 +60,20 @@ noinst_PROGRAMS = \
 	test-stl \
 	test-trim \
 	test-cal
+	
+libsookee.pc: $(top_srcdir)/pkg-config/libsookee.pc.in
+	sed -e 's![@]prefix[@]!$(prefix)!g' \
+	    -e 's![@]exec_prefix[@]!$(exec_prefix)!g' \
+	    -e 's![@]includedir[@]!$(includedir)!g' \
+	    -e 's![@]libdir[@]!$(libdir)!g' \
+	    -e 's![@]PACKAGE_VERSION[@]!$(PACKAGE_VERSION)!g' \
+	    -e 's![@]KRB5_LDFLAGS[@]!$(KRB5_LDFLAGS)!g' \
+	    -e 's![@]KRB5_LIBS[@]!$(KRB5_LIBS)!g' \
+	    $(top_srcdir)/pkg-config/libsookee.pc.in > $@
+
 
 test_SOURCES = test.cpp
 test_LDADD = -L.libs -lsookee
-test_CFLAGS = -std=c++1y
 
 test_ios_SOURCES = test-ios.cpp
 test_ios_LDADD = -L.libs -lsookee

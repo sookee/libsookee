@@ -92,7 +92,7 @@ const str OFF = "\\[\\033[0m\\]";
 
 std::ostream& out(std::ostream* os)
 {
-	static std::ostream* osp = 0;
+	static /*thread_local*/ std::ostream* osp = 0;
 
 	if(!osp) // initialize
 		if(!os)

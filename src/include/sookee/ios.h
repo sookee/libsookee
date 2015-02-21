@@ -32,6 +32,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <sookee/types/stream.h>
 #include <sookee/types/str_vec.h>
 #include <sookee/log.h>
+#include <sookee/str.h>
 
 #include <unistd.h>
 #include <sys/stat.h>
@@ -54,6 +55,7 @@ namespace sookee { namespace ios {
 
 using namespace sookee::log;
 using namespace sookee::types;
+using namespace sookee::utils;
 
 std::istream& getstring(std::istream& is, str& s);
 inline
@@ -262,6 +264,35 @@ std::istream& getline(std::istream& is, std::string& s, std::streamsize num, cha
 	return is.getline(&s[0], num, delim);
 }
 
+// retain type info for std::stringstreams
+
+template<typename Type>
+std::stringstream& operator<<(std::stringstream& ss, const Type& type)
+{
+	static_cast<std::ostream&>(ss) << type;
+	return ss;
+}
+
+template<typename Type>
+std::stringstream& operator<<(std::stringstream&& ss, const Type& type)
+{
+	static_cast<std::ostream&>(ss) << type;
+	return ss;
+}
+
+template<typename Type>
+std::stringstream& operator>>(std::stringstream& ss, Type& type)
+{
+	static_cast<std::istream&>(ss) >> type;
+	return ss;
+}
+
+template<typename Type>
+std::stringstream& operator>>(std::stringstream&& ss, Type& type)
+{
+	static_cast<std::istream&>(ss) >> type;
+	return ss;
+}
 
 //using namespace __gnu_cxx;
 
@@ -281,10 +312,9 @@ protected:
 
 public:
 	basic_stdio_stream(int fd, const std::ios::openmode& mode)
-	:
-	stream_type(&buf),
-		buf(fd, mode)
+	: stream_type(/*&buf*/), buf(fd, mode)
 	{
+		this->rdbuf(&buf);
 	}
 
 	void close()
@@ -485,6 +515,13 @@ public:
 		set_pipes_r(args...);
 	}
 
+	/**
+	 *
+	 * @param dir Spaced need to be escaped "just\ like\ \ this.txt"
+	 * @param prog
+	 * @param args
+	 * @return
+	 */
 	template<typename... Args>
 	bool exec(str dir, str prog, Args... args)
 	{
@@ -540,11 +577,18 @@ public:
 			for(auto& fd: p)
 				close(fd);
 
-		dir = expand_env(dir, WRDE_SHOWERR);
-		prog = expand_env(prog, WRDE_SHOWERR);
+		// escaped because wordexp breaks at spaces
+		//replace(dir, " ", "\\ ");
+		//replace(prog, " ", "\\ ");
+
+		//log("BEFORE");
+		dir = wordexp(dir, WRDE_SHOWERR);
+		//log("AFTER");
+		prog = wordexp(prog, WRDE_SHOWERR);
 
 		if(!dir.empty())
-			chdir(dir.c_str());
+			if(chdir(dir.c_str()) == -1)
+				log("ERROR: [" << errno << "] " << strerror(errno) << ": " << dir);
 
 		execlp(prog.c_str(), prog.c_str(), convert(args).c_str()..., (char*)0);
 

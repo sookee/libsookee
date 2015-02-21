@@ -35,6 +35,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <functional>
 #include <algorithm>
 #include <sstream>
+#include <cstring>
 
 namespace sookee { namespace utils {
 
@@ -76,6 +77,46 @@ inline str& rtrim(str& s, const char* t = ws)
  * @return The same string passed in as a parameter reference.
  */
 inline str& trim(str& s, const char* t = ws)
+{
+	return ltrim(rtrim(s, t), t);
+}
+
+// MOVE SEMANTICS
+
+/**
+ * Remove leading characters from a str.
+ * @param s The str to be modified.
+ * @param t The set of characters to delete from the beginning
+ * of the string.
+ * @return The same string passed in as a parameter reference.
+ */
+inline str ltrim(str&& s, const char* t = " \n\t")
+{
+	s.erase(0, s.find_first_not_of(t));
+	return s;
+}
+
+/**
+ * Remove trailing characters from a str.
+ * @param s The str to be modified.
+ * @param t The set of characters to delete from the end
+ * of the string.
+ * @return The same string passed in as a parameter reference.
+ */
+inline str rtrim(str&& s, const char* t = " \n\t")
+{
+	s.erase(s.find_last_not_of(t) + 1);
+	return s;
+}
+
+/**
+ * Remove surrounding characters from a str.
+ * @param s The string to be modified.
+ * @param t The set of characters to delete from each end
+ * of the string.
+ * @return The same string passed in as a parameter reference.
+ */
+inline str trim(str&& s, const char* t = " \n\t")
 {
 	return ltrim(rtrim(s, t), t);
 }
@@ -165,6 +206,8 @@ inline str rtrim_keep(str& s, const char* t = ws)
 }
 
 str& replace(str& s, const str& from, const str& to);
+// replace whole words only
+str replace_word(const str& s, const str& from, const str& to);
 
 inline
 str& transform(str& s, const std::function<int(int)>& func)
@@ -237,6 +280,11 @@ size_t extract_delimited_text(const str& in, const str& d1, const str& d2, str& 
 str_vec split(const str& s, char d = ' ', bool fold = true);
 //void split(const str& s, str_vec& v, char d = ' ', bool fold = true);
 
+// untested
+str_vec split(const str& s, const str& d);
+
+str_vec split2(const std::string& s);
+
 template<typename Container>
 str join(const Container& c, const str& delim = " ")
 {
@@ -278,6 +326,15 @@ T to(const str& s)
 	siss iss(s);
 	iss >> t;
 	return t;
+}
+
+// utility function to create char*'s
+template<std::size_t Size>
+char* make_rptr(const char (&s)[Size])
+{
+	char* rptr = new char[Size];
+	std::strcpy(rptr, s);
+	return rptr;
 }
 
 }} // sookee::utils

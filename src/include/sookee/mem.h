@@ -81,16 +81,22 @@ public:
     }
 };
 
-template<typename T, typename... Args>
-std::unique_ptr<T> make_unique(Args&&... args)
-{
-    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-}
+//template<typename T, typename... Args>
+//std::unique_ptr<T> make_unique(Args&&... args)
+//{
+//    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+//}
+//
+//template<typename Type>
+//std::unique_ptr<Type[]> make_unique_array(size_t size)
+//{
+//    return std::unique_ptr<Type[]>(new Type[size]);
+//}
 
-template<typename Type>
-std::unique_ptr<Type[]> make_unique_array(size_t size)
+template<typename Type, typename... Args>
+auto mk_sptr(Args&&... args)-> std::shared_ptr<Type>
 {
-    return std::unique_ptr<Type[]>(new Type[size]);
+	return std::make_shared<Type>(std::forward<Args>(args)...);
 }
 
 }} // sookee::bug

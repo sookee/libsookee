@@ -29,7 +29,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#include <SFML/Graphics.hpp>
+//#include <SFML/Graphics.hpp>
 
 #include <sookee/types/basic.h>
 #include <sookee/types/stream.h>

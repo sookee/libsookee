@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+includedir=@includedir@
+libdir=@libdir@
+
+Name: libsookee
+Description: The SooKee library
+URL: https://github.com/sookee/libsookee
+Version: @PACKAGE_VERSION@
+Cflags: -I${includedir}
+Libs: -L${libdir}/sookee -lsookee
+#Libs.private: @KRB5_LDFLAGS@ @KRB5_LIBS@

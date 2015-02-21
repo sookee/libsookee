@@ -34,9 +34,11 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <sys/stat.h>
 
 #include <sookee/types.h>
+#include <sookee/bug.h>
 
 namespace sookee { namespace ios {
 
+using namespace sookee::bug;
 using namespace sookee::types;
 
 //sis&(&sgl)(sis&, str&, char) = std::getline;
@@ -193,7 +195,7 @@ bool ls(const str& folder, str_vec& folders, str_vec &files)
 		else if(dirp->d_type == DT_UNKNOWN)
 		{
 			struct stat s;
-			if(!stat(dirp->d_name, &s))
+			if(!stat((folder + "/" + dirp->d_name).c_str(), &s))
 			{
 				if(S_ISDIR(s.st_mode))
 					folders.push_back(dirp->d_name);
@@ -221,7 +223,7 @@ str_vec ls(const str& folder, ftype t)
 
 	while((dirp = readdir(dir)))
 	{
-		if(!stat(dirp->d_name, &s))
+		if(!stat((folder + "/" + dirp->d_name).c_str(), &s))
 		{
 			if((t == ftype::dir && S_ISDIR(s.st_mode))
 			|| (t == ftype::reg && S_ISREG(s.st_mode))

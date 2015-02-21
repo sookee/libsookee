@@ -52,7 +52,7 @@ std::string get_stamp()
 
 std::ostream& out(std::ostream* os)
 {
-	static std::ostream* osp = 0;
+	static /*thread_local*/ std::ostream* osp = 0;
 
 	// initialize
 	if(!osp)

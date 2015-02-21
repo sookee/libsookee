@@ -43,22 +43,26 @@ is granted under the same conditions.
 
 '----------------------------------------------------------------*/
 
+#include <string>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <cerrno>
+
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#include <cstdio>
-#include <cstdlib>
 #include <unistd.h>
-#include <cerrno>
 #include <openssl/rand.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 
-#include <string>
-#include <iostream>
+#include <sookee/log.h>
 
 namespace sookee { namespace net {
+
+using namespace sookee::log;
 
 typedef std::string str;
 typedef size_t siz;

@@ -53,7 +53,7 @@ bool Config::load(const str& dir, const str& file, bool first)
 		includes.clear();
 		props.clear();
 	}
-	str config_file = dir + "/" + expand_env(file);
+	str config_file = wordexp(dir) + "/" + wordexp(file);
 
 	if(!includes.insert(config_file).second)
 		return true; // endless recursion

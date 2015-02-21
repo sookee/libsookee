@@ -34,6 +34,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 '-----------------------------------------------------------------*/
 
 #include <algorithm>
+#include <array>
 
 namespace sookee { namespace stl {
 

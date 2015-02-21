@@ -5,7 +5,9 @@
  *      Author: SooKee <oasookee@gmail.com>
  */
 
+#include <sookee/ios.h>
 #include <sookee/types/basic.h>
+#include <sookee/types/stream.h>
 #include <sookee/types/siz_vec.h>
 #include <sookee/types/str_vec.h>
 #include <sookee/str.h>
@@ -18,6 +20,7 @@ namespace sookee { namespace utils {
 
 using namespace sookee::bug;
 using namespace sookee::log;
+using namespace sookee::ios;
 using namespace sookee::types;
 using namespace sookee::utils;
 
@@ -314,6 +317,11 @@ public:
 		vars.clear();
 	}
 
+	bool compile_file(const str& filename)
+	{
+		return compile((sss() << sifs(filename).rdbuf()).str());
+	}
+
 	bool compile(const str& text)
 	{
 		clear();
@@ -381,12 +389,20 @@ public:
 		{
 			s.append(*p++);
 			if(v != vars.end())
-				s.append(d.at(*v++));
+			{
+				if(!d.count(*v))
+					log("ERROR: not in dict" << *v++);
+				else
+					s.append(d.at(*v++));
+			}
 		}
 
 		while(v != vars.end())
 		{
-			s.append(d.at(*v++));
+			if(!d.count(*v))
+				log("ERROR: not in dict" << *v++);
+			else
+				s.append(d.at(*v++));
 			if(p != pieces.end())
 				s.append(*p++);
 		}

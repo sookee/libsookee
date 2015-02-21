@@ -67,6 +67,15 @@ typedef std::lock_guard<std::mutex> lock_guard;
 typedef std::unique_lock<std::mutex> unique_lock;
 typedef std::lock_guard<std::recursive_mutex> recursive_lock_guard;
 
+template<typename Type>
+using sptr = std::shared_ptr<Type>;
+
+template<typename Type>
+using uptr = std::unique_ptr<Type>;
+
+template<typename Type>
+using rptr = Type*;
+
 struct malloc_deleter
 {
 	template <class T>

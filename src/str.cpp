@@ -50,6 +50,37 @@ str& replace(str& s, const str& from, const str& to)
 	return s;
 }
 
+std::string replace_word(const std::string& s, const std::string& from, const std::string& to)
+{
+	// comparator functions
+	static auto is_space = [](char c){ return std::isspace(c); };
+	static auto is_not_space = [](char c){ return !std::isspace(c); };
+
+	std::string r;
+	std::string word;
+
+	auto p = s.begin();
+	auto e = p;
+	const auto end = s.end();
+
+	while(p != end)
+	{
+		// keep whitespace
+		r.append(p, (e = std::find_if(p, end, is_not_space)));
+
+		// extract words (between whitespace)
+		word.assign(e, (p = std::find_if(e, end, is_space)));
+
+		// decide to use word or substitute
+		if(word == from)
+			r.append(to);
+		else
+			r.append(word);
+	}
+
+	return r;
+}
+
 str::size_type extract_delimited_text(const str& in, const str& d1, const str& d2, str& out, size_t pos)
 {
 	if(pos == str::npos)
@@ -68,19 +99,53 @@ str::size_type extract_delimited_text(const str& in, const str& d1, const str& d
 
 str_vec split(const str& s, char d, bool fold)
 {
-	static const str_vec base_v(20, str(0, 32));
-	str_vec v = base_v;
+	str_vec v;
+	v.reserve(20);
 	std::istringstream iss(s);
-	str p = base_v[0];
-	while(iss && fold && iss.peek() == d)
-		iss.ignore();
-	while(iss && std::getline(iss, p, d))
+	str p;
+	if(fold)
+		while(iss.peek() == d)
+			iss.ignore();
+	while(std::getline(iss, p, d))
 	{
 		v.emplace_back(std::move(p));
-		while(iss && fold && iss.peek() == d)
-			iss.ignore();
+		if(fold)
+			while(iss.peek() == d)
+				iss.ignore();
 	}
 	return v;
+}
+
+str_vec split(const str& s, const str& d)
+{
+	str_vec v;
+	v.reserve(20);
+
+	str::size_type pos = 0;
+	str::size_type end;
+
+	while((end = s.find(d, pos)) != str::npos)
+	{
+		v.emplace_back(s.substr(pos, end - pos));
+		pos = end + d.size();
+	}
+	return v;
+}
+
+str_vec split2(const std::string& s)
+{
+	str_vec v;
+
+    auto done = s.end();
+    auto end = s.begin();
+    decltype(end) pos;
+
+    while((pos = std::find_if(end, done, std::not1(std::ptr_fun(isspace)))) != done)
+    {
+        end = std::find_if(pos, done, std::ptr_fun(isspace));
+        v.emplace_back(pos, end);
+    }
+    return v;
 }
 
 //void split(const str& s, str_vec& v, char d, bool fold)
