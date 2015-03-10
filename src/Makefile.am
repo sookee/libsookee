@@ -38,7 +38,7 @@ libsookee_db_la_SOURCES = \
 	mysql.cpp 
 	
 libsookee_la_CXXFLAGS = 
-libsookee_la_LIBADD =
+libsookee_la_LIBADD = -lrt
 libsookee_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
 
 #libsookee_i18n_la_CXXFLAGS = $(ICU_CFLAGS)
