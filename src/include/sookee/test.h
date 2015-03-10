@@ -12,7 +12,6 @@
 #include <ctime>
 #include <functional>
 #include <iostream>
-#include <time.h>
 
 #include <sookee/types/basic.h>
 
@@ -41,19 +40,66 @@ struct context
 //	}
 //};
 
+//class Timer
+//{
+//	const clockid_t clk = CLOCK_PROCESS_CPUTIME_ID;
+//	timespec tsb;
+//	timespec tse;
+//	siz iterations = 1;
+//
+//public:
+//	Timer(clockid_t clk = CLOCK_PROCESS_CPUTIME_ID): clk(clk), tsb {0,0}, tse {0,0} {}
+//
+//	void clear() { tsb = {0, 0}; tse = {0, 0}; }
+//	void start() { clock_gettime(clk, &tsb); }
+//	void stop() { clock_gettime(clk, &tse); }
+//
+//	friend std::ostream& operator<<(std::ostream& o, const Timer& timer)
+//	{
+//		return o << timer.diff();
+//	}
+//
+//	template<typename Func, typename... Args>
+//	double run(Func func, Args... args)
+//	{
+//		start();
+//		for(siz i = 0; i < iterations; ++i)
+//			func(args...);
+//		stop();
+//
+//		return diff();
+//	}
+//
+//	double diff() const
+//	{
+//		return double(tse.tv_nsec - tsb.tv_nsec)
+//			/ 1000000000
+//			+ double(tse.tv_sec - tsb.tv_sec);
+//	}
+//
+//	siz get_iterations() const
+//	{
+//		return iterations;
+//	}
+//
+//	void set_iterations(siz iterations = 1)
+//	{
+//		this->iterations = iterations;
+//	}
+//};
+
 class Timer
 {
-	const clockid_t clk = CLOCK_PROCESS_CPUTIME_ID;
-	timespec tsb;
-	timespec tse;
+	hr_clk::time_point tsb;
+	hr_clk::time_point tse;
 	siz iterations = 1;
 
 public:
-	Timer(clockid_t clk = CLOCK_PROCESS_CPUTIME_ID): clk(clk), tsb {0,0}, tse {0,0} {}
+//	Timer(): tsb {0}, tse {0} {}
 
-	void clear() { tsb = {0, 0}; tse = {0, 0}; }
-	void start() { clock_gettime(clk, &tsb); }
-	void stop() { clock_gettime(clk, &tse); }
+	void clear() { tsb = tse = hr_clk::now(); }
+	void start() { tsb = hr_clk::now(); }
+	void stop() { tse = hr_clk::now(); }
 
 	friend std::ostream& operator<<(std::ostream& o, const Timer& timer)
 	{
@@ -71,11 +117,11 @@ public:
 		return diff();
 	}
 
+	// return time difference in seconds
 	double diff() const
 	{
-		return double(tse.tv_nsec - tsb.tv_nsec)
-			/ 1000000000
-			+ double(tse.tv_sec - tsb.tv_sec);
+		auto d = std::chrono::duration_cast<std::chrono::microseconds>(tse - tsb);
+		return d.count() / 1000000.0;
 	}
 
 	siz get_iterations() const
