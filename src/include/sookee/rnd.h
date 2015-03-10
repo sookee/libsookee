@@ -12,7 +12,7 @@
 namespace sookee { namespace rnd {
 
 inline
-auto& engine()
+std::mt19937& engine()
 {
 	thread_local static std::random_device rd {};
 	thread_local static std::mt19937 engine {rd()};
@@ -27,10 +27,10 @@ void seed(seed_type s)
 	engine().seed(s);
 }
 
-inline
-auto randint(auto min, auto max) -> decltype(min + max)
+template<typename Integral>
+Integral randint(Integral min, Integral max)// -> decltype(min + max)
 {
-	using Integral = decltype(min + max);
+//	using Integral = decltype(min + max);
 	thread_local static std::uniform_int_distribution<Integral> dist;
 	typename std::uniform_int_distribution<Integral>::param_type p{min, max};
 	return dist(engine(), p);

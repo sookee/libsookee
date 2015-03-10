@@ -35,11 +35,11 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 
 AC_LANG(C++)
-AX_CXX_COMPILE_STDCXX_14([noext],[mandatory])
+AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
  
 AC_CONFIG_MACRO_DIR([m4])
 
-PKG_CHECK_MODULES([ICU], [icu-i18n icu-uc icu-io icu-le icu-lx])
+#PKG_CHECK_MODULES([ICU], [icu-i18n icu-uc icu-io icu-le icu-lx])
 AX_LIB_MYSQL([5.0])
 
 AC_LANG_CPLUSPLUS
