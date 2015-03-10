@@ -12,6 +12,7 @@
 #include <ctime>
 #include <functional>
 #include <iostream>
+#include <time.h>
 
 #include <sookee/types/basic.h>
 
