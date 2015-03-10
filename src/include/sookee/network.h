@@ -140,7 +140,9 @@ class httpi_stream
 	str host;
 
 public:
-	using net::socketstream::socketstream;
+//	using net::socketstream::socketstream;
+	httpi_stream(): net::socketstream() {}
+	httpi_stream(int s): net::socketstream() { buf.set_socket(s); }
 
 	str user_agent = "none";
 	str accept = "text/html";
