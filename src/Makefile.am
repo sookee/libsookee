@@ -1,7 +1,3 @@
-pkgconfigdir = $(libdir)/pkgconfig
-
-pkgconfig_DATA = libsookee.pc
-
 sookee_includedir = $(prefix)/include/sookee
 sookee_include_typesdir = $(prefix)/include/sookee/types
 
@@ -61,17 +57,6 @@ noinst_PROGRAMS = \
 	test-trim \
 	test-cal
 	
-libsookee.pc: $(top_srcdir)/pkg-config/libsookee.pc.in
-	sed -e 's![@]prefix[@]!$(prefix)!g' \
-	    -e 's![@]exec_prefix[@]!$(exec_prefix)!g' \
-	    -e 's![@]includedir[@]!$(includedir)!g' \
-	    -e 's![@]libdir[@]!$(libdir)!g' \
-	    -e 's![@]PACKAGE_VERSION[@]!$(PACKAGE_VERSION)!g' \
-	    -e 's![@]KRB5_LDFLAGS[@]!$(KRB5_LDFLAGS)!g' \
-	    -e 's![@]KRB5_LIBS[@]!$(KRB5_LIBS)!g' \
-	    $(top_srcdir)/pkg-config/libsookee.pc.in > $@
-
-
 test_SOURCES = test.cpp
 test_LDADD = -L.libs -lsookee
 

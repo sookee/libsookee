@@ -43,5 +43,5 @@ PKG_CHECK_MODULES([ICU], [icu-i18n icu-uc icu-io icu-le icu-lx])
 AX_LIB_MYSQL([5.0])
 
 AC_LANG_CPLUSPLUS
-AC_CONFIG_FILES([Makefile src/Makefile])
+AC_CONFIG_FILES([pkg-config/libsookee.pc Makefile src/Makefile])
 AC_OUTPUT

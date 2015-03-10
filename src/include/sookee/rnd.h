@@ -12,30 +12,49 @@
 namespace sookee { namespace rnd {
 
 inline
-std::mt19937& mt_rng()
+auto& engine()
 {
-	static std::mt19937 rng((std::random_device())()); // to avoid keeping the file open
-	return rng;
+	thread_local static std::random_device rd {};
+	thread_local static std::mt19937 engine {rd()};
+	return engine;
 }
 
-template<typename Integral>
-Integral integral(Integral b, Integral e)
+using seed_type = decltype(engine()());
+
+inline
+void seed(seed_type s)
 {
-	static std::uniform_int_distribution<Integral> d;
-	typename std::uniform_int_distribution<Integral>::param_type p{b, e};
-	return d(mt_rng(), p);
+	engine().seed(s);
 }
 
-template<typename Real>
-Real real(Real b, Real e)
+inline
+auto randint(auto min, auto max) -> decltype(min + max)
 {
-	static std::uniform_real_distribution<Real> d;
-	typename std::uniform_real_distribution<Real>::param_type p{b, e};
-	return d(mt_rng(), p);
+	using Integral = decltype(min + max);
+	thread_local static std::uniform_int_distribution<Integral> dist;
+	typename std::uniform_int_distribution<Integral>::param_type p{min, max};
+	return dist(engine(), p);
 }
+
+//template<typename Integral>
+//Integral integral(Integral b, Integral e)
+//{
+//	static std::uniform_int_distribution<Integral> d;
+//	typename std::uniform_int_distribution<Integral>::param_type p{b, e};
+//	return d(mt_rng(), p);
+//}
+//
+//template<typename Real>
+//Real real(Real b, Real e)
+//{
+//	static std::uniform_real_distribution<Real> d;
+//	typename std::uniform_real_distribution<Real>::param_type p{b, e};
+//	return d(mt_rng(), p);
+//}
 
 enum class type { lower, upper, both };
 
+inline
 std::string random_alphanum(size_t length, type t = type::both)
 {
     static const std::string anl =
@@ -54,7 +73,7 @@ std::string random_alphanum(size_t length, type t = type::both)
     const std::string& an = t == type::lower ? anl : t == type::upper ? anu : anb;
 
 
-    static std::mt19937 rg(std::chrono::system_clock::now().time_since_epoch().count());
+//    static std::mt19937 rg(std::chrono::system_clock::now().time_since_epoch().count());
     static std::uniform_int_distribution<> pick(0, (int)an.size() - 1);
 
     std::string s;
@@ -62,19 +81,19 @@ std::string random_alphanum(size_t length, type t = type::both)
     s.reserve(length);
 
     while(length--)
-        s += an[pick(rg)];
+        s += an[pick(engine())];
 
     return s;
 }
 
-template<typename RandomEngine = std::default_random_engine>
-int rnd(int a, int b, RandomEngine e = RandomEngine())
-{
-	static std::uniform_int_distribution<> d;
-	typename std::uniform_int_distribution<>::param_type p{a, b};
-
-    return d(e, p);
-}
+//template<typename RandomEngine = std::default_random_engine>
+//int rnd(int a, int b, RandomEngine e = RandomEngine())
+//{
+//	static std::uniform_int_distribution<> d;
+//	typename std::uniform_int_distribution<>::param_type p{a, b};
+//
+//    return d(e, p);
+//}
 
 //std::random_device rd;
 //std::default_random_engine eng{rd()};

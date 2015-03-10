@@ -100,13 +100,12 @@ int wordexp_vec(const str& var, str_vec& vars, int flags)
 std::istream& getstring(std::istream& is, str& s)
 {
 	char term = ' ';
-	if(is.peek() != '"' && is.peek() != '\'')
-	{
-		is.setstate(std::ios::failbit);
-		return is;
-	}
 
-	is.get(term);
+	if(is.flags() & is.skipws)
+		is >> std::ws;
+
+	if(is.peek() == '"' || is.peek() == '\'')
+		is.get(term);
 
 	char c;
 	str n;
@@ -137,7 +136,7 @@ std::istream& getnested(std::istream& is, str& s, char d1, char d2)
 	str n;
 	uns d = 0;
 	char c;
-	while(is.get(c))// && (c != d2 || d))
+	while(is.get(c))
 	{
 		n.append(1, c);
 		if(c == d1)

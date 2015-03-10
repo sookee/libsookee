@@ -1,26 +1,32 @@
 # ============================================================================
+# This file is copied from the original work of the following owners 
+# and is distributed with their copyright notice and license intact.
+#
+# It has been modified to check for C++14 support rather than C++11
+#
+# ============================================================================
 #  http://www.gnu.org/software/autoconf-archive/ax_cxx_compile_stdcxx_11.html
 # ============================================================================
 #
 # SYNOPSIS
 #
-#   AX_CXX_COMPILE_STDCXX_11([ext|noext],[mandatory|optional])
+#   AX_CXX_COMPILE_STDCXX_14([ext|noext],[mandatory|optional])
 #
 # DESCRIPTION
 #
-#   Check for baseline language coverage in the compiler for the C++11
+#   Check for baseline language coverage in the compiler for the C++14
 #   standard; if necessary, add switches to CXXFLAGS to enable support.
 #
 #   The first argument, if specified, indicates whether you insist on an
-#   extended mode (e.g. -std=gnu++11) or a strict conformance mode (e.g.
-#   -std=c++11).  If neither is specified, you get whatever works, with
+#   extended mode (e.g. -std=gnu++14) or a strict conformance mode (e.g.
+#   -std=c++14).  If neither is specified, you get whatever works, with
 #   preference for an extended mode.
 #
 #   The second argument, if specified 'mandatory' or if left unspecified,
-#   indicates that baseline C++11 support is required and that the macro
+#   indicates that baseline C++14 support is required and that the macro
 #   should error out if no mode with that support is found.  If specified
 #   'optional', then configuration proceeds regardless, after defining
-#   HAVE_CXX11 if and only if a supporting mode is found.
+#   HAVE_CXX14 if and only if a supporting mode is found.
 #
 # LICENSE
 #
@@ -28,13 +34,14 @@
 #   Copyright (c) 2012 Zack Weinberg <zackw@panix.com>
 #   Copyright (c) 2013 Roy Stogner <roystgnr@ices.utexas.edu>
 #   Copyright (c) 2014 Alexey Sokolov <sokolov@google.com>
+#   Copyright (c) 2014, 2015 Google Inc.
 #
 #   Copying and distribution of this file, with or without modification, are
 #   permitted in any medium without royalty provided the copyright notice
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 4
+#serial 8
 
 m4_define([_AX_CXX_COMPILE_STDCXX_14_testbody], [[
   template <typename T>
@@ -61,6 +68,27 @@ m4_define([_AX_CXX_COMPILE_STDCXX_14_testbody], [[
 
     auto d = a;
     auto l = [](){};
+
+    // http://stackoverflow.com/questions/13728184/template-aliases-and-sfinae
+    // Clang 3.1 fails with headers of libstd++ 4.8.3 when using std::function because of this
+    namespace test_template_alias_sfinae {
+        struct foo {};
+
+        template<typename T>
+        using member = typename T::member_type;
+
+        template<typename T>
+        void func(...) {}
+
+        template<typename T>
+        void func(member<T>*) {}
+
+        void test();
+
+        void test() {
+            func<foo>(0);
+        }
+    }
 ]])
 
 AC_DEFUN([AX_CXX_COMPILE_STDCXX_14], [dnl
