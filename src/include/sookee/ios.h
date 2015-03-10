@@ -50,6 +50,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <ostream>
 #include <limits>
 #include <cstring>
+#include <array>
 
 namespace sookee { namespace ios {
 
