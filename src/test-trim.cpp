@@ -11,7 +11,7 @@
 #include <sookee/log.h>
 #include <sookee/test.h>
 
-#include <boost/algorithm/string/trim.hpp>
+//#include <boost/algorithm/string/trim.hpp>
 
 using namespace sookee::types;
 using namespace sookee::test;
