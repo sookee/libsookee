@@ -9,7 +9,7 @@ DEF_FLAGS = \
 GEN_FLAGS = -Wl,-E -Wall -Wextra -Winit-self -pedantic -pipe -pthread \
 	-I$(top_srcdir)/src/include
 
-AM_CXXFLAGS = $(GEN_FLAGS) $(DEF_FLAGS)
+AM_CXXFLAGS =  $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS)
 
 sookee_include_HEADERS = $(wildcard $(srcdir)/include/sookee/*.h)	
 sookee_include_types_HEADERS = $(wildcard $(srcdir)/include/sookee/types/*.h)
@@ -37,7 +37,7 @@ libsookee_la_SOURCES = \
 libsookee_db_la_SOURCES = \
 	mysql.cpp 
 	
-libsookee_la_CXXFLAGS = 
+libsookee_la_CXXFLAGS = $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS)
 libsookee_la_LIBADD = -lrt
 libsookee_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
 
@@ -45,7 +45,7 @@ libsookee_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
 #libsookee_i18n_la_LIBADD = $(ICU_LIBS)
 #libsookee_i18n_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
 
-libsookee_db_la_CXXFLAGS = $(MYSQL_CFLAGS)
+libsookee_db_la_CXXFLAGS = $(MYSQL_CFLAGS) $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS)
 libsookee_db_la_LIBADD =
 libsookee_db_la_LDFLAGS = $(MYSQL_LDFLAGS) -version-info 0:0:0 -rdynamic -pthread
 
