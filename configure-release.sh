@@ -1,8 +1,10 @@
 #!/bin/bash
 
+source ${0%*.sh}.local 2> /dev/null
+
 top_dir=$(pwd)
 
-PREFIX=$HOME
+PREFIX=${PREFIX:-$HOME}
 LIBDIR=$PREFIX/lib
 
 export PKG_CONFIG_PATH=$LIBDIR/pkgconfig
