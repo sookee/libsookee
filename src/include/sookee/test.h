@@ -120,6 +120,8 @@ public:
 	// return time difference in seconds
 	double diff() const
 	{
+		if(tse <= tsb)
+			return 0.0;
 		auto d = std::chrono::duration_cast<std::chrono::microseconds>(tse - tsb);
 		return d.count() / 1000000.0;
 	}
