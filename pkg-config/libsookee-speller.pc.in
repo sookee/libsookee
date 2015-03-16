@@ -3,9 +3,10 @@ exec_prefix=@exec_prefix@
 includedir=@includedir@
 libdir=@libdir@
 
-Name: libsookee
-Description: The SooKee library
+Name: libsookee-speller
+Description: The SooKee Speller library
 URL: https://github.com/sookee/libsookee
 Version: @PACKAGE_VERSION@
 Cflags: -I${includedir}
-Libs: -L${libdir}/sookee -lsookee
+Requires: aspell
+Libs: -L${libdir}/sookee -lsookee-speller

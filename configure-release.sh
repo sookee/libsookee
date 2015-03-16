@@ -15,7 +15,7 @@ rm -fr $top_dir/build-release
 mkdir -p $top_dir/build-release
 
 cd $top_dir/build-release
-$top_dir/configure --prefix=$PREFIX --enable-silent-rules
+$top_dir/configure --with-icu --with-speller --with-mysql --prefix=$PREFIX --enable-silent-rules
 
 
 

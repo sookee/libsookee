@@ -15,7 +15,7 @@ rm -fr $top_dir/build-debug
 mkdir -p $top_dir/build-debug
 
 cd $top_dir/build-debug
-$top_dir/configure --prefix=$PREFIX
+$top_dir/configure --with-icu --with-speller --with-mysql --prefix=$PREFIX
 
 
 

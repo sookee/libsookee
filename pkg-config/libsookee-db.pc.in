@@ -3,9 +3,11 @@ exec_prefix=@exec_prefix@
 includedir=@includedir@
 libdir=@libdir@
 
-Name: libsookee
-Description: The SooKee library
+Name: libsookee-db
+Description: The SooKee Database library
 URL: https://github.com/sookee/libsookee
 Version: @PACKAGE_VERSION@
 Cflags: -I${includedir}
-Libs: -L${libdir}/sookee -lsookee
+Cflags.private: @MYSQL_CFLAGS@
+Libs: -L${libdir}/sookee -lsookee-db
+Libs.private: @MYSQL_LDFLAGS@

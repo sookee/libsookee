@@ -14,11 +14,31 @@ AM_CXXFLAGS =  $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS)
 sookee_include_HEADERS = $(wildcard $(srcdir)/include/sookee/*.h)	
 sookee_include_types_HEADERS = $(wildcard $(srcdir)/include/sookee/types/*.h)
 
-#sookee_library_LTLIBRARIES = \
-#	libsookee.la libsookee-i18n.la libsookee-db.la 
+sookee_library_LTLIBRARIES = libsookee.la
+	
+if MAKE_I18N
+sookee_library_LTLIBRARIES += libsookee-i18n.la
+libsookee_i18n_la_SOURCES = i18n.cpp 
+libsookee_i18n_la_CXXFLAGS = $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS) $(ICU_CFLAGS)
+libsookee_i18n_la_LIBADD = $(ICU_LIBS)
+libsookee_i18n_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
+endif
 
-sookee_library_LTLIBRARIES = \
-	libsookee.la libsookee-db.la 
+if MAKE_SPELLER
+sookee_library_LTLIBRARIES += libsookee-speller.la
+libsookee_speller_la_SOURCES = speller.cpp 
+libsookee_speller_la_CXXFLAGS = $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS) $(ASPELL_CFLAGS)
+libsookee_speller_la_LIBADD = $(ASPELL_LIBS)
+libsookee_speller_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
+endif
+
+if MAKE_DB
+sookee_library_LTLIBRARIES += libsookee-db.la
+libsookee_db_la_SOURCES = mysql.cpp
+libsookee_db_la_CXXFLAGS = $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS) $(MYSQL_CFLAGS)
+libsookee_db_la_LIBADD =
+libsookee_db_la_LDFLAGS = $(MYSQL_LDFLAGS) -version-info 0:0:0 -rdynamic -pthread
+endif
 
 libsookee_la_SOURCES = \
 	bug.cpp \
@@ -30,24 +50,10 @@ libsookee_la_SOURCES = \
 	radp.cpp \
 	str.cpp \
 	types.cpp
-	
-#libsookee_i18n_la_SOURCES = \
-#	i18n.cpp 
-	
-libsookee_db_la_SOURCES = \
-	mysql.cpp 
-	
+
 libsookee_la_CXXFLAGS = $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS)
 libsookee_la_LIBADD = -lrt
 libsookee_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
-
-#libsookee_i18n_la_CXXFLAGS = $(ICU_CFLAGS)
-#libsookee_i18n_la_LIBADD = $(ICU_LIBS)
-#libsookee_i18n_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
-
-libsookee_db_la_CXXFLAGS = $(MYSQL_CFLAGS) $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS)
-libsookee_db_la_LIBADD =
-libsookee_db_la_LDFLAGS = $(MYSQL_LDFLAGS) -version-info 0:0:0 -rdynamic -pthread
 
 noinst_PROGRAMS = \
 	test \
