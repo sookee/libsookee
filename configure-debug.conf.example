@@ -1,0 +1,6 @@
+PREFIX=$HOME/dev
+
+MAKE_DB=yes
+MAKE_I18N=yes
+MAKE_SPELLER=yes
+
