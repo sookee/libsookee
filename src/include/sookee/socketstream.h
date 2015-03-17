@@ -54,7 +54,8 @@ is granted under the same conditions.
 #include <cstring> // strerror()
 #include <cerrno>
 
-#include <sookee/types.h>
+#include <sookee/types/basic.h>
+#include <sookee/bug.h>
 
 #ifdef __clang__
 #	include "stdio_filebuf.h"
@@ -65,6 +66,7 @@ is granted under the same conditions.
 namespace sookee { namespace net {
 
 using namespace __gnu_cxx;
+using namespace sookee::bug;
 using namespace sookee::types;
 
 template<typename Char>
@@ -200,14 +202,28 @@ protected:
 
 public:
 	basic_socketbuf()
-	: sock(0)
-	, ibuf(0)
-	, obuf(0)
+	: sock(-1)
+	, ibuf(new char_type[SIZE])
+	, obuf(new char_type[SIZE])
 	{
-		ibuf = new char_type[SIZE];
-		obuf = new char_type[SIZE];
 		buf_type::setp(obuf, obuf + (SIZE - 1));
 		buf_type::setg(ibuf, ibuf, ibuf);
+	}
+
+	basic_socketbuf(basic_socketbuf&& sb)
+	: sock(sb.sock)
+	, ibuf(sb.ibuf)
+	, obuf(sb.obuf)
+	{
+		buf_type::setp(obuf, obuf + (SIZE - 1));
+		buf_type::pbump(sb.pptr() - obuf);
+		buf_type::setg(ibuf, sb.gptr(), sb.egptr());
+
+		sb.sock = -1;
+		sb.ibuf = new char_type[SIZE];
+		sb.obuf = new char_type[SIZE];
+		sb.setp(sb.obuf, sb.obuf + (SIZE - 1));
+		sb.setg(sb.ibuf, sb.ibuf, sb.ibuf);
 	}
 
 	virtual ~basic_socketbuf()
@@ -283,6 +299,14 @@ protected:
 public:
 	basic_socketstream(): stream_type(&buf) {}
 	basic_socketstream(int s): stream_type(&buf) { buf.set_socket(s); }
+	basic_socketstream(basic_socketstream&& ss)
+	: buf(std::move(ss.buf))
+	{
+//		bug_func();
+//		bug_var(ss.buf.get_socket());
+//		buf.set_socket(ss.buf.get_socket());
+//		ss.buf.set_socket(-1);
+	}
 
 	virtual ~basic_socketstream()
 	{
@@ -291,7 +315,10 @@ public:
 
 	void close()
 	{
-		if(buf.get_socket() != 0) ::close(buf.get_socket());
+//		bug_func();
+//		bug_var(buf.get_socket());
+		if(buf.get_socket() != -1)
+			::close(buf.get_socket());
 		stream_type::clear();
 	}
 

@@ -221,7 +221,11 @@ public:
 	fdstream(fdstream&& fds)
 	: ibuf(std::move(fds.ibuf))
 	, obuf(std::move(fds.obuf))
+//	: ibuf(fds.ibuf.release())
+//	, obuf(fds.obuf.release())
 	{
+		std::istream::rdbuf(ibuf.get());
+		std::ostream::rdbuf(obuf.get());
 		fds.std::istream::rdbuf(new fdinbuf(-1));
 		fds.std::ostream::rdbuf(new fdoutbuf(-1));
 		fds.setstate(std::ios::failbit);

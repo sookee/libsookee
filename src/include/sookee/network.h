@@ -134,124 +134,124 @@ public:
 };
 
 // TODO: these are buggy
-//class httpi_stream
-//: public http_stream
-//, public net::socketstream
-//{
-//	str host;
-//
-//public:
-////	using net::socketstream::socketstream;
-//	httpi_stream(): net::socketstream() {}
-//	httpi_stream(int s): net::socketstream() { buf.set_socket(s); }
-//
-//	str user_agent = "none";
-//	str accept = "text/html";
-//	net::header_map headers;
-//
-//	bool open(const std::string& host, in_port_t port, bool nb = false) override
-//	{
-//		this->host.clear();
-//		if(net::socketstream::open(host, port, SOCK_STREAM, nb))
-//			this->host = host;
-//		return is_open();
-//	}
-//
-//	bool is_open() const override { return !host.empty(); }
-//
-//	void close() override
-//	{
-//		host.clear();
-//		net::socketstream::close();
-//	}
-//
-//	operator std::iostream&() { return *this; }
-//
-//	str get(const str& path) override
-//	{
-//		net::socketstream& ss = *this;
-//
-//		ss << "GET " << path << " HTTP/1.1\r\n";
-//		ss << "Host: " << host << "\r\n";
-//		ss << "User-Agent: " << user_agent << "\r\n";
-//		ss << "Accept: " << accept << "\r\n";
-//		ss << "\r\n" << std::flush;
-//
-//		if(!net::read_http_headers(ss, headers))
-//		{
-//			log("ERROR reading headers.");
-//			return false;
-//		}
-//
-//		str html;
-//		if(!net::read_http_response_data(ss, headers, html))
-//		{
-//			log("ERROR reading response data.");
-//			return false;
-//		}
-//
-//		return html;
-//	}
-//};
-//
-//class https_stream
-//: public http_stream
-//, public net::ssl_socketstream
-//{
-//	str host;
-//
-//public:
-//	using net::ssl_socketstream::ssl_socketstream;
-//
-//	str user_agent = "none";
-//	str accept = "text/html";
-//	net::header_map headers;
-//
-//	operator std::iostream&() { return *this; }
-//
-//	bool open(const std::string& host, in_port_t port, bool nb = false) override
-//	{
-//		(void) nb;
-//		this->host.clear();
-//		if(net::ssl_socketstream::open(host, port))//, SOCK_STREAM, nb))
-//			this->host = host;
-//		return is_open();
-//	}
-//
-//	bool is_open() const override { return !host.empty(); }
-//
-//	void close() override
-//	{
-//		host.clear();
-//		net::ssl_socketstream::close();
-//	}
-//
-//	str get(const str& path) override
-//	{
-//		net::ssl_socketstream& ss = *this;
-//
-//		ss << "GET " << path << " HTTP/1.1\r\n";
-//		ss << "Host: " << host << "\r\n";
-//		ss << "User-Agent: " << user_agent << "\r\n";
-//		ss << "Accept: " << accept << "\r\n";
-//		ss << "\r\n" << std::flush;
-//
-//		if(!net::read_http_headers(ss, headers))
-//		{
-//			log("ERROR reading headers.");
-//			return false;
-//		}
-//
-//		str html;
-//		if(!net::read_http_response_data(ss, headers, html))
-//		{
-//			log("ERROR reading response data.");
-//			return false;
-//		}
-//
-//		return html;
-//	}
-//};
+class httpi_stream
+: public http_stream
+, public net::socketstream
+{
+	str host;
+
+public:
+//	using net::socketstream::socketstream;
+	httpi_stream(): net::socketstream() {}
+	httpi_stream(int s): net::socketstream() { buf.set_socket(s); }
+
+	str user_agent = "none";
+	str accept = "text/html";
+	net::header_map headers;
+
+	bool open(const std::string& host, in_port_t port, bool nb = false) override
+	{
+		this->host.clear();
+		if(net::socketstream::open(host, port, SOCK_STREAM, nb))
+			this->host = host;
+		return is_open();
+	}
+
+	bool is_open() const override { return !host.empty(); }
+
+	void close() override
+	{
+		host.clear();
+		net::socketstream::close();
+	}
+
+	operator std::iostream&() { return *this; }
+
+	str get(const str& path) override
+	{
+		net::socketstream& ss = *this;
+
+		ss << "GET " << path << " HTTP/1.1\r\n";
+		ss << "Host: " << host << "\r\n";
+		ss << "User-Agent: " << user_agent << "\r\n";
+		ss << "Accept: " << accept << "\r\n";
+		ss << "\r\n" << std::flush;
+
+		if(!net::read_http_headers(ss, headers))
+		{
+			log("ERROR reading headers.");
+			return false;
+		}
+
+		str html;
+		if(!net::read_http_response_data(ss, headers, html))
+		{
+			log("ERROR reading response data.");
+			return false;
+		}
+
+		return html;
+	}
+};
+
+class https_stream
+: public http_stream
+, public net::ssl_socketstream
+{
+	str host;
+
+public:
+	using net::ssl_socketstream::ssl_socketstream;
+
+	str user_agent = "none";
+	str accept = "text/html";
+	net::header_map headers;
+
+	operator std::iostream&() { return *this; }
+
+	bool open(const std::string& host, in_port_t port, bool nb = false) override
+	{
+		(void) nb;
+		this->host.clear();
+		if(net::ssl_socketstream::open(host, port))//, SOCK_STREAM, nb))
+			this->host = host;
+		return is_open();
+	}
+
+	bool is_open() const override { return !host.empty(); }
+
+	void close() override
+	{
+		host.clear();
+		net::ssl_socketstream::close();
+	}
+
+	str get(const str& path) override
+	{
+		net::ssl_socketstream& ss = *this;
+
+		ss << "GET " << path << " HTTP/1.1\r\n";
+		ss << "Host: " << host << "\r\n";
+		ss << "User-Agent: " << user_agent << "\r\n";
+		ss << "Accept: " << accept << "\r\n";
+		ss << "\r\n" << std::flush;
+
+		if(!net::read_http_headers(ss, headers))
+		{
+			log("ERROR reading headers.");
+			return false;
+		}
+
+		str html;
+		if(!net::read_http_response_data(ss, headers, html))
+		{
+			log("ERROR reading response data.");
+			return false;
+		}
+
+		return html;
+	}
+};
 
 }} // sookee::net
 

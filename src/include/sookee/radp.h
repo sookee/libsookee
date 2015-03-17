@@ -354,6 +354,81 @@ struct m
 
 // rsp(line.c_str(), i1, f1, mpt('\\'), w1);
 
+// Just bunging this untested code here for now
+class fistream
+{
+	const char* sp = nullptr;
+	const char* ep = nullptr;
+	bool eofbit = false;
+	bool failbit = false;
+
+	void skip_ws()
+	{
+		while(sp < ep && *sp == ' ')
+			++sp;
+	}
+
+	fistream& operator_unsigned(int& i)
+	{
+		if((eofbit = sp == ep))
+			return *this;
+		else if(*sp < '0' || *sp > '9')
+			failbit = true;
+		else for(i = 0; *sp >= '0' && *sp <= '9'; ++sp)
+				i = (i << 3) + (i << 1) + *sp - '0';
+		return *this;
+	}
+
+public:
+	fistream(const std::string& s): sp(s.data()), ep(sp + s.size()) {}
+	fistream(const fistream& fis): sp(fis.sp), ep(fis.ep) {}
+
+	void str(const std::string& s) { sp = s.data(); ep = sp + s.size(); }
+
+	bool eof() const { return eofbit; }
+	bool fail() const { return failbit; }
+
+	fistream& operator>>(int& i)
+	{
+		skip_ws();
+		if((eofbit = sp == ep))
+			return *this;
+		else if(*sp != '-' && *sp != '+')
+			return operator_unsigned(i);
+		else
+		{
+			bool neg = *sp++ == '-';
+			operator_unsigned(i);
+			if(neg)
+				i = -i;
+		}
+		return *this;
+	}
+
+	fistream& operator>>(unsigned& i)
+	{
+		skip_ws();
+		if((eofbit = sp == ep))
+			return *this;
+		else if(*sp < '0' || *sp > '9')
+			failbit = true;
+		else for(i = 0; *sp >= '0' && *sp <= '9'; ++sp)
+				i = (i << 3) + (i << 1) + *sp - '0';
+		return *this;
+	}
+
+	fistream& operator>>(std::string& s)
+	{
+		skip_ws();
+		if((eofbit = sp == ep))
+			return *this;
+		s.clear();
+		while(sp < ep  && *sp != ' ')
+			s += *sp++;
+		return *this;
+	}
+};
+
 }} // sookee::radp
 
 namespace soo { using namespace sookee::radp; }

@@ -44,27 +44,29 @@ public:
 	typedef char const* const* arg_ptr;
 	std::string error;
 
+	Args(const Args& args): error(args.error), arg(args.arg) {}
 private:
 	arg_ptr arg;
 
 public:
 	Args(arg_ptr arg): arg(arg) {}
 
-	bool has_next() const { return *arg; }
-	void next() { ++arg; }
+	operator bool() const { return *arg; }
+	Args& operator++() { ++arg; return *this; }
+	Args operator++(int) { Args arg(*this); ++arg; return arg; }
 
 //	arg_ptr begin() { return arg; }
 //	arg_ptr end() { arg_ptr e = arg; while(*e) ++e; return e; }
 
-	bool test_arg(const std::string& opt)
+	bool test(const std::string& opt)
 	{
 		return opt == *arg;
 	}
 
 	template<typename Type>
-	bool get_arg(const std::string& opt, Type& out)
+	bool get(const std::string& opt, Type& out)
 	{
-		if(test_arg(opt))
+		if(test(opt))
 		{
 			if(!*(++arg))
 			{
@@ -80,18 +82,18 @@ public:
 		return true;
 	}
 
-	bool test_arg(const std::string& lopt, const std::string& sopt)
+	bool test(const std::string& lopt, const std::string& sopt)
 	{
-		return test_arg(lopt) || test_arg(sopt);
+		return test(lopt) || test(sopt);
 	}
 
 	template<typename Type>
-	bool get_arg(const std::string& lopt, const std::string& sopt, Type& out)
+	bool get(const std::string& lopt, const std::string& sopt, Type& out)
 	{
-		if(test_arg(lopt))
-			return get_arg(lopt, out);
-		else if(test_arg(sopt))
-			return get_arg(sopt, out);
+		if(test(lopt))
+			return get(lopt, out);
+		else if(test(sopt))
+			return get(sopt, out);
 		return true;
 	}
 };
