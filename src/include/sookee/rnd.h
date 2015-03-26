@@ -11,11 +11,21 @@
 
 namespace sookee { namespace rnd {
 
+// __cplusplus 199711L
+// __cplusplus 201103L
+// __cplusplus 201300L ??
+// __cplusplus 201402L
+
+#if __cplusplus >= 201103L
+#else
+#define thread_local
+#endif
+
 inline
 std::mt19937& engine()
 {
-	/*thread_local*/ static std::random_device rd {};
-	/*thread_local*/ static std::mt19937 engine {rd()};
+	thread_local static std::random_device rd {};
+	thread_local static std::mt19937 engine {rd()};
 	return engine;
 }
 
@@ -31,26 +41,32 @@ template<typename Integral>
 Integral randint(Integral min, Integral max)// -> decltype(min + max)
 {
 //	using Integral = decltype(min + max);
-	/*thread_local*/ static std::uniform_int_distribution<Integral> dist;
+	thread_local static std::uniform_int_distribution<Integral> dist;
 	typename std::uniform_int_distribution<Integral>::param_type p{min, max};
 	return dist(engine(), p);
 }
 
-//template<typename Integral>
-//Integral integral(Integral b, Integral e)
-//{
-//	static std::uniform_int_distribution<Integral> d;
-//	typename std::uniform_int_distribution<Integral>::param_type p{b, e};
-//	return d(mt_rng(), p);
-//}
-//
-//template<typename Real>
-//Real real(Real b, Real e)
-//{
-//	static std::uniform_real_distribution<Real> d;
-//	typename std::uniform_real_distribution<Real>::param_type p{b, e};
-//	return d(mt_rng(), p);
-//}
+template
+	<
+	  typename Type
+	, typename Dist = typename std::conditional<std::is_integral<Type>::value
+	, std::uniform_int_distribution<Type>
+	, std::uniform_real_distribution<Type>>::type
+	>
+class prng
+{
+	std::mt19937 gen;
+	Dist dis;
+
+public:
+	prng(): gen(std::random_device()()) {}
+
+	Type get(Type from, Type to)
+	{
+		typename Dist::param_type range {from, to};
+		return dis(gen, range);
+	}
+};
 
 enum class type { lower, upper, both };
 

@@ -337,6 +337,29 @@ char* make_rptr(const char (&s)[Size])
 	return rptr;
 }
 
+class separator
+{
+	str c;
+	str s;
+
+public:
+	separator(const str& s): s(s) {}
+	void reset() { c.clear(); }
+	void reset(const str& s) { c.clear(); this->s = s; }
+	friend str operator+(const str& s, separator& sep)
+	{
+		str r = sep.c + s;
+		sep.c = sep.s;
+		return r;
+	}
+	friend str operator+(separator& sep, const str& s)
+	{
+		str r = sep.c + s;
+		sep.c = sep.s;
+		return r;
+	}
+};
+
 }} // sookee::utils
 
 namespace soo { using namespace sookee::utils; }

@@ -215,9 +215,10 @@ public:
 	, ibuf(sb.ibuf)
 	, obuf(sb.obuf)
 	{
-		buf_type::setp(obuf, obuf + (SIZE - 1));
-		buf_type::pbump(sb.pptr() - obuf);
-		buf_type::setg(ibuf, sb.gptr(), sb.egptr());
+
+		buf_type::setg(sb.eback(), sb.gptr(), sb.egptr());
+		buf_type::setp(sb.pbase(), sb.epptr());
+		buf_type::pbump(sb.pptr() - sb.pbase());
 
 		sb.sock = -1;
 		sb.ibuf = new char_type[SIZE];
@@ -302,10 +303,6 @@ public:
 	basic_socketstream(basic_socketstream&& ss)
 	: buf(std::move(ss.buf))
 	{
-//		bug_func();
-//		bug_var(ss.buf.get_socket());
-//		buf.set_socket(ss.buf.get_socket());
-//		ss.buf.set_socket(-1);
 	}
 
 	virtual ~basic_socketstream()
@@ -319,6 +316,7 @@ public:
 //		bug_var(buf.get_socket());
 		if(buf.get_socket() != -1)
 			::close(buf.get_socket());
+		buf.set_socket(-1);
 		stream_type::clear();
 	}
 

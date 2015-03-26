@@ -55,8 +55,12 @@ public:
 	Args& operator++() { ++arg; return *this; }
 	Args operator++(int) { Args arg(*this); ++arg; return arg; }
 
-//	arg_ptr begin() { return arg; }
-//	arg_ptr end() { arg_ptr e = arg; while(*e) ++e; return e; }
+	// Experimental untested API (self-iterator)
+	Args begin() { return *this; }
+	Args end() { arg_ptr end = arg; while(*end++){} return Args(end); }
+	Args& operator*() { return *this; }
+	bool operator==(const Args& args) const { return arg == args.arg; }
+	// experimental
 
 	bool test(const std::string& opt)
 	{
@@ -98,45 +102,22 @@ public:
 	}
 };
 
-//Args::arg_ptr begin(Args& args) { return args.begin(); }
-//Args::arg_ptr end(Args& args) { return args.end(); }
-
 /**
  * Example usage
  */
 //int main(int argc, char* argv[])
 //{
-//	std::string s;
-//	std::istringstream("hello") >> s;
-//
 //	(void) argc;
 //	std::string lang = "en";
 //
-//	bool test1 = false;
-//	int test2 = -1;
-//	unsigned test3 = 1U;
-//
-//
-//	for(Args args(argv); args.has_next(); args.next())
+//	for(Args args(argv); args; ++args)
 //	{
-//		if(args.test_arg("--help", "-h"))
+//		if(args.test("--help", "-h"))
 //		{
 //			usage(argv[0]);
 //			return 0;
 //		}
-//		else if(!args.get_arg("--bool", "-b", test1))
-//		{
-//			con("ERROR: " << args.error);
-//		}
-//		else if(!args.get_arg("--int", "-i", test2))
-//		{
-//			con("ERROR: " << args.error);
-//		}
-//		else if(!args.get_arg("--unsigned", "-u", test3))
-//		{
-//			con("ERROR: " << args.error);
-//		}
-//		else if(!args.get_arg("--lang", "-l", lang))
+//		else if(!args.get("--lang", "-l", lang))
 //		{
 //			con("ERROR: " << args.error);
 //			usage(argv[0]);

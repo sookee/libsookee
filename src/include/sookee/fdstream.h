@@ -66,6 +66,15 @@ protected:
 	int fd = -1;
 
 public:
+	fdoutbuf(fdoutbuf&& o)
+	: fd(o.fd)
+	{
+		o.sync();
+		setg(eback(), eback() + (o.gptr() - o.eback())
+			, eback() + (o.egptr() - o.eback()));
+		o.setg(o.eback(), o.eback(), o.eback());
+		o.fd = -1;
+	}
 	fdoutbuf(int fd = -1): fd(fd) {}
 	void set_fd(int fd) { this->fd = fd; }
 
@@ -126,6 +135,24 @@ protected:
 	char buffer[bufSize + pbSize];        // data buffer
 
 public:
+	fdinbuf(fdinbuf&& i)
+	: fd(i.fd)
+	{
+		i.sync();
+		std::copy(std::begin(i.buffer), std::end(i.buffer), buffer);
+		setg(buffer + (i.eback() - i.buffer)
+			, buffer + (i.gptr() - i.buffer)
+			, buffer + (i.egptr() - i.buffer));
+		setp(buffer + (i.pbase() - i.buffer)
+			, buffer + (i.epptr() - i.buffer));
+		pbump(i.pptr() - i.pbase());
+
+		i.setg(buffer + pbSize,     // beginning of putback area
+		i.buffer + pbSize,     // read position
+		i.buffer + pbSize);    // end position
+		i.fd = -1;
+	}
+
 	/* constructor
 	 * - initialize file descriptor
 	 * - initialize empty data buffer
@@ -207,41 +234,46 @@ public:
 
 class fdstream: public std::iostream//public fdostream, public fdistream
 {
-	std::unique_ptr<fdinbuf> ibuf;
-	std::unique_ptr<fdoutbuf> obuf;
+//	std::unique_ptr<fdinbuf> ibuf;
+//	std::unique_ptr<fdoutbuf> obuf;
+	fdinbuf ibuf;
+	fdoutbuf obuf;
 public:
 	fdstream(int fd = -1)
-	: ibuf(new fdinbuf(fd))
-	, obuf(new fdoutbuf(fd))
+	: ibuf(fd)
+	, obuf(fd)
 	{
-		std::istream::rdbuf(ibuf.get());
-		std::ostream::rdbuf(obuf.get());
+		std::istream::rdbuf(&ibuf);
+		std::ostream::rdbuf(&obuf);
 	}
 
 	fdstream(fdstream&& fds)
 	: ibuf(std::move(fds.ibuf))
 	, obuf(std::move(fds.obuf))
-//	: ibuf(fds.ibuf.release())
-//	, obuf(fds.obuf.release())
 	{
-		std::istream::rdbuf(ibuf.get());
-		std::ostream::rdbuf(obuf.get());
-		fds.std::istream::rdbuf(new fdinbuf(-1));
-		fds.std::ostream::rdbuf(new fdoutbuf(-1));
-		fds.setstate(std::ios::failbit);
 	}
+
+//	fdstream(fdstream&& fds)
+//	: ibuf(std::move(fds.ibuf))
+//	, obuf(std::move(fds.obuf))
+////	: ibuf(fds.ibuf.release())
+////	, obuf(fds.obuf.release())
+//	{
+//		std::istream::rdbuf(ibuf.get());
+//		std::ostream::rdbuf(obuf.get());
+//		fds.std::istream::rdbuf(new fdinbuf(-1));
+//		fds.std::ostream::rdbuf(new fdoutbuf(-1));
+//		fds.setstate(std::ios::failbit);
+//	}
 
 	void set_fd(int fd)
 	{
 		clear();
-		if(ibuf)
-			ibuf->set_fd(fd);
-		if(obuf)
-			obuf->set_fd(fd);
+		ibuf.set_fd(fd);
+		obuf.set_fd(fd);
 	}
 };
 
-}
-} // ::sookee::net
+}} // ::sookee::net
 
 #endif // LIBSOOKEE_FDSTREAM_H

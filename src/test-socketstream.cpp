@@ -54,6 +54,8 @@ public:
 		open(host, port, mode);
 	}
 
+//	basic_socketstream(const basic_socketstream& ss) = delete;
+
 	~basic_socketstream() { close(); }
 
 	void open(const str& host, const in_port_t port
