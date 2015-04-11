@@ -164,9 +164,7 @@ std::istream& read_http_headers(std::istream&is, header_map& headers)
 	str line;
 
 	if(!std::getline(is, line))
-	{
 		return is;
-	}
 
 	str key, val;
 	std::istringstream iss;

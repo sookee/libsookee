@@ -254,21 +254,26 @@ str upper_copy(str s)
 
 /**
  * Extract a substring from within a string that is delimited by a beginning
- * and an ending string.
- * @param in The string from-which the substring is to be extracted.
+ * string and an ending string.
+ * @param in The string from which the substring is to be extracted.
  * @param d1 The beginning delimiter. Text AFTER this string will be extracted.
  * @param d2 The end delimiter. Text before this string will be extracted.
  * @param out The returned substring.
- * @param pos The position within the passed in string from which the delimited
+ * @param pos The position within the passed in string from which the delimiter
  * search is to begin. This allows for repeated calls to this function to extract
  * more than one matching substring.
- * @return On success the position of the character fllowing the end of the end delimiter (d2).
+ * @return On success the position of the character following the end of the end delimiter (d2).
  * On failure returns str::npos.
  */
-size_t extract_delimited_text(const str& in, const str& d1, const str& d2, str& out, size_t pos = 0);
+str::size_type extract_delimited_text(
+	const str& in
+	, const str& d1
+	, const str& d2
+	, str& out
+	, str::size_type pos = 0);
 
 /**
- * Split a string into an array of substringd by
+ * Split a string into an array of substrings by
  * dividing the string into substrings separated by
  * a given character.
  * @param s The string to divide.
@@ -359,6 +364,10 @@ public:
 		return r;
 	}
 };
+
+// "blah blah", wibble, "blob=\"escape\"", woo
+std::istream& getcsvfield(std::istream& is, std::string& field);
+std::istream& getcsvline(std::istream& is, std::vector<std::string>& fields);
 
 }} // sookee::utils
 

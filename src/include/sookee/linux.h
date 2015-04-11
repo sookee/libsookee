@@ -218,6 +218,9 @@ public:
 //	iterator begin() { return iterator(name); }
 //	iterator end() { return iterator(); }
 
+	// only const makes sense as we can't change
+	// the file names using this.
+
 	iterator begin() const { return iterator(name); }
 	iterator end() const { return iterator(); }
 };

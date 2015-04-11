@@ -66,14 +66,14 @@ private:
 	std::vector<Type> ptrs;
 
 public:
-    template <typename T = Type, typename... Args>
+    template<typename T = Type, typename... Args>
     auto create(Args&&... args) -> typename std::enable_if<!is_instantiable<T, Args...>::value, T*>::type
     {
         ptrs.push_back(T{ std::forward<Args>(args)... });
         return &ptrs.back();
     }
 
-    template <typename T = Type, typename... Args>
+    template<typename T = Type, typename... Args>
     auto create(Args&&... args) -> typename std::enable_if<is_instantiable<T, Args...>::value, T*>::type
     {
         ptrs.emplace_back(std::forward<Args>(args)...);

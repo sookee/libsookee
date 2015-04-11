@@ -83,10 +83,10 @@ std::string replace_word(const std::string& s, const std::string& from, const st
 
 str::size_type extract_delimited_text(const str& in, const str& d1, const str& d2, str& out, size_t pos)
 {
-	if(pos == str::npos)
-		return pos;
+//	if(pos == str::npos)
+//		return pos;
 
-	size_t end = pos;
+	auto end = pos;
 
 	if((pos = in.find(d1, pos)) != str::npos)
 		if((end = in.find(d2, (pos = pos + d1.size()))) != str::npos)
@@ -194,5 +194,55 @@ str_vec split2(const std::string& s)
 //{
 //	return c.erase(std::remove_if(c.begin(), c.end(), pred), c.end());
 //}
+
+std::istream& getcsvfield(std::istream& is, std::string& field)
+{
+	using std::ws;
+
+	field.clear();
+
+	char c;
+	if((is >> ws).peek() == '"')
+	{
+		is.ignore();
+		bool esc = false;
+		while((esc || is.peek() != '"') && is.get(c))
+		{
+			if(esc)
+				esc = false;
+			else if(c == '\\')
+			{
+				esc = true;
+				continue;
+			}
+			field += c;
+		}
+		if(c != '"')
+			is.clear();
+		is.ignore(std::numeric_limits<std::streamsize>::max(), ',');
+	}
+	else
+	{
+		if(std::getline(is, field, ','))
+			rtrim(field);
+	}
+
+	return is;
+}
+
+std::istream& getcsvline(std::istream& is, std::vector<std::string>& fields)
+{
+	fields.clear();
+	std::string field;
+
+	while(getcsvfield(is, field))
+		fields.push_back(std::move(field));
+
+	is.clear();
+	if(fields.empty())
+		is.setstate(std::ios::failbit);
+
+	return is;
+}
 
 }} // sookee::utils

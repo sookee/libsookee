@@ -72,16 +72,14 @@ std::ostream& write_cookie_headers(std::ostream& os, const cookie_jar& cookies);
 /**
  * Read the HTTP headers from std::istream is into the supplied
  * header_map.
- * If the returned headers do not have a HTTP 200 OK response code then
- * the stream is set to a fail state and the headers are not read.
+ *
+ * All header keys are made lower-case.
  *
  * @param is The input stream to read the HTTP headres from.
  * @param headers The header_map intowhich the headers will be read
  * from a successful HTTP response.
  *
- * @return The passed in stread. If the headers do not contain a
- * successful response code (200 OK) then the stream is set to a
- * failed state.
+ * @return The passed in stream.
  */
 std::istream& read_http_headers(std::istream&is, header_map& headers);
 
@@ -114,7 +112,7 @@ std::istream& read_tag_by_att(std::istream& is, std::ostream& os, const str& tag
 std::istream& read_element(std::istream& is, str& tag);
 
 str fix_entities(str s);
-str urldecode(std::string s);
+str urldecode(str s);
 
 str html_to_text(const str& html);
 void html_to_text(std::istream& i, std::ostream& o);

@@ -13,6 +13,8 @@
 #include <string>
 #include <limits>
 #include <tuple>
+#include <chrono>
+#include <sstream>
 
 namespace sookee { namespace cal {
 
@@ -379,6 +381,111 @@ inline constexpr unsigned prev_weekday(unsigned wd) noexcept
 {
 	return wd > 0 ? wd-1 : 6;
 }
+
+// -----------------------------------------
+
+using std::chrono::duration_cast;
+
+template<typename Clock, typename Integral = unsigned>
+class HMSBase
+{
+public:
+	using clk = Clock;
+	using milliseconds = std::chrono::milliseconds;
+	using seconds = std::chrono::seconds;
+	using minutes = std::chrono::minutes;
+	using hours = std::chrono::hours;
+
+private:
+	static std::string filler(Integral t)
+	{
+		return t < 10U ? "0":"";
+	}
+
+	typename clk::duration d;
+
+public:
+
+	void set_duration(typename HMSBase::clk::duration d)
+	{
+		this->d = d;
+	}
+
+	void set_duration(std::chrono::seconds s)
+	{
+		d = std::chrono::duration_cast<clk::duration>(s);
+	}
+
+	Integral to_secs() const { return duration_cast<seconds>(d).count(); }
+	Integral to_mins() const { return duration_cast<minutes>(d).count(); }
+	Integral to_hrs() const { return duration_cast<hours>(d).count(); }
+
+	Integral get_secs_part() const
+	{
+		Integral h, m, s;
+		s = to_secs();
+		secs_to_hms(h, m, s);
+		return s;
+	}
+
+	Integral get_mins_part() const
+	{
+		Integral h, m, s;
+		s = to_secs();
+		secs_to_hms(h, m, s);
+		return m;
+	}
+
+	Integral get_hrs_part() const
+	{
+		Integral h, m, s;
+		s = to_secs();
+		secs_to_hms(h, m, s);
+		return h;
+	}
+
+	/**
+	 * Convert a time period in seconds to
+	 * hours, minutes and seconds. The function is called with
+	 * only the seconds parameter set @param s to the entire duration
+	 * and returns with all three parameters set to their relative portion.
+	 *
+	 * @param h - out parameter hours
+	 * @param m - out parameter minutes
+	 * @param s - in/out parameter seconds
+	 */
+	static void secs_to_hms(Integral& h, Integral& m, Integral& s)
+	{
+//		h = s / 60 / 60;
+//		m = (s / 60) - (h * 60);
+//		s -= ((h * 60 * 60) + (m * 60));
+		h = s / (60 * 60);
+		m = (s / 60) - (h * 60);
+		s -= 60 * ((h * 60) + m);
+	}
+
+	std::string hms_to_str()
+	{
+		return hms_to_str(to_secs());
+
+	}
+
+	static std::string hms_to_str(Integral s)
+	{
+		Integral h, m;
+		secs_to_hms(h, m, s);
+
+		std::ostringstream oss;
+		oss << filler(h) << h;
+		oss << ":" << filler(m) << m;
+		oss << ":" << filler(s) << s;
+
+		return oss.str();
+	}
+};
+
+template<typename Integral = unsigned>
+using HMS = HMSBase<std::chrono::high_resolution_clock, Integral>;
 
 }} // sookee::cal
 

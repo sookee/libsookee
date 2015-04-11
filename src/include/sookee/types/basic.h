@@ -84,6 +84,10 @@ struct malloc_deleter
 
 typedef std::unique_ptr<char, malloc_deleter> cstring_uptr;
 
+// type deduction helper
+template<typename Type>
+class compiletime_type_is;
+
 }} // sookee::types
 
 namespace soo { using namespace sookee::types; }
