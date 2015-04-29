@@ -39,12 +39,6 @@ AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
  
 AC_CONFIG_MACRO_DIR([m4])
 
-AC_ARG_WITH([icu], AS_HELP_STRING([--with-icu], [Build the icu library]))
-AS_IF([test "x$with_icu" = "xyes"], [
-	PKG_CHECK_MODULES([ICU], [icu-i18n icu-uc icu-io icu-le icu-lx], [HAVE_ICU=1], [HAVE_ICU=0])
-])
-AM_CONDITIONAL([MAKE_I18N], [test "$HAVE_ICU" -eq 1])
-
 AC_ARG_WITH([speller], AS_HELP_STRING([--with-speller], [Build the speller library]))
 AS_IF([test "x$with_speller" = "xyes"], [
 	PKG_CHECK_MODULES([ASPELL], [aspell], [HAVE_ASPELL=1], [HAVE_ASPELL=0])
@@ -58,7 +52,6 @@ AC_LANG_CPLUSPLUS
 AC_CONFIG_FILES([
 	pkg-config/libsookee.pc
 	pkg-config/libsookee-db.pc
-	pkg-config/libsookee-i18n.pc
 	pkg-config/libsookee-speller.pc
 	Makefile
 	src/Makefile])

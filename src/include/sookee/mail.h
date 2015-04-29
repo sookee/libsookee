@@ -51,7 +51,7 @@ class SMTP
 
 	bool tx(std::ostream& os, const str& data = "")
 	{
-		return os << data << "\r\n" << std::flush;
+		return (bool)(os << data << "\r\n" << std::flush);
 	}
 
 	bool rx(std::istream& is, const str& code)

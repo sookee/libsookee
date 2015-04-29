@@ -1,5 +1,5 @@
 sookee_includedir = $(prefix)/include/sookee
-sookee_include_typesdir = $(prefix)/include/sookee/types
+#sookee_include_typesdir = $(prefix)/include/sookee/types
 
 sookee_librarydir = $(prefix)/lib/sookee
 
@@ -12,17 +12,18 @@ GEN_FLAGS = -Wl,-E -Wall -Wextra -Winit-self -pedantic -pipe -pthread \
 AM_CXXFLAGS =  $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS)
 
 sookee_include_HEADERS = $(wildcard $(srcdir)/include/sookee/*.h)	
-sookee_include_types_HEADERS = $(wildcard $(srcdir)/include/sookee/types/*.h)
+sookee_include_HEADERS += $(wildcard $(srcdir)/include/sookee/types/*.h)
+sookee_include_HEADERS += $(wildcard $(srcdir)/include/sookee/utf8/*.h)
 
 sookee_library_LTLIBRARIES = libsookee.la
 	
-if MAKE_I18N
-sookee_library_LTLIBRARIES += libsookee-i18n.la
-libsookee_i18n_la_SOURCES = i18n.cpp 
-libsookee_i18n_la_CXXFLAGS = $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS) $(ICU_CFLAGS)
-libsookee_i18n_la_LIBADD = $(ICU_LIBS)
-libsookee_i18n_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
-endif
+#if MAKE_I18N
+#sookee_library_LTLIBRARIES += libsookee-i18n.la
+#libsookee_i18n_la_SOURCES = i18n.cpp 
+#libsookee_i18n_la_CXXFLAGS = $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS) $(ICU_CFLAGS)
+#libsookee_i18n_la_LIBADD = $(ICU_LIBS)
+#libsookee_i18n_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
+#endif
 
 if MAKE_SPELLER
 sookee_library_LTLIBRARIES += libsookee-speller.la
@@ -44,6 +45,7 @@ libsookee_la_SOURCES = \
 	bug.cpp \
 	cal.cpp \
 	cfg.cpp \
+	i18n.cpp \
 	ios.cpp \
 	log.cpp \
 	network.cpp \

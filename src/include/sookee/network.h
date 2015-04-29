@@ -178,14 +178,14 @@ public:
 		if(!net::read_http_headers(ss, headers))
 		{
 			log("ERROR reading headers.");
-			return false;
+			return {};
 		}
 
 		str html;
 		if(!net::read_http_response_data(ss, headers, html))
 		{
 			log("ERROR reading response data.");
-			return false;
+			return {};
 		}
 
 		return html;
@@ -237,14 +237,14 @@ public:
 		if(!net::read_http_headers(ss, headers))
 		{
 			log("ERROR reading headers.");
-			return false;
+			return {};
 		}
 
 		str html;
 		if(!net::read_http_response_data(ss, headers, html))
 		{
 			log("ERROR reading response data.");
-			return false;
+			return {};
 		}
 
 		return html;

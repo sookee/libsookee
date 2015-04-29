@@ -241,5 +241,16 @@ str_vec ls(const str& folder, ftype t)
 	return files;
 }
 
+str_vec tree(const str& root)
+{
+	str_vec folders {root};
+
+	for(auto&& folder: ls(root, ftype::dir))
+		if(folder != "." && folder != "..")
+			for(auto&& sub: tree(root + '/' + folder))
+				folders.push_back(sub);
+
+	return folders;
+}
 
 }} // sookee::ios

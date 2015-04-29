@@ -94,7 +94,6 @@ protected:
 	char_type* ibuf;//[SIZE] ;
 	char_type* obuf;//[SIZE] ;
 
-
 public:
 	basic_ssl_socketbuf()
 	: conn()
@@ -199,7 +198,7 @@ public:
 		ssl_connection conn;
 		if(ssl_connect(host, port, conn))
 			buf.set_ssl_connection(conn);
-		return *this;
+		return (bool)*this;
 	}
 
 	bool tcp_connect(const str& host, siz port, int& sd)

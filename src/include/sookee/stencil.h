@@ -317,6 +317,12 @@ public:
 		vars.clear();
 	}
 
+	map_stencil& operator=(const str& text)
+	{
+		compile(text);
+		return *this;
+	}
+
 	bool compile_file(const str& filename)
 	{
 		return compile((sss() << sifs(filename).rdbuf()).str());

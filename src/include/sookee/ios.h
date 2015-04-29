@@ -97,6 +97,8 @@ enum class ftype
 
 str_vec ls(const str& folder, ftype t = ftype::reg);
 
+str_vec tree(const str& root);
+
 inline
 bool getargs(std::istream&) { return true; }
 
@@ -597,6 +599,109 @@ public:
 		return false; // execl() failed
 	}
 };
+
+// Stream Iterators/Wrappers
+
+enum flags {none = 0, rebegin = 1, skip_blanks = 2};
+
+class istream_line_iterator
+{
+	std::istream* is = nullptr;
+	str line;
+	bool skip = false;
+
+public:
+	istream_line_iterator(std::istream& is, int flags = none)
+	: istream_line_iterator(&is, flags) {}
+	istream_line_iterator(std::istream* is = nullptr, int flags = none)
+	: is(is), skip(flags & skip_blanks)
+	{
+		if(is && (flags & rebegin))
+		{
+			is->clear();
+			is->seekg(0);
+		}
+		++(*this);
+	}
+
+	istream_line_iterator& operator++()
+	{
+		if(is)
+		{
+			while(std::getline(*is, line) && trim_copy(line).empty()) {}
+			if(!(*is))
+				is = nullptr;
+		}
+		return *this;
+	}
+
+	istream_line_iterator operator++(int) { istream_line_iterator i(*this); return ++i; }
+
+	const str& operator*() const { return line; }
+
+	bool operator==(const istream_line_iterator& i) const
+	{
+		if(is != i.is)
+			return false;
+
+		if(is && is->tellg() != i.is->tellg())
+			return false;
+
+		return false;
+	}
+	bool operator!=(const istream_line_iterator& i) const { return is != i.is; }
+};
+
+template<typename DataType>
+class value_iterable_istream
+{
+	std::istream& is;
+
+public:
+	value_iterable_istream(std::istream& is): is(is) {}
+
+	std::istream_iterator<DataType> begin() { return std::istream_iterator<DataType>(is); }
+	std::istream_iterator<DataType> end() { return std::istream_iterator<DataType>(); }
+};
+
+class line_iterable_istream
+{
+	std::istream& is;
+	int flags;
+
+public:
+	line_iterable_istream(std::istream& is, int flags = none): is(is), flags(flags)
+	{
+		if(flags & rebegin)
+		{
+			is.clear();
+			is.seekg(0);
+		}
+	}
+
+	istream_line_iterator begin() { return istream_line_iterator(is, flags); }
+	istream_line_iterator end() { return istream_line_iterator(); }
+};
+
+
+// TODO: add these ??
+template<std::size_t SIZE>
+std::istream& getline_s(std::istream& is, char(&buf)[SIZE], char delim = '\n')
+{
+	return is.getline(buf, SIZE, delim);
+}
+
+inline
+std::istream& getline_s(std::istream& is, char* buf, std::size_t size, char delim = '\n')
+{
+	return is.getline(buf, size, delim);
+}
+
+inline
+std::istream& getline_s(std::istream& is, std::string& buf, char delim = '\n')
+{
+	return getline_s(is, &buf[0], buf.size(), delim);
+}
 
 }} // sookee::ios
 

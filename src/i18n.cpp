@@ -28,27 +28,41 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 #include <sookee/i18n.h>
 
-#include <unicode/utypes.h>
-#include <unicode/ucnv.h>
+//#include <unicode/utypes.h>
+//#include <unicode/ucnv.h>
 
 namespace sookee { namespace i18n {
 
-std::string to_utf8(const std::u32string& s)
+//std::string to_utf8(const std::u32string& s)
+//{
+//	UErrorCode status = U_ZERO_ERROR;
+//	char buf[1024];
+//	int32_t len = ucnv_convert("UTF-8", "UTF-32", buf, 1024, (const char*)s.data(), s.size() * 4, &status);
+////	con("status: " << status);
+//	return std::string(buf, len);
+//}
+//
+//std::u32string to_utf32(const std::string& utf8)
+//{
+//	UErrorCode status = U_ZERO_ERROR;
+//	char target[1024];
+//	int32_t len = ucnv_convert("UTF-32", "UTF-8", target, 1024, utf8.data(), utf8.size(), &status);
+////	con("status: " << status);
+//	return std::u32string((char32_t*) target, len / sizeof(char32_t));
+//}
+
+std::string to_utf8(std::u32string utf32)
 {
-	UErrorCode status = U_ZERO_ERROR;
-	char buf[1024];
-	int32_t len = ucnv_convert("UTF-8", "UTF-32", buf, 1024, (const char*)s.data(), s.size() * 4, &status);
-//	con("status: " << status);
-	return std::string(buf, len);
+	std::string utf8;
+	utf8::utf32to8(utf32.begin(), utf32.end(), std::back_inserter(utf8));
+	return utf8;
 }
 
 std::u32string to_utf32(const std::string& utf8)
 {
-	UErrorCode status = U_ZERO_ERROR;
-	char target[1024];
-	int32_t len = ucnv_convert("UTF-32", "UTF-8", target, 1024, utf8.data(), utf8.size(), &status);
-//	con("status: " << status);
-	return std::u32string((char32_t*) target, len / sizeof(char32_t));
+	std::u32string utf32;
+	utf8::utf8to32(utf8.begin(), utf8.end(), std::back_inserter(utf32));
+	return utf32;
 }
 
 std::u32string mb_to_utf32(const std::string& mb)

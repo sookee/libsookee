@@ -53,20 +53,20 @@ template
 	, std::uniform_int_distribution<Type>
 	, std::uniform_real_distribution<Type>>::type
 	>
-class prng
+class PRNG
 {
 	std::mt19937 gen;
 	Dist dis;
 
 public:
-	prng(): gen(std::random_device()()) {}
+	PRNG(): gen(std::random_device()()) {}
 
 	Type get(Type from, Type to)
 	{
-		typename Dist::param_type range {from, to};
-		return dis(gen, range);
+		return dis(gen, typename Dist::param_type {from, to});
 	}
 };
+
 
 enum class type { lower, upper, both };
 

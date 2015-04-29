@@ -69,6 +69,8 @@ inline std::string get_filename(const std::string& path)
 #define con_s(m) do{std::cout << std::boolalpha << m;}while(false)
 #define con_e() do{std::cout << std::endl;}while(false)
 
+#define err(m) do{std::cerr << std::boolalpha << m << std::endl;}while(false)
+
 #define wcon(m) do{std::wcout << m << std::endl;}while(false)
 
 //template<typename Return>
@@ -215,6 +217,7 @@ inline std::string get_filename(const std::string& path)
 //		return logs[name].set_id(name);
 //	}
 //};
+
 
 }} // sookee::log
 
