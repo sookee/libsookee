@@ -69,14 +69,30 @@ str get_cookie_header(const cookie_jar& cookies, const str& domain);
 
 std::ostream& write_cookie_headers(std::ostream& os, const cookie_jar& cookies);
 
+
+struct response
+{
+	str protocol;
+	uns code;
+	str message;
+};
+
+/**
+ * Return first line of the response containing the response code
+ * @param is
+ * @param response
+ * @return
+ */
+std::istream& read_http_response(std::istream&is, response& r);
+
 /**
  * Read the HTTP headers from std::istream is into the supplied
  * header_map.
  *
  * All header keys are made lower-case.
  *
- * @param is The input stream to read the HTTP headres from.
- * @param headers The header_map intowhich the headers will be read
+ * @param is The input stream to read the HTTP headers from.
+ * @param headers The header_map into which the headers will be read
  * from a successful HTTP response.
  *
  * @return The passed in stream.
@@ -134,14 +150,15 @@ public:
 // TODO: these are buggy
 class httpi_stream
 : public http_stream
-, public net::socketstream
+//, public net::socketstream
+, public net::netstream
 {
 	str host;
 
 public:
 //	using net::socketstream::socketstream;
-	httpi_stream(): net::socketstream() {}
-	httpi_stream(int s): net::socketstream() { buf.set_socket(s); }
+	httpi_stream(): net::netstream() {}
+	httpi_stream(int s): net::netstream(s) {}// buf.set_socket(s); }
 
 	str user_agent = "none";
 	str accept = "text/html";
@@ -149,8 +166,9 @@ public:
 
 	bool open(const std::string& host, in_port_t port, bool nb = false) override
 	{
+		(void) nb;
 		this->host.clear();
-		if(net::socketstream::open(host, port, SOCK_STREAM, nb))
+		if(netstream::open(host, std::to_string(port)))
 			this->host = host;
 		return is_open();
 	}
@@ -160,14 +178,14 @@ public:
 	void close() override
 	{
 		host.clear();
-		net::socketstream::close();
+		netstream::close();
 	}
 
 	operator std::iostream&() { return *this; }
 
 	str get(const str& path) override
 	{
-		net::socketstream& ss = *this;
+		net::netstream& ss = *this;
 
 		ss << "GET " << path << " HTTP/1.1\r\n";
 		ss << "Host: " << host << "\r\n";

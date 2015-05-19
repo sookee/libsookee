@@ -259,12 +259,14 @@ inline std::istream& operator>>(std::istream& is, const std::string& s)
 	return is;
 }
 
-// secure user input with sts::strings
+// secure user input with std::strings
 inline
 std::istream& getline(std::istream& is, std::string& s, std::streamsize num, char delim = '\n')
 {
-	s.resize(num);
-	return is.getline(&s[0], num, delim);
+	std::unique_ptr<char[]> buf(new char[num]);
+	if(is.getline(buf.get(), num + 1, delim))
+		s.assign(buf.get(), is.gcount());
+	return is;
 }
 
 // retain type info for std::stringstreams

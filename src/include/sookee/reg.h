@@ -29,12 +29,44 @@ http://www.gnu.org/licenses/gpl-2.0.html
 '-----------------------------------------------------------------*/
 
 #include <sookee/types/basic.h>
+#include <sookee/types/regex.h>
 
 namespace sookee { namespace reg {
 
 using namespace sookee::types;
 
+// usage:
+//
+// str s;
+// std::regex r;
+//
+// for(std::smatch& m: smatch_container(s, r))
+//     std::cout << m[0] << '\n';
+//
+class smatch_container
+{
+	sreg_iter i;
 
+public:
+	smatch_container(str_citer b, str_citer e
+		, std::regex r, std::regex_constants::match_flag_type m =
+        std::regex_constants::match_default)
+	: i(b, e, r, m) {}
+	smatch_container(
+		const str& s
+		, std::regex r
+		, std::regex_constants::match_flag_type m = std::regex_constants::match_default)
+	: i(s.begin(), s.end(), r, m) {}
+
+	sreg_iter begin() const { return i; }
+	sreg_iter end() const { return {}; }
+};
+
+namespace stock {
+
+const std::regex url(R"~((https?):\/\/([^:\/]*)(?::(\d+))?\/(.*))~");
+
+} // stock
 }} // sookee::string
 
 namespace soo { using namespace sookee::reg; }

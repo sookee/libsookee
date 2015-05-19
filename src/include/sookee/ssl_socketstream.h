@@ -1,9 +1,8 @@
-#pragma once
-#ifndef _LIBSOOKEE_SSL_SOCKETSTREAM_H_
-#define _LIBSOOKEE_SSL_SOCKETSTREAM_H_
+#ifndef LIBSOOKEE_SSL_SOCKETSTREAM_H
+#define LIBSOOKEE_SSL_SOCKETSTREAM_H
 
 /*-----------------------------------------------------------------.
-| Copyright (C) 2013 SooKee oasookee@gmail.com               |
+| Copyright (C) 2013 SooKee oasookee@gmail.com                     |
 '------------------------------------------------------------------'
 
 This code is was created from code (C) Copyright Nicolai M. Josuttis 2001
@@ -310,4 +309,4 @@ typedef basic_ssl_socketstream<wchar_t> ssl_wsocketstream;
 
 namespace soo { using namespace sookee::net; }
 
-#endif // _LIBSOOKEE_SSL_SOCKETSTREAM_H_
+#endif // LIBSOOKEE_SSL_SOCKETSTREAM_H

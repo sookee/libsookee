@@ -83,7 +83,8 @@ public:
 
 	bool sendmail(const str& subject, const str& data)
 	{
-		net::socketstream ss;
+//		net::socketstream ss;
+		net::netstream ss;
 
 		str reply;
 
@@ -97,7 +98,7 @@ public:
 		str time(buffer, size);
 //		trim(time);
 
-		ss.open(host, port);
+		ss.open(host, std::to_string(port));
 
 		if(!rx(ss, "220"))
 			return false;

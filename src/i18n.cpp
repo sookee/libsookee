@@ -27,6 +27,9 @@ http://www.gnu.org/licenses/gpl-2.0.html
 '-----------------------------------------------------------------*/
 
 #include <sookee/i18n.h>
+#include <iconv.h>
+#include <cstring>
+#include <memory>
 
 //#include <unicode/utypes.h>
 //#include <unicode/ucnv.h>
@@ -63,6 +66,28 @@ std::u32string to_utf32(const std::string& utf8)
 	std::u32string utf32;
 	utf8::utf8to32(utf8.begin(), utf8.end(), std::back_inserter(utf32));
 	return utf32;
+}
+
+// Untested iconv version
+std::string to_utf8_xxx(std::u32string utf32)
+{
+	iconv_t cd;
+	if((cd = iconv_open("UTF-8", "UTF-32")) == iconv_t(-1))
+		throw std::runtime_error(std::strerror(errno));
+
+	std::unique_ptr<char[]> buf(new char[utf32.size() * 4]);
+
+	auto inbuf = (char*)&utf32[0];
+	auto inbytesleft = utf32.size() * sizeof(std::u32string::value_type);
+	auto outbuf = buf.get();
+	auto outbytesleft = utf32.size() * 4;
+
+	iconv(cd, nullptr, nullptr, nullptr, nullptr);
+
+	if(iconv(cd, &inbuf, &inbytesleft, &outbuf, &outbytesleft) == std::size_t(-1))
+		throw std::runtime_error(std::strerror(errno));
+
+	return std::string(buf.get(), outbuf);
 }
 
 std::u32string mb_to_utf32(const std::string& mb)

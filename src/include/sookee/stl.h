@@ -1,9 +1,6 @@
-#pragma once
-#ifndef _LIBSOOKEE_STL_H_
-#define _LIBSOOKEE_STL_H_
+#ifndef LIBSOOKEE_STL_H
+#define LIBSOOKEE_STL_H
 /*
- * stl.h
- *
  * SooKee's Template Library
  *
  *  Created on: 1 Aug 2011
@@ -202,10 +199,42 @@ class circular
 	};
 };
 
+// EXAMPLE ITERATOR
+template<typename Type>
+struct base_iterator
+{
+	using value_type = Type;
+	using pointer = value_type*;
+	using const_pointer = value_type const*;
+	using reference = value_type&;
+	using const_reference = value_type const&;
+
+	pointer ptr = nullptr;
+
+//	virtual ~basic_iterator() {}
+	base_iterator(pointer ptr): ptr(ptr) {}
+	base_iterator(base_iterator&& iter): ptr(iter.ptr) { iter.ptr = nullptr; }
+	base_iterator(const base_iterator& iter): ptr(iter.ptr) {}
+
+	bool operator==(base_iterator& iter) const { return ptr == iter.ptr; }
+	bool operator!=(base_iterator& iter) const { return !(*this == iter); }
+
+	reference operator*() { return *ptr; }
+	const_reference operator*() const { return *ptr; }
+
+	pointer operator->() { return ptr; }
+	const_pointer operator->() const { return ptr; }
+
+	base_iterator& operator++() { ++ptr; return *this; }
+	base_iterator operator++(int) { base_iterator iter(*this); ++ptr; return iter; }
+	base_iterator& operator--() { --ptr; return *this; }
+	base_iterator operator--(int) { base_iterator iter(*this); --ptr; return iter; }
+};
+
 } // experimental
 
 }} // sookee::stl
 
 namespace soo { using namespace sookee::stl; }
 
-#endif /* _LIBSOOKEE_STL_H_ */
+#endif // LIBSOOKEE_STL_H

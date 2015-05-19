@@ -24,8 +24,7 @@ namespace sookee { namespace rnd {
 inline
 std::mt19937& engine()
 {
-	thread_local static std::random_device rd {};
-	thread_local static std::mt19937 engine {rd()};
+	thread_local static std::mt19937 engine {std::random_device{}()};
 	return engine;
 }
 
@@ -38,9 +37,8 @@ void seed(seed_type s)
 }
 
 template<typename Integral>
-Integral randint(Integral min, Integral max)// -> decltype(min + max)
+Integral randint(Integral min, Integral max)
 {
-//	using Integral = decltype(min + max);
 	thread_local static std::uniform_int_distribution<Integral> dist;
 	typename std::uniform_int_distribution<Integral>::param_type p{min, max};
 	return dist(engine(), p);
@@ -48,27 +46,40 @@ Integral randint(Integral min, Integral max)// -> decltype(min + max)
 
 template
 	<
-	  typename Type
+	  typename Type = int
+	, typename Generator = std::mt19937
 	, typename Dist = typename std::conditional<std::is_integral<Type>::value
 	, std::uniform_int_distribution<Type>
 	, std::uniform_real_distribution<Type>>::type
 	>
 class PRNG
 {
-	std::mt19937 gen;
+	using rd = std::random_device;
+	using param_type = typename Dist::param_type;
+	std::seed_seq ss;
+	Generator gen;
 	Dist dis;
 
 public:
-	PRNG(): gen(std::random_device()()) {}
+	PRNG(): ss({rd{}(), rd{}(), rd{}(), rd{}()}), gen(ss) {}
 
 	Type get(Type from, Type to)
 	{
-		return dis(gen, typename Dist::param_type {from, to});
+		return dis(gen, param_type{from, to});
 	}
 };
 
+template<typename Type = std::int32_t>
+using PRNG_32 = PRNG<Type>;
 
-enum class type { lower, upper, both };
+using PRNG_32U = PRNG<std::uint32_t>;
+
+template<typename Type = std::int64_t>
+using PRNG_64 = PRNG<Type, std::mt19937_64>;
+
+using PRNG_64U = PRNG<std::uint32_t, std::mt19937_64>;
+
+enum class type {lower, upper, both};
 
 inline
 std::string random_alphanum(size_t length, type t = type::both)
@@ -88,8 +99,6 @@ std::string random_alphanum(size_t length, type t = type::both)
 
     const std::string& an = t == type::lower ? anl : t == type::upper ? anu : anb;
 
-
-//    static std::mt19937 rg(std::chrono::system_clock::now().time_since_epoch().count());
     static std::uniform_int_distribution<> pick(0, (int)an.size() - 1);
 
     std::string s;
@@ -119,15 +128,17 @@ std::string random_alphanum(size_t length, type t = type::both)
 // Linear Congruential Generator
 class lcg
 {
-	unsigned int seed = 0;
+	unsigned int n = 0;
 
 public:
-	void srand(int seed) { this->seed = seed; }
+	lcg(int n = 0): n(n) {}
+
+	void seed(int n) { this->n = n; }
 
 	int rand()
 	{
-		seed = (214013 * seed + 2531011);
-		return (seed >> 16) & 0x7FFF;
+		n = (214013 * n + 2531011);
+		return (n >> 16) & 0x7FFF;
 	}
 };
 

@@ -156,6 +156,18 @@ std::ostream& write_cookie_headers(std::ostream& os, const cookie_jar& cookies)
 	return os;
 }
 
+std::istream& read_http_response(std::istream&is, response& r)
+{
+//	str line;
+//	if(std::getline(is, line))
+//	{
+//		std::istringstream iss(line);
+//		std::getline(iss >> r.protocol >> r.code >> std::ws, r.message);
+//	}
+////	HTTP/1.1 301 Moved Permanently
+//	return is;
+	return std::getline(is >> r.protocol >> r.code >> std::ws, r.message);
+}
 
 
 std::istream& read_http_headers(std::istream&is, header_map& headers)
@@ -163,18 +175,20 @@ std::istream& read_http_headers(std::istream&is, header_map& headers)
 //	bug_func();
 	str line;
 
-	if(!std::getline(is, line))
-		return is;
+//	if(!std::getline(is, line))
+//		return is;
+
+	headers.clear();
 
 	str key, val;
 	std::istringstream iss;
 
-	while(is && std::getline(is, line) && !trim(line).empty())
+	while(std::getline(is, line) && !trim(line).empty())
 	{
 		iss.clear();
 		iss.str(line);
 		if(iss >> key && std::getline(iss, val))
-			headers.insert(std::make_pair(lower(trim(key, " \t\r\n:")), trim(val)));
+			headers.emplace(lower(trim(key, " \t\r\n:")), trim(val));
 	}
 	return is;
 }

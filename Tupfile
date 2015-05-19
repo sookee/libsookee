@@ -1,0 +1,4 @@
+
+
+: foreach *.c |> g++ -o %o %f |> %B.o
+: *.o |> g++ -shared -o %.o |> libsookee.so
