@@ -290,6 +290,15 @@ str_vec split(const str& s, const str& d);
 
 str_vec split2(const std::string& s);
 
+/**
+ * Split string using ANY of the chars in d as a delimiter
+ * @param s
+ * @param d string of char delimiters
+ * @return
+ */
+str_vec split_by(const str& s, const str& d, unsigned guess = 20);
+
+
 template<typename Container>
 str join(const Container& c, const str& delim = " ")
 {

@@ -132,6 +132,24 @@ str_vec split(const str& s, const str& d)
 	return v;
 }
 
+str_vec split_by(const str& s, const str& d, unsigned guess)
+{
+	str_vec v;
+	v.reserve(guess);
+
+	auto end = s.begin();
+	auto pos = end;
+
+	while(end != s.end())
+	{
+		end = std::find_first_of(pos, s.end(), d.begin(), d.end());
+		v.emplace_back(pos, end);
+		pos = end + 1;
+	}
+
+	return v;
+}
+
 str_vec split2(const std::string& s)
 {
 	str_vec v;

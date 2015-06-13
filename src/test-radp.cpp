@@ -50,7 +50,7 @@ int main()
 
 	for(siz i = 0; i < max_ints; ++i)
 	{
-		ints.emplace_back(ipick(eng, irange));
+		ints.push_back(ipick(eng, irange));
 		text += sep + std::to_string(ints[i]);
 		sep = " ";
 	}
@@ -85,37 +85,31 @@ int main()
 	sep.clear();
 	text.clear();
 
-//	flt_vec floats;
+	flt_vec floats;
 
 	for(siz i = 0; i < max_floats; ++i)
 	{
-//		floats.emplace_back(rpick(eng, rrange));
-		text += sep + std::to_string(rpick(eng, rrange));
+//		siz dp = std::pow(10, ipick(eng, decltype(ipick)::param_type{0, 5}));
+//		floats.push_back(((int)rpick(eng, rrange) * dp)/float(dp));
+		floats.push_back(rpick(eng, rrange));
+		text += sep + std::to_string(floats[i]);
 		sep = " ";
 	}
-
-//	bug_var(text);
-//	bug_var(std::numeric_limits<int>::min());
-//	bug_var(std::numeric_limits<int>::max());
-	//return 1;
 
 	pos = text.data();
 	err = 0;
 	for(siz i = 0; i < max_floats; ++i)
 	{
-		float v, vv;
-		sscanf(pos, "%f", &vv);
+		float v;//, vv;
+//		sscanf(pos, "%f", &vv);
 		if((end = pf(pos, v)) == pos)
 		{
 			log("ERROR: parse failed");
 			++err;
 		}
-		else if(v != vv)//(int(v * 10000000000) != int(vv * 10000000000))
+		else if(v != floats[i])//vv)
 		{
-//			bug_var(pos);
-//			bug_var(int(v * 10000000000));
-//			bug_var(int(vv * 10000000000));
-			log("ERROR: parsed value (" << v << ") != expected value: " << vv);
+			log("ERROR: parsed value (" << v << ") != expected value: " << floats[i]);//vv);
 			++err;
 		}
 		pos = adv(end, 1);

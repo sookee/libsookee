@@ -8,7 +8,7 @@ PREFIX=${PREFIX:-$HOME/dev}
 LIBDIR=$PREFIX/lib
 
 WITH="$WITH --with-mysql=${MAKE_DB:-no}"
-WITH="$WITH --with-icu=${MAKE_I18N:-no}"
+#WITH="$WITH --with-icu=${MAKE_I18N:-no}"
 WITH="$WITH --with-speller=${MAKE_SPELLER:-no}"
 
 export PKG_CONFIG_PATH="$LIBDIR/pkgconfig"

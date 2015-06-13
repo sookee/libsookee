@@ -7,13 +7,9 @@ top_dir=$(pwd)
 PREFIX=${PREFIX:-$HOME}
 LIBDIR=$PREFIX/lib
 
-MAKE_DB={$MAKE_DB:-no}
-MAKE_I18N={$MAKE_I18N:-no}
-MAKE_SPELLER={$MAKE_SPELLER:-no}
-
-WITH_DB="--with-mysql=$MAKE_DB"
-WITH_I18N="--with-icu=$MAKE_I18N"
-WITH_SPELLER="--with-speller=$MAKE_SPELLER"
+WITH="$WITH --with-mysql=${MAKE_DB:-no}"
+#WITH="$WITH --with-icu=${MAKE_I18N:-no}"
+WITH="$WITH --with-speller=${MAKE_SPELLER:-no}"
 
 export PKG_CONFIG_PATH="$LIBDIR/pkgconfig"
 
@@ -23,7 +19,8 @@ rm -fr $top_dir/build-release
 mkdir -p $top_dir/build-release
 
 cd $top_dir/build-release
-$top_dir/configure $WITH_DB $WITH_I18N $WITH_SPELLER --prefix=$PREFIX --enable-silent-rules
+#$top_dir/configure $WITH --prefix=$PREFIX
+$top_dir/configure $WITH --prefix=$PREFIX --enable-silent-rules
 
 
 

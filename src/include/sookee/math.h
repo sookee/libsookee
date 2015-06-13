@@ -26,32 +26,64 @@ bool is_prime(Integral n)
 	return true;
 }
 
-template<typename Numeric = double, size_t SIZE = 10>
+//template<typename Numeric = double, size_t SIZE = 10>
+//class MovingAverage
+//{
+//	std::deque<Numeric> data;
+//
+//	siz num = 0;
+//	Numeric sum = {}; // cache sum(data)
+////	Numeric ave = {};
+//
+//public:
+//	MovingAverage() {}
+//
+//	void add(Numeric num)
+//	{
+//		data.push_back(num);
+//		sum += data.back();
+//
+//		if(data.size() > SIZE)
+//		{
+//			sum -= data.front();
+//			data.pop_front();
+//		}
+//	}
+//	Numeric average() const { return sum / data.size(); }
+//};
+
+template<typename NumericType = int, typename ResultType = float>
 class MovingAverage
 {
-	std::deque<Numeric> data;
+	using size_type = typename std::vector<NumericType>::size_type;
 
-	siz num = 0;
-	Numeric sum = {}; // cache sum(data)
-	Numeric ave = {};
+	std::vector<NumericType> v;
+	size_type pos = 0;
+	NumericType sum = 0;
 
 public:
-	MovingAverage() {}
+	MovingAverage(size_type size)
+	: v(size) { if(!size) throw std::range_error("can't be zero"); }
 
-	void add(double num)
+	void add(NumericType n)
 	{
-		data.push_back(num);
-		sum += data.back();
+		sum = sum + n - v[pos];
+		v[pos] = n;
 
-		if(data.size() > SIZE)
-		{
-			sum -= data.front();
-			data.pop_front();
-		}
-
-		ave = sum / data.size();
+		if(++pos == v.size())
+			pos = 0;
 	}
-	Numeric average() const { return ave; }
+
+	ResultType get() const
+	{
+		return ResultType(sum) / v.size();
+	}
+
+	ResultType next(NumericType n)
+	{
+		add(n);
+		return get();
+	}
 };
 
 constexpr int cfct(int x)

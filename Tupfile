@@ -1,4 +1,36 @@
+BLD = tup-build
+SRC = src
 
+libsookee_CXXFLAGS = -std=c++14 -I$(SRC)/include -D _GLIBCXX_USE_CXX11_ABI=0
+noinst_CXXFLAGS = $(libsookee_CXXFLAGS) -L$(BLD) -lsookee
 
-: foreach *.c |> g++ -o %o %f |> %B.o
-: *.o |> g++ -shared -o %.o |> libsookee.so
+CXX = g++-5.1.0
+
+libsookee_SOURCES = \
+	$(SRC)/bug.cpp \
+	$(SRC)/cal.cpp \
+	$(SRC)/cfg.cpp \
+	$(SRC)/i18n.cpp \
+	$(SRC)/ios.cpp \
+	$(SRC)/log.cpp \
+	$(SRC)/network.cpp \
+	$(SRC)/radp.cpp \
+	$(SRC)/str.cpp \
+	$(SRC)/types.cpp
+
+: foreach $(libsookee_SOURCES) |> $(CXX) -c -fPIC $(libsookee_CXXFLAGS) -o %o %f |> $(BLD)/%B.o {O}
+: {O} |> $(CXX) -shared -o %o %f |> $(BLD)/libsookee.so
+
+noinst_PROGRAMS = \
+	$(SRC)/test.cpp \
+	$(SRC)/test-ios.cpp \
+	$(SRC)/test-radp.cpp \
+	$(SRC)/time-radp.cpp \
+	$(SRC)/test-socketstream.cpp \
+	$(SRC)/test-stencil.cpp \
+	$(SRC)/test-stl.cpp \
+	$(SRC)/test-trim.cpp \
+	$(SRC)/test-cal.cpp
+	
+: foreach $(noinst_PROGRAMS) | $(BLD)/libsookee.so |> $(CXX) $(noinst_CXXFLAGS) -o %o %f |> $(BLD)/%B
+

@@ -11,12 +11,96 @@ GEN_FLAGS = -Wl,-E -Wall -Wextra -Winit-self -pedantic -pipe -pthread \
 
 AM_CXXFLAGS =  $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS)
 
-sookee_include_HEADERS = $(wildcard $(srcdir)/include/sookee/*.h)	
-sookee_include_HEADERS += $(wildcard $(srcdir)/include/sookee/types/*.h)
-sookee_include_HEADERS += $(wildcard $(srcdir)/include/sookee/utf8/*.h)
+sookee_include_HEADERS = \
+	$(srcdir)/include/sookee/ansi.h \
+	$(srcdir)/include/sookee/args.h \
+	$(srcdir)/include/sookee/bug.h \
+	$(srcdir)/include/sookee/cal.h \
+	$(srcdir)/include/sookee/cfg.h \
+	$(srcdir)/include/sookee/factory.h \
+	$(srcdir)/include/sookee/fdstream.h \
+	$(srcdir)/include/sookee/filedb.h \
+	$(srcdir)/include/sookee/i18n.h \
+	$(srcdir)/include/sookee/ios.h \
+	$(srcdir)/include/sookee/linux.h \
+	$(srcdir)/include/sookee/log.h \
+	$(srcdir)/include/sookee/macros.h \
+	$(srcdir)/include/sookee/mail.h \
+	$(srcdir)/include/sookee/math.h \
+	$(srcdir)/include/sookee/mem.h \
+	$(srcdir)/include/sookee/mysql.h \
+	$(srcdir)/include/sookee/network.h \
+	$(srcdir)/include/sookee/radp.h \
+	$(srcdir)/include/sookee/reg.h \
+	$(srcdir)/include/sookee/require-c++11.h \
+	$(srcdir)/include/sookee/rnd.h \
+	$(srcdir)/include/sookee/scoper.h \
+	$(srcdir)/include/sookee/socketstream.h \
+	$(srcdir)/include/sookee/speller.h \
+	$(srcdir)/include/sookee/ssl_socketstream.h \
+	$(srcdir)/include/sookee/stdio_filebuf.h \
+	$(srcdir)/include/sookee/stencil.h \
+	$(srcdir)/include/sookee/stl.h \
+	$(srcdir)/include/sookee/str.h \
+	$(srcdir)/include/sookee/sub.h \
+	$(srcdir)/include/sookee/test.h \
+	$(srcdir)/include/sookee/types.h \
+	$(srcdir)/include/sookee/utf8.h \
+	$(srcdir)/include/sookee/utils.h \
+	$(srcdir)/include/sookee/xio.h
+		
+sookee_include_HEADERS += \
+	$(srcdir)/include/sookee/types/basic.h \
+	$(srcdir)/include/sookee/types/dbl_deq.h \
+	$(srcdir)/include/sookee/types/dbl_lst.h \
+	$(srcdir)/include/sookee/types/dbl_map.h \
+	$(srcdir)/include/sookee/types/dbl_set.h \
+	$(srcdir)/include/sookee/types/dbl_vec.h \
+	$(srcdir)/include/sookee/types/deq.h \
+	$(srcdir)/include/sookee/types/flt_deq.h \
+	$(srcdir)/include/sookee/types/flt_lst.h \
+	$(srcdir)/include/sookee/types/flt_map.h \
+	$(srcdir)/include/sookee/types/flt_set.h \
+	$(srcdir)/include/sookee/types/flt_vec.h \
+	$(srcdir)/include/sookee/types/int_deq.h \
+	$(srcdir)/include/sookee/types/int_lst.h \
+	$(srcdir)/include/sookee/types/int_map.h \
+	$(srcdir)/include/sookee/types/int_set.h \
+	$(srcdir)/include/sookee/types/int_vec.h \
+	$(srcdir)/include/sookee/types/lst.h \
+	$(srcdir)/include/sookee/types/map.h \
+	$(srcdir)/include/sookee/types/pair.h \
+	$(srcdir)/include/sookee/types/regex.h \
+	$(srcdir)/include/sookee/types/set.h \
+	$(srcdir)/include/sookee/types/siz_deq.h \
+	$(srcdir)/include/sookee/types/siz_lst.h \
+	$(srcdir)/include/sookee/types/siz_map.h \
+	$(srcdir)/include/sookee/types/siz_set.h \
+	$(srcdir)/include/sookee/types/siz_vec.h \
+	$(srcdir)/include/sookee/types/str_deq.h \
+	$(srcdir)/include/sookee/types/str_lst.h \
+	$(srcdir)/include/sookee/types/str_map.h \
+	$(srcdir)/include/sookee/types/str_set.h \
+	$(srcdir)/include/sookee/types/str_vec.h \
+	$(srcdir)/include/sookee/types/stream.h \
+	$(srcdir)/include/sookee/types/typed_integral.h \
+	$(srcdir)/include/sookee/types/typedefs_cnt.h \
+	$(srcdir)/include/sookee/types/typedefs_deq.h \
+	$(srcdir)/include/sookee/types/typedefs_lst.h \
+	$(srcdir)/include/sookee/types/typedefs_map.h \
+	$(srcdir)/include/sookee/types/typedefs_pair.h \
+	$(srcdir)/include/sookee/types/typedefs_set.h \
+	$(srcdir)/include/sookee/types/typedefs_vec.h \
+	$(srcdir)/include/sookee/types/typedefs.h \
+	$(srcdir)/include/sookee/types/vec.h
+
+sookee_include_HEADERS += \
+	$(srcdir)/include/sookee/utf8/checked.h \
+	$(srcdir)/include/sookee/utf8/core.h \
+	$(srcdir)/include/sookee/utf8/unchecked.h
 
 sookee_library_LTLIBRARIES = libsookee.la
-	
+
 #if MAKE_I18N
 #sookee_library_LTLIBRARIES += libsookee-i18n.la
 #libsookee_i18n_la_SOURCES = i18n.cpp 
@@ -51,6 +135,7 @@ libsookee_la_SOURCES = \
 	network.cpp \
 	radp.cpp \
 	str.cpp \
+	sub.cpp \
 	types.cpp
 
 libsookee_la_CXXFLAGS = $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS)
@@ -65,6 +150,7 @@ noinst_PROGRAMS = \
 	test-socketstream \
 	test-stencil \
 	test-stl \
+	test-sub \
 	test-trim \
 	test-cal
 	
@@ -88,6 +174,9 @@ test_stencil_LDADD = -L.libs -lsookee
 
 test_stl_SOURCES = test-stl.cpp
 test_stl_LDADD = -L.libs -lsookee
+
+test_sub_SOURCES = test-sub.cpp
+test_sub_LDADD = -L.libs -lsookee
 
 test_trim_SOURCES = test-trim.cpp
 test_trim_LDADD = -L.libs -lsookee
