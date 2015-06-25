@@ -70,7 +70,7 @@ std::istream& getnested(std::istream&& is, str& s, char d1 = '{', char d2 = '}')
 }
 
 
-str wordexp(const str& var, int flags = 0);
+str wordexp(str var, int flags = 0);
 // [[deprecated]]
 inline str expand_env(const str& var, int flags = 0) { return wordexp(var, flags); }
 

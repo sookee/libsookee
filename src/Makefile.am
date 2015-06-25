@@ -3,6 +3,8 @@ sookee_includedir = $(prefix)/include/sookee
 
 sookee_librarydir = $(prefix)/lib/sookee
 
+#AUTOMAKE_OPTIONS = subdir-objects
+
 DEF_FLAGS = \
 	-D DEBUG -D LIBSOOKEE_COMPAT_LOG
 	
@@ -141,45 +143,3 @@ libsookee_la_SOURCES = \
 libsookee_la_CXXFLAGS = $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS)
 libsookee_la_LIBADD = -lrt
 libsookee_la_LDFLAGS = -version-info 0:0:0 -rdynamic -pthread
-
-noinst_PROGRAMS = \
-	test \
-	test-ios \
-	test-radp \
-	time-radp \
-	test-socketstream \
-	test-stencil \
-	test-stl \
-	test-sub \
-	test-trim \
-	test-cal
-	
-test_SOURCES = test.cpp
-test_LDADD = -L.libs -lsookee
-
-test_ios_SOURCES = test-ios.cpp
-test_ios_LDADD = -L.libs -lsookee
-
-test_radp_SOURCES = test-radp.cpp
-test_radp_LDADD = -L.libs -lsookee
-
-time_radp_SOURCES = time-radp.cpp
-time_radp_LDADD = -L.libs -lsookee
-
-test_socketstream_SOURCES = test-socketstream.cpp
-test_socketstream_LDADD = -L.libs -lsookee
-
-test_stencil_SOURCES = test-stencil.cpp
-test_stencil_LDADD = -L.libs -lsookee
-
-test_stl_SOURCES = test-stl.cpp
-test_stl_LDADD = -L.libs -lsookee
-
-test_sub_SOURCES = test-sub.cpp
-test_sub_LDADD = -L.libs -lsookee
-
-test_trim_SOURCES = test-trim.cpp
-test_trim_LDADD = -L.libs -lsookee
-
-test_cal_SOURCES = test-cal.cpp
-test_cal_LDADD = -L.libs -lsookee

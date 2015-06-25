@@ -31,18 +31,15 @@ int main()
 		dump(q);
 	}
 
-//	return 1;
-
 	std::istringstream iss("a word is a wok a doodle doo");
 
 	sookee::sub::map m;
 	m.emplace("word", "XXX");
 	m.emplace("wok", "YY");
-//	m["word"] = "XXX";
-//	m["wok"] = "YY";
 
 	std::ostringstream oss;
 	map_copy(m, iss, oss);
 	std::cout << "result: " << oss.str() << '\n';
+
 	con("End of testing:");
 }

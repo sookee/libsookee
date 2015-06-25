@@ -1,6 +1,29 @@
 #ifndef LIBSOOKEE_SUB_H
 #define LIBSOOKEE_SUB_H
 
+/*-----------------------------------------------------------------.
+| Copyright (C) 2015 SooKee oasookee@gmail.com                     |
+'------------------------------------------------------------------'
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301, USA.
+
+http://www.gnu.org/licenses/gpl-2.0.html
+
+'-----------------------------------------------------------------*/
+
 #include <map>
 #include <list>
 #include <deque>
@@ -17,30 +40,7 @@ struct is_longer_than
 	bool operator()(const std::string& a, const std::string& b) { return a.size() >= b.size(); }
 };
 
-class map
-// needs to be a multimap because it sorts on string length
-// therefore there need to be multiple entries of the same length
-: public std::multimap<std::string, std::string, is_longer_than>
-{
-public:
-	typedef std::multimap<std::string, std::string, is_longer_than> super_type;
-	typedef super_type::iterator iterator;
-	typedef super_type::const_iterator const_iterator;
-
-	map() {}
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
-	map(std::initializer_list<value_type> list)
-	: std::multimap<std::string, std::string, is_longer_than>(list)
-	{
-	}
-#endif
-	iterator insert(const std::string& key, const std::string& val)
-	{
-		return super_type::insert(std::make_pair(key, val));
-	}
-};
-
-//using map = std::multimap<std::string, std::string, is_longer_than>;
+using map = std::multimap<std::string, std::string, is_longer_than>;
 
 struct is_longer_than_lex
 {
@@ -51,27 +51,6 @@ struct is_longer_than_lex
 		return a < b;
 	}
 };
-
-//class map
-//: public std::map<std::string, std::string, is_longer_than_lex>
-//{
-//public:
-//	typedef std::map<std::string, std::string, is_longer_than_lex> super_type;
-//	typedef super_type::iterator iterator;
-//	typedef super_type::const_iterator const_iterator;
-//
-//	map() {}
-//#ifdef __GXX_EXPERIMENTAL_CXX0X__
-//	map(std::initializer_list<value_type> list)
-//	: std::map<std::string, std::string, is_longer_than_lex>(list)
-//	{
-//	}
-//#endif
-//	void insert(const std::string& key, const std::string& val)
-//	{
-//		super_type::insert(std::make_pair(key, val));
-//	}
-//};
 
 template<typename T>
 class circular_buffer
@@ -84,6 +63,7 @@ public:
 	typedef const value_type* const_pointer;
 	typedef const value_type& const_reference;
 	typedef size_t size_type;
+
 private:
 	const size_type len;
 	T* buf;
@@ -112,10 +92,12 @@ public:
 
 	bool push(const T& c)
 	{
-		if(full) return false;
+		if(full)
+			return false;
 		buf[top] = c;
 		top = top == len - 1 ? 0 : top + 1;
-		if(top == bot) { full = true; }
+		if(top == bot)
+			full = true;
 		return true;
 	}
 
@@ -127,7 +109,8 @@ public:
 
 	bool pull(T& c)
 	{
-		if(empty()) return false; // empty
+		if(empty())
+			return false;
 		c = buf[bot];
 //		buf[top] = '_'; // TODO: remove this
 		bot = bot == len - 1 ? 0 : bot + 1;
@@ -137,7 +120,8 @@ public:
 
 	void ignore(size_t len = 1)
 	{
-		for(size_t i = 0; i < len; ++i) pull();
+		for(size_t i = 0; i < len; ++i)
+			pull();
 	}
 
 	void dump(std::ostream& os = std::cout) const
@@ -154,19 +138,21 @@ public:
 
 	bool contains(const std::string& s) const
 	{
-		if(s.size() > len) return false;
+		if(s.size() > len)
+			return false;
 
 		for(size_t p = 0; p < s.size(); ++p)
-		{
-			if(s[p] != (*this)[p]) return false;
-		}
+			if(s[p] != (*this)[p])
+				return false;
+
 		return true;
 	}
 
 	size_type read(std::istream& is, size_type len = size())
 	{
 		size_type i = 0;
-		while(is && i < len && push(is.peek())) { is.ignore(); ++i; }
+		while(is && i < len && push(is.peek()))
+			{ is.ignore(); ++i; }
 		return i;
 	}
 
@@ -180,6 +166,7 @@ public:
 		static T zero;
 		circular_buffer* c;
 		size_type pos;
+
 	public:
 		iterator(circular_buffer* c = 0): c(c), pos(0) {}
 		iterator(const iterator& i): c(i.c), pos(i.pos) {}
@@ -209,6 +196,7 @@ public:
 		static T zero;
 		const circular_buffer* c;
 		size_type pos;
+
 	public:
 		const_iterator(const circular_buffer* c = 0): c(c), pos(0) {}
 		const_iterator(const const_iterator& i): c(i.c), pos(i.pos) {}

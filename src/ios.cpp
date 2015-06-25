@@ -43,17 +43,16 @@ using namespace sookee::types;
 
 //sis&(&sgl)(sis&, str&, char) = std::getline;
 
-str wordexp(const str& var, int flags)
+str wordexp(str var, int flags)
 {
-	str exp = var;
 	wordexp_t p;
 	if(!wordexp(var.c_str(), &p, flags))
 	{
 		if(p.we_wordc && p.we_wordv[0])
-			exp = p.we_wordv[0];
+			var = p.we_wordv[0];
 		wordfree(&p);
 	}
-	return exp;
+	return var;
 }
 
 str_vec wordexp_vec(const str& var, int flags)

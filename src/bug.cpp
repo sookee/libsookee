@@ -191,7 +191,7 @@ __scope__bomb__::~__scope__bomb__()
 
 void stack_handler(int sig)
 {
-	void *array[2048];
+	void* array[2048];
 	size_t size;
 
 	// get void*'s for all entries on the stack

@@ -74,12 +74,50 @@ void map_copy(map& m, std::istream& is, std::ostream& os)
 	}
 }
 
-std::string map_replace(map& m, const std::string& str)
+std::string map_replace(map& m, const std::string& s)
 {
-	std::istringstream iss(str);
-	std::ostringstream oss;
-	map_copy(m, iss, oss);
-	return oss.str();
+	using size_type = std::string::size_type;
+	using map_citer = map::const_iterator;
+
+	if(m.empty())
+		return s;
+
+	size_type idx = 0;
+	size_type max = s.size();
+
+	std::string r;
+	r.reserve(max * 2);
+
+	char c; // general purpose
+	circular pipe(m.begin()->first.size());
+
+	for(; idx < pipe.capacity() && idx < max; ++idx)
+		pipe.push(s[idx]);
+
+	map_citer i;
+	map_citer end = m.end();
+	while(!pipe.empty())
+	{
+		for(i = m.begin(); i != end && !pipe.contains(i->first); ++i);
+		if(i != end)
+		{
+			r += i->second;
+			for(size_type p = 0; p < i->first.length(); ++p)
+			{
+				pipe.pull();
+				if(idx < max)
+					pipe.push(s[idx++]);
+			}
+		}
+		else
+		{
+			if(pipe.pull(c))
+				r += c;
+			if(idx < max)
+				pipe.push(s[idx++]);
+		}
+	}
+	return r;
 }
 
 void map_copy_reset(map& m, std::istream& is, std::ostream& os)

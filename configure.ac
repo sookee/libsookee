@@ -54,5 +54,6 @@ AC_CONFIG_FILES([
 	pkg-config/libsookee-db.pc
 	pkg-config/libsookee-speller.pc
 	Makefile
-	src/Makefile])
+	src/Makefile
+	src/test/Makefile])
 AC_OUTPUT

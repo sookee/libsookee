@@ -35,6 +35,8 @@ namespace sookee { namespace types {
 
 USING_MAP(str, str, str_map);
 USING_MMAP(str, str, str_mmap);
+//USING_UMAP(str, str, str_umap);
+//USING_UMMAP(str, str, str_ummap);
 
 }} // sookee::types
 

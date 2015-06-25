@@ -1,6 +1,5 @@
-#pragma once
-#ifndef _LIBSOOKEE_BUG_H_
-#define _LIBSOOKEE_BUG_H_
+#ifndef LIBSOOKEE_BUG_H
+#define LIBSOOKEE_BUG_H
 /*
  * bug.h
  *
@@ -93,4 +92,4 @@ struct lock_guard_scope_bomb
 
 namespace soo { using namespace sookee::bug; }
 
-#endif // _LIBSOOKEE_BUG_H_
+#endif // LIBSOOKEE_BUG_H

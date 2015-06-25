@@ -43,7 +43,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 	USING_PAIR(name##_iter, name##_iter, name##_range)
 
 #define USING_UMAP(type1, type2, name) \
-	USING_CONTAINER_2(std::unordered_map, type1, type2, name); \
+	TYPEDEF_CONTAINER_2(std::unordered_map, type1, type2, name); \
 	USING_PAIR(name##_iter, name##_iter, name##_range)
 
 #define USING_UMMAP(type1, type2, name) \

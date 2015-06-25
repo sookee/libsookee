@@ -45,8 +45,9 @@ const char* const ws = " \t\n\r\f\v";
 
 str& replace(str& s, const str& from, const str& to)
 {
-	for(size_t pos = 0; (pos = s.find(from, pos)) != std::string::npos; pos += to.size())
-		s.replace(pos, from.size(), to);
+	if(!from.empty()) // string::find("") returns 0 !!
+		for(size_t pos = 0; (pos = s.find(from, pos)) != std::string::npos; pos += to.size())
+			s.replace(pos, from.size(), to);
 	return s;
 }
 
