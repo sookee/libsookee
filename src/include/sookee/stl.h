@@ -149,22 +149,52 @@ void copy(const Container& c1, Container& c2)
 }
 
 template<typename Iter>
-class IterRange
+class range
 {
 	Iter s;
 	Iter e;
 
 public:
-	IterRange(const Iter& start, const Iter &end): s(start), e(end) {}
+	range(Iter start, Iter end): s(start), e(end) {}
 
 	Iter begin() { return s; }
 	Iter end() { return e; }
 };
 
-template<typename T>
-IterRange<T> make_range(const T &start, const T &end)
+template<typename Iter>
+range<Iter> make_range(Iter start, Iter end)
 {
-	return IterRange<T>(start, end);
+	return range<Iter>(start, end);
+}
+
+template<typename Numeric>
+struct numeric_iterator
+{
+	static_assert
+	(
+		   std::is_integral<Numeric>::value
+		|| std::is_floating_point<Numeric>::value
+		, "Template parameter must be numeric."
+	);
+	Numeric v = 0;
+	Numeric s = 1;
+	numeric_iterator(Numeric v, Numeric s = 1): v(v), s(s) {}
+	Numeric operator*() const { return v; }
+	Numeric* operator->() const { return &v; }
+	numeric_iterator& operator++() { v += s; return *this; }
+	bool operator==(const numeric_iterator& i) const { return s < 0 ? i.v >= i : v >= i.v; }
+	bool operator!=(const numeric_iterator& i) const { return s < 0 ? i.v < v : v < i.v; }
+};
+
+
+template<typename Numeric>
+range<numeric_iterator<Numeric>> make_numeric_range(Numeric begin, Numeric end, Numeric step = 1)
+{
+	static_assert((std::is_integral<Numeric>::value
+		|| std::is_floating_point<Numeric>::value)
+		, "");
+	assert(step > 0);
+	return {{begin, begin < end ? step:-step}, end};
 }
 
 namespace experimental {

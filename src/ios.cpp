@@ -65,7 +65,7 @@ str_vec wordexp_vec(const str& var, int flags)
 		if(p.we_wordc)
 			for(char** exp = p.we_wordv; *exp; ++exp)
 				vars.push_back(exp[0]);
-		wordfree(&p);
+		wordfree (&p);
 	}
 	return vars;
 }

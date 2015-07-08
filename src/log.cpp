@@ -42,12 +42,9 @@ namespace sookee { namespace log {
 
 std::string get_stamp()
 {
-	time_t rawtime = std::time(0);
-	tm* timeinfo = std::localtime(&rawtime);
-	char buffer[32];
-	std::strftime(buffer, 32, "%Y-%m-%d %H:%M:%S", timeinfo);
-
-	return std::string(buffer);
+	time_t t = std::time(0);
+	char buf[sizeof("YYYY-MM-DD HH:MM:SS")];
+	return {buf, std::strftime(buf, sizeof(buf), "%F %T", std::localtime(&t))};
 }
 
 std::ostream& out(std::ostream* os)
