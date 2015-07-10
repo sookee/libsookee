@@ -16,7 +16,11 @@
 #include <chrono>
 #include <sstream>
 
+#include <sookee/bug.h>
+
 namespace sookee { namespace cal {
+
+using namespace sookee::bug;
 
 typedef size_t year_t;
 typedef size_t month_t;
@@ -88,6 +92,7 @@ bool is_leap_year(year_t y)
 inline
 size_t days_in_month(year_t y, month_t m)
 {
+	assert(m < 12);
 	static size_t dmap[] =
 	{
 		31		// Jan
@@ -110,7 +115,8 @@ size_t days_in_month(year_t y, month_t m)
 inline
 size_t days_in_month(month_t m)
 {
-	return days_in_month(m, cal::get_year());
+	assert(m < 12);
+	return days_in_month(cal::get_year(), m);
 }
 
 
