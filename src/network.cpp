@@ -111,7 +111,7 @@ cookie::cookie(const str& data)
 
 bool cookie::is_expired()
 {
-	return !expires > time(0);
+	return !(expires > time(0));
 }
 
 str urlencode(const str& url)
@@ -209,21 +209,21 @@ std::istream& read_chunked_encoding(std::istream& is, str& data)
 std::istream& read_compress_encoding(std::istream& is, str& data)
 {
 	data.clear();
-	log("ERROR: compress encoding not implemented");
+	log("E: compress encoding not implemented");
 	return is;
 }
 
 std::istream& read_deflate_encoding(std::istream& is, str& data)
 {
 	data.clear();
-	log("ERROR: deflate encoding not implemented");
+	log("E: deflate encoding not implemented");
 	return is;
 }
 
 std::istream& read_gzip_encoding(std::istream& is, str& data)
 {
 	data.clear();
-	log("ERROR: gzip encoding not implemented");
+	log("E: gzip encoding not implemented");
 	return is;
 }
 

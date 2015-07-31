@@ -55,7 +55,7 @@ Database::Database(): active(false), port(3306)
 		lock_guard lock(initialized_mtx);
 		if(mysql_library_init(0, NULL, NULL))
 		{
-			log("ERROR: initializing mysql library");
+			log("E: initializing mysql library");
 			return;
 		}
 	}

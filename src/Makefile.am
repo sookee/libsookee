@@ -136,6 +136,7 @@ libsookee_la_SOURCES = \
 	log.cpp \
 	network.cpp \
 	radp.cpp \
+	reg.cpp \
 	str.cpp \
 	sub.cpp \
 	types.cpp

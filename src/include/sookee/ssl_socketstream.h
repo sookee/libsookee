@@ -72,6 +72,14 @@ struct ssl_connection
 	SSL *ssl;
 	SSL_CTX *ctx;
 	ssl_connection(): sock(0), ssl(0), ctx(0) {}
+// TODO:
+//	~ssl_connection()
+//	{
+//		if(ssl)
+//			SSL_free(ssl);
+//		if(ctx)
+//			SSL_CTX_free(ctx);
+//	}
 };
 
 template<typename Char>

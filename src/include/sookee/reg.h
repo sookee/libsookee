@@ -28,12 +28,15 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
+#include <regex>
 #include <sookee/types/basic.h>
 #include <sookee/types/regex.h>
 
 namespace sookee { namespace reg {
 
 using namespace sookee::types;
+
+str strerror(std::regex_constants::error_type e);
 
 // usage:
 //
@@ -54,9 +57,9 @@ public:
 	: i(b, e, r, m) {}
 	smatch_container(
 		const str& s
-		, std::regex r
+		, const std::regex& e
 		, std::regex_constants::match_flag_type m = std::regex_constants::match_default)
-	: i(s.begin(), s.end(), r, m) {}
+	: i(s.begin(), s.end(), e, m) {}
 
 	sreg_iter begin() const { return i; }
 	sreg_iter end() const { return {}; }
@@ -64,9 +67,28 @@ public:
 
 namespace stock {
 
-const std::regex url(R"~((https?):\/\/([^:\/]*)(?::(\d+))?\/(.*))~");
+//const std::regex url(R"~((https?):\/\/([^:\/]*)(?::(\d+))?\/(.*))~");
+
+// #1 protocol
+// #2 host
+// #3 port
+// #4 path
+// #5 query
+const std::regex url(R"~((https?|file|s?ftp)://([^:/]*)(?::(\d+))?(/[^?]*)?(\?.*)?)~");
+
+// e_query ========================================================
+//
+//	for(auto&& m: smatch_container(query_string, query))
+//		for(auto&& s: m)
+//			con(s);
+
+// #1 key
+// #2 value
+const std::regex query(R"~((?:^[?]|&)([^=]+)(?:=([^&]+))?)~");
+// ================================================================
 
 } // stock
+
 }} // sookee::string
 
 namespace soo { using namespace sookee::reg; }

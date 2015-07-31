@@ -25,77 +25,28 @@ struct context
 	str expect;
 };
 
-//class Timer
-//{
-//	timespec tsb;
-//	timespec tse;
-//
-//public:
-//	void start() { clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tsb); }
-//	void stop() { clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tse); }
-//
-//	friend std::ostream& operator<<(std::ostream& o, const Timer& timer)
-//	{
-//		return o << (double) (timer.tse.tv_nsec - timer.tsb.tv_nsec) / 1000000000 + (double) (timer.tse.tv_sec - timer.tsb.tv_sec);
-//	}
-//};
+class PosixTimer
+{
+	timespec tsb;
+	timespec tse;
 
-//class Timer
-//{
-//	const clockid_t clk = CLOCK_PROCESS_CPUTIME_ID;
-//	timespec tsb;
-//	timespec tse;
-//	siz iterations = 1;
-//
-//public:
-//	Timer(clockid_t clk = CLOCK_PROCESS_CPUTIME_ID): clk(clk), tsb {0,0}, tse {0,0} {}
-//
-//	void clear() { tsb = {0, 0}; tse = {0, 0}; }
-//	void start() { clock_gettime(clk, &tsb); }
-//	void stop() { clock_gettime(clk, &tse); }
-//
-//	friend std::ostream& operator<<(std::ostream& o, const Timer& timer)
-//	{
-//		return o << timer.diff();
-//	}
-//
-//	template<typename Func, typename... Args>
-//	double run(Func func, Args... args)
-//	{
-//		start();
-//		for(siz i = 0; i < iterations; ++i)
-//			func(args...);
-//		stop();
-//
-//		return diff();
-//	}
-//
-//	double diff() const
-//	{
-//		return double(tse.tv_nsec - tsb.tv_nsec)
-//			/ 1000000000
-//			+ double(tse.tv_sec - tsb.tv_sec);
-//	}
-//
-//	siz get_iterations() const
-//	{
-//		return iterations;
-//	}
-//
-//	void set_iterations(siz iterations = 1)
-//	{
-//		this->iterations = iterations;
-//	}
-//};
+public:
+	void clear() { start(); tse = tsb; }
+	void start() { clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tsb); }
+	void stop() { clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tse); }
+
+	friend std::ostream& operator<<(std::ostream& o, const PosixTimer& timer)
+	{
+		return o << (double) (timer.tse.tv_nsec - timer.tsb.tv_nsec) / 1000000000 + (double) (timer.tse.tv_sec - timer.tsb.tv_sec);
+	}
+};
 
 class Timer
 {
 	hr_clk::time_point tsb;
 	hr_clk::time_point tse;
-	siz iterations = 1;
 
 public:
-//	Timer(): tsb {0}, tse {0} {}
 
 	void clear() { tsb = tse = hr_clk::now(); }
 	void start() { tsb = hr_clk::now(); }
@@ -103,22 +54,11 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& o, const Timer& timer)
 	{
-		return o << timer.diff();
-	}
-
-	template<typename Func, typename... Args>
-	double run(Func func, Args... args)
-	{
-		start();
-		for(siz i = 0; i < iterations; ++i)
-			func(args...);
-		stop();
-
-		return diff();
+		return o << timer.secs();
 	}
 
 	// return time difference in seconds
-	double diff() const
+	double secs() const
 	{
 		if(tse <= tsb)
 			return 0.0;
@@ -126,14 +66,13 @@ public:
 		return d.count() / 1000000.0;
 	}
 
-	siz get_iterations() const
+	// return time difference in milliseconds
+	double millis() const
 	{
-		return iterations;
-	}
-
-	void set_iterations(siz iterations = 1)
-	{
-		this->iterations = iterations;
+		if(tse <= tsb)
+			return 0.0;
+		auto d = std::chrono::duration_cast<std::chrono::microseconds>(tse - tsb);
+		return d.count() / 1000.0;
 	}
 };
 

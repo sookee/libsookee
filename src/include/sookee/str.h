@@ -219,8 +219,37 @@ str& transform(str& s, const std::function<int(int)>& func)
 inline
 str& lower(str& s)
 {
-	return transform(s, tolower);
+	std::transform(s.begin(), s.end(), s.begin()
+		, std::ptr_fun<int, int>(std::tolower));
+	return s;
 }
+
+//std::string downcased(std::string s) {
+//  std::locale loc{"en_US.UTF-8"};
+//  std::transform(begin(s), end(s), begin(s), [&](auto const& c) {
+//    return std::tolower(c, loc);
+//  });
+//  return s;
+//}
+
+inline
+str& lower_lc(str& s, const std::locale& loc = std::locale(""))
+{
+	std::transform(std::begin(s), std::end(s), std::begin(s), [&](char c)
+	{
+		return std::tolower(c, loc);
+	});
+	return s;
+}
+
+//inline
+//std::string lower_case(std::string s)
+//{
+//	std::transform(s.begin(), s.end(), s.begin()
+//		, std::ptr_fun<int, int>(std::tolower));
+//	return s;
+//}
+
 
 inline
 str& lower(str&& s)

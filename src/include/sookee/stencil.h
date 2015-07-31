@@ -57,7 +57,7 @@ private:
 	{
 		if(!idx)
 			return arg;
-		log("ERROR: idx out of range");
+		log("E: idx out of range");
 		return "";
 	}
 
@@ -65,7 +65,7 @@ private:
 	{
 		if(!idx)
 			return arg;
-		log("ERROR: idx out of range");
+		log("E: idx out of range");
 		return "";
 	}
 
@@ -74,7 +74,7 @@ private:
 	{
 		if(!idx)
 			return std::to_string(arg);
-		log("ERROR: idx out of range");
+		log("E: idx out of range");
 		return "";
 	}
 
@@ -250,7 +250,7 @@ public:
 
 			if((end = tmp.find(d2, pos)) == str::npos)
 			{
-				log("ERROR: expected end of variable: " << pos);
+				log("E: expected end of variable: " << pos);
 				return false;
 			}
 
@@ -259,7 +259,7 @@ public:
 
 			if(sookee::radp::psz(param_spec.c_str(), param) == param_spec.c_str())
 			{
-				log("ERROR: parsing <?soo ?> parameter value: " << pos);
+				log("E: parsing <?soo ?> parameter value: " << pos);
 				return false;
 			}
 
@@ -350,7 +350,7 @@ public:
 
 			if((end = std::search(pos, fin, d2.begin(), d2.end())) == fin)
 			{
-				log("ERROR: expected " << d2);
+				log("E: expected " << d2);
 				return false;
 			}
 
@@ -397,7 +397,7 @@ public:
 			if(v != vars.end())
 			{
 				if(!d.count(*v))
-					log("ERROR: not in dict" << *v++);
+					log("E: not in dict" << *v++);
 				else
 					s.append(d.at(*v++));
 			}
@@ -406,7 +406,7 @@ public:
 		while(v != vars.end())
 		{
 			if(!d.count(*v))
-				log("ERROR: not in dict" << *v++);
+				log("E: not in dict" << *v++);
 			else
 				s.append(d.at(*v++));
 			if(p != pieces.end())

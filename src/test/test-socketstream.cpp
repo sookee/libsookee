@@ -76,7 +76,7 @@ public:
 		if(int status = getaddrinfo(host.c_str(), port.c_str(), &hints, &res) != 0)
 		{
 			std::basic_iostream<Char>::setstate(std::ios::failbit);
-			log("ERROR: getting addres info: " << gai_strerror(status));
+			log("E: getting addres info: " << gai_strerror(status));
 			return *this;
 		}
 
@@ -143,20 +143,20 @@ public:
 		bug_func();
 		if(!bind(host, port))
 		{
-			log("ERROR: " << std::strerror(errno));
+			log("E: " << std::strerror(errno));
 			return false;
 		}
 
 		int option = 1;
 		if(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option)))
 		{
-			log("ERROR: " << std::strerror(errno));
+			log("E: " << std::strerror(errno));
 			return false;
 		}
 
 		if(::listen(sock, 10) == -1)
 		{
-			log("ERROR: " << std::strerror(errno));
+			log("E: " << std::strerror(errno));
 			return false;
 		}
 
@@ -178,7 +178,7 @@ public:
 							std::this_thread::sleep_for(std::chrono::seconds(1));
 						else
 						{
-							log("ERROR: " << strerror(errno));
+							log("E: " << strerror(errno));
 							::close(cs);
 							continue;
 						}
@@ -220,7 +220,7 @@ int main()
 
 	ss.open("openarena.ws", "80");
 
-	bug_var(ss);
+	bug_var(ss.good());
 
 	ss << "GET /smfnews.php" << " HTTP/1.1\r\n";
 	ss << "Host: openarena.ws" << "\r\n";

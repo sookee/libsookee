@@ -1,5 +1,5 @@
-#ifndef LIBSOOKEE_IOS_H_
-#define LIBSOOKEE_IOS_H_
+#ifndef LIBSOOKEE_IOS_H
+#define LIBSOOKEE_IOS_H
 /*
  *  Created on: 28 Jan 2012
  *      Author: oasookee@gmail.com
@@ -404,7 +404,7 @@ private:
 		{
 			if(::kill(pid, SIGKILL) == -1)
 			{
-				log("ERROR: Unable to kill process: " << pid);
+				log("E: Unable to kill process: " << pid);
 				return;
 			}
 		}
@@ -421,7 +421,7 @@ private:
 
 		if(::kill(pid, SIGKILL) == -1)
 		{
-			log("ERROR: Unable to kill process: " << pid);
+			log("E: Unable to kill process: " << pid);
 			return;
 		}
 
@@ -431,7 +431,7 @@ private:
 				return; // killed
 			std::this_thread::sleep_for(std::chrono::milliseconds(500));
 		}
-		log("ERROR: Unable to kill process: " << pid);
+		log("E: Unable to kill process: " << pid);
 	}
 
 public:
@@ -593,11 +593,11 @@ public:
 
 		if(!dir.empty())
 			if(chdir(dir.c_str()) == -1)
-				log("ERROR: [" << errno << "] " << strerror(errno) << ": " << dir);
+				log("E: [" << errno << "] " << strerror(errno) << ": " << dir);
 
 		execlp(prog.c_str(), prog.c_str(), convert(args).c_str()..., (char*)0);
 
-		log("ERROR: [" << errno << "] " << strerror(errno));
+		log("E: [" << errno << "] " << strerror(errno));
 		return false; // execl() failed
 	}
 };
@@ -709,4 +709,4 @@ std::istream& getline_s(std::istream& is, std::string& buf, char delim = '\n')
 
 namespace soo { using namespace sookee::ios; }
 
-#endif // LIBSOOKEE_IOS_H_
+#endif // LIBSOOKEE_IOS_H

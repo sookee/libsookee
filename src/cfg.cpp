@@ -64,7 +64,7 @@ bool Config::load(const str& dir, const str& file, bool first)
 
 	if(!ifs.is_open())
 	{
-		log("ERROR: opening config file");
+		log("E: opening config file");
 		return false;
 	}
 
@@ -90,8 +90,8 @@ bool Config::load(const str& dir, const str& file, bool first)
 		siss iss(line);
 		if(!sgl(sgl(iss, key, ':') >> std::ws, val))
 		{
-			log("ERROR: parsing config file: " << file << " at: " << no);
-			log("     :					   : " << line);
+			log("E: parsing config file: " << file << " at: " << no);
+			log(" :	" << line);
 			continue;
 		}
 

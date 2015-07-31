@@ -60,6 +60,11 @@ void stack_handler(int sig);
 #define ADD_STACK_HANDLER() do{}while(false)
 #define bug_lock_guard(lock, mutex) sookee::types::lock_guard lock(mutex)
 #else
+template<typename Key, typename Val>
+std::ostream& operator<<(std::ostream& o, const std::pair<Key, Val>& p)
+{
+	return o << '{' << p.first << ", " << p.second << '}';
+}
 #define bug(m) do{sookee::bug::out() << m << std::endl;}while(false)
 #define QUOTE(s) #s
 #define bug_var(v) bug(QUOTE(v:) << std::boolalpha << " " << v)

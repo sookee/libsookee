@@ -4,8 +4,8 @@
  *      Author: SooKee oasookee@gmail.com
  */
 
-#ifndef RND_H_
-#define RND_H_
+#ifndef LIBSOOKEE_RND_H_
+#define LIBSOOKEE_RND_H_
 
 #include <random>
 
@@ -67,6 +67,23 @@ public:
 	{
 		return dis(gen, param_type{from, to});
 	}
+
+	/**
+	 * Chances of success. This function will return true
+	 * num times out of denom.
+	 * @param num
+	 * @param denom
+	 * @return
+	 */
+	bool chances(Type num, Type denom) { return num > get(1, denom); }
+
+	/**
+	 * Percentage chance of success. This function returns true
+	 * num percent of the time.
+	 * @param num
+	 * @return
+	 */
+	bool pc(Type num) { return chances(num, 100); }
 };
 
 template<typename Type = std::int32_t>
@@ -146,4 +163,4 @@ public:
 
 namespace soo { using namespace sookee::rnd; }
 
-#endif /* RND_H_ */
+#endif // LIBSOOKEE_RND_H_

@@ -64,12 +64,12 @@ int main()
 		int v;
 		if((end = pi(pos, v)) == pos)
 		{
-			log("ERROR: parse failed");
+			log("E: parse failed");
 			++err;
 		}
 		else if(v != ints[i])
 		{
-			log("ERROR: parsed value (" << v << ") != expected value: " << ints[i]);
+			log("E: parsed value (" << v << ") != expected value: " << ints[i]);
 			++err;
 		}
 		pos = adv(end, 1);
@@ -104,12 +104,12 @@ int main()
 //		sscanf(pos, "%f", &vv);
 		if((end = pf(pos, v)) == pos)
 		{
-			log("ERROR: parse failed");
+			log("E: parse failed");
 			++err;
 		}
 		else if(v != floats[i])//vv)
 		{
-			log("ERROR: parsed value (" << v << ") != expected value: " << floats[i]);//vv);
+			log("E: parsed value (" << v << ") != expected value: " << floats[i]);//vv);
 			++err;
 		}
 		pos = adv(end, 1);

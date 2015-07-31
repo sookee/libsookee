@@ -74,10 +74,10 @@ class basic_netstream
 : public std::basic_iostream<Char>
 {
 	const std::ios::openmode mode = std::ios::in|std::ios::out;
+
 public:
-	basic_netstream(basic_netstream&& ns): std::basic_iostream<Char>(ns.rdbuf())
+	basic_netstream(basic_netstream&& ns): std::basic_iostream<Char>(ns.rdbuf(nullptr))
 	{
-		ns.rdbuf(nullptr);
 	}
 
 	basic_netstream()
@@ -139,6 +139,11 @@ public:
 
 	// TODO: decide how to handle err_message
 	str error;
+
+	bool open(const str& host, long port)
+	{
+		return open(host, std::to_string(port));
+	}
 
 	bool open(const str& host, const str& port)
 	{

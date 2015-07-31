@@ -151,13 +151,13 @@ void copy(const Container& c1, Container& c2)
 template<typename Iter>
 class range
 {
-	Iter s;
+	Iter b;
 	Iter e;
 
 public:
-	range(Iter start, Iter end): s(start), e(end) {}
+	range(Iter begin, Iter end): b(begin), e(end) {}
 
-	Iter begin() { return s; }
+	Iter begin() { return b; }
 	Iter end() { return e; }
 };
 

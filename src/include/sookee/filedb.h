@@ -142,7 +142,7 @@ std::istream& read(std::istream& is, Arg& arg, Args&... args)
 //
 //		if(!fs)
 //		{
-//			log("ERROR: opening file: " << filename);
+//			log("E: opening file: " << filename);
 //			return false;
 //		}
 //

@@ -195,14 +195,14 @@ public:
 
 		if(!net::read_http_headers(ss, headers))
 		{
-			log("ERROR reading headers.");
+			log("E: reading headers.");
 			return {};
 		}
 
 		str html;
 		if(!net::read_http_response_data(ss, headers, html))
 		{
-			log("ERROR reading response data.");
+			log("E: reading response data.");
 			return {};
 		}
 
@@ -254,14 +254,14 @@ public:
 
 		if(!net::read_http_headers(ss, headers))
 		{
-			log("ERROR reading headers.");
+			log("E: reading headers.");
 			return {};
 		}
 
 		str html;
 		if(!net::read_http_response_data(ss, headers, html))
 		{
-			log("ERROR reading response data.");
+			log("E: reading response data.");
 			return {};
 		}
 

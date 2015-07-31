@@ -24,6 +24,8 @@
 AC_INIT([libsookee],[0.1],[oasookee@gmail.com],[libsookee])
 AC_CONFIG_SRCDIR([src/Makefile.am])
 AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_AUX_DIR([aux])
 
 AM_INIT_AUTOMAKE([1.10 foreign])
 AM_SILENT_RULES
@@ -37,8 +39,6 @@ AC_PROG_INSTALL
 AC_LANG(C++)
 AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
  
-AC_CONFIG_MACRO_DIR([m4])
-
 AC_ARG_WITH([speller], AS_HELP_STRING([--with-speller], [Build the speller library]))
 AS_IF([test "x$with_speller" = "xyes"], [
 	PKG_CHECK_MODULES([ASPELL], [aspell], [HAVE_ASPELL=1], [HAVE_ASPELL=0])
