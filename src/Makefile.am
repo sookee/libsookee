@@ -6,12 +6,12 @@ sookee_librarydir = $(prefix)/lib/sookee
 #AUTOMAKE_OPTIONS = subdir-objects
 
 DEF_FLAGS = \
-	-D DEBUG -D LIBSOOKEE_COMPAT_LOG
+	-D LIBSOOKEE_COMPAT_LOG
 	
 GEN_FLAGS = -Wl,-E -Wall -Wextra -Winit-self -pedantic -pipe -pthread \
 	-I$(top_srcdir)/src/include
 
-AM_CXXFLAGS =  $(GEN_FLAGS) $(DEF_FLAGS) $(CXXFLAGS)
+AM_CXXFLAGS = $(CXXFLAGS) $(GEN_FLAGS) $(DEF_FLAGS)
 
 sookee_include_HEADERS = \
 	$(srcdir)/include/sookee/ansi.h \

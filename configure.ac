@@ -37,7 +37,7 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 
 AC_LANG(C++)
-AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
+AX_CXX_COMPILE_STDCXX_14([noext],[mandatory])
  
 AC_ARG_WITH([speller], AS_HELP_STRING([--with-speller], [Build the speller library]))
 AS_IF([test "x$with_speller" = "xyes"], [

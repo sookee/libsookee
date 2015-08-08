@@ -12,6 +12,7 @@
 #include <ctime>
 #include <functional>
 #include <iostream>
+#include <iomanip>
 
 #include <sookee/types/basic.h>
 
@@ -27,17 +28,64 @@ struct context
 
 class PosixTimer
 {
+	struct clock_type {};
+	struct precision_type {};
+	template<typename T, typename ID>
+	struct helper
+	{
+		ID id;
+		T p;
+		helper(T p = {}): p(p) {}
+		operator T() const { return p; }
+	};
+public:
+
+	using clock = helper<decltype(CLOCK_MONOTONIC), clock_type>;
+	using precision = helper<unsigned, precision_type>;
+
+private:
+	decltype(CLOCK_MONOTONIC) clk;
 	timespec tsb;
 	timespec tse;
+	precision p = 6;
 
 public:
+	PosixTimer()
+	: PosixTimer(clock(CLOCK_MONOTONIC), precision(6)) {}
+
+	explicit PosixTimer(clock clk)
+	: PosixTimer(clk, precision(6)) {}
+
+	explicit PosixTimer(precision p)
+	: PosixTimer(clock(CLOCK_MONOTONIC), p) {}
+
+	explicit PosixTimer(clock clk, precision p)
+	: clk(clk), p(p) {}
+
 	void clear() { start(); tse = tsb; }
-	void start() { clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tsb); }
-	void stop() { clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tse); }
+	void start() { clock_gettime(clk, &tsb); }
+	void stop() { clock_gettime(clk, &tse); }
 
 	friend std::ostream& operator<<(std::ostream& o, const PosixTimer& timer)
 	{
-		return o << (double) (timer.tse.tv_nsec - timer.tsb.tv_nsec) / 1000000000 + (double) (timer.tse.tv_sec - timer.tsb.tv_sec);
+		return o << std::fixed << std::setprecision(timer.p) << timer.secs();
+	}
+
+	auto nanos() const
+	{
+		auto b = (tsb.tv_sec * 1000000000) + tsb.tv_nsec;
+		auto e = (tse.tv_sec * 1000000000) + tse.tv_nsec;
+		return e - b;
+	}
+
+	double millis() const
+	{
+		return nanos() / 1000000.0;
+	}
+
+	double secs() const
+	{
+		return nanos() / 1000000000.0;
 	}
 };
 
