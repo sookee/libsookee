@@ -26,20 +26,20 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-#define GCC_VERSION (__GNUC__ * 10000 \
-	+ __GNUC_MINOR__ * 100 \
-	+ __GNUC_PATCHLEVEL__)
+//#define GCC_VERSION (__GNUC__ * 10000 \
+//	+ __GNUC_MINOR__ * 100 \
+//	+ __GNUC_PATCHLEVEL__)
 
 #include <sookee/i18n.h>
 #include <iconv.h>
 #include <cstring>
 #include <memory>
 #include <cwchar>
-#if GCC_VERSION > 50101
+//#if GCC_VERSION > 50101
 //#include <cuchar>
-#else
+//#else
 #include <uchar.h>
-#endif
+//#endif
 
 
 
@@ -112,7 +112,7 @@ std::u32string mb_to_utf32(const std::string& mb)
 	size_t len;
 	std::string::size_type pos;
 
-	mbrlen(0, 0, &ps);
+	std::mbrlen(0, 0, &ps);
 	for(pos = 0; (len = mbrtoc32(&pc32, mb.c_str() + pos, MB_CUR_MAX, &ps) != 0); pos += len)
 	{
 		if(pos == size_t(-1) || pos == size_t(-2) || pos == size_t(-3))
