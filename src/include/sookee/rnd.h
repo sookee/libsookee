@@ -159,6 +159,8 @@ public:
 	}
 };
 
+
+
 }} // ::sookee::rnd
 
 namespace soo { using namespace sookee::rnd; }

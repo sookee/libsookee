@@ -263,6 +263,12 @@ struct base_iterator
 
 } // experimental
 
+template<typename... Args>
+constexpr auto make_array(Args&&... args)-> std::array<std::common_type_t<Args...>, sizeof...(Args)>
+{
+	return {std::forward<Args>(args)...};
+}
+
 }} // sookee::stl
 
 namespace soo { using namespace sookee::stl; }

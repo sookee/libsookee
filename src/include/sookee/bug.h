@@ -93,6 +93,20 @@ struct lock_guard_scope_bomb
 */
 #endif
 
+#ifndef DEBUG
+#define DEBUG_ONLY(code)
+#else
+#include <sstream>
+#define DEBUG_ONLY(code) do{code}while(0)
+#define DEBUG_EXCEPTION(message) do{int line = __LINE__; \
+std::ostringstream oss; \
+oss << message; \
+oss << " in " << __FUNCTION__ << " "; \
+oss << __FILE__ << " at line " << line; \
+throw std::runtime_error(oss.str());}while(0)
+#define DEBUG_TEST(expr, message) do{if(expr) DEBUG_EXCEPTION(message);}while(0)
+#endif
+
 }} // sookee::bug
 
 namespace soo { using namespace sookee::bug; }

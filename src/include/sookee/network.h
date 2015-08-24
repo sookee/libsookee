@@ -77,6 +77,13 @@ struct response
 	str message;
 };
 
+//	str html;
+//	net::header_map headers;
+//	net::cookie_jar cookies;
+//	net::read_http_headers(io, headers);
+//	net::read_http_cookies(io, headers, cookies);
+//	net::read_http_response_data(io, headers, html);
+
 /**
  * Return first line of the response containing the response code
  * @param is

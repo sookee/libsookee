@@ -71,7 +71,8 @@ struct ssl_connection
 	int sock;
 	SSL *ssl;
 	SSL_CTX *ctx;
-	ssl_connection(): sock(0), ssl(0), ctx(0) {}
+	str_vec errors;
+	ssl_connection(): sock(-1), ssl(0), ctx(0) {}
 // TODO:
 //	~ssl_connection()
 //	{
@@ -97,40 +98,49 @@ protected:
 	static const int char_size = sizeof(char_type);
 	static const int SIZE = 128;
 
-	ssl_connection conn;
-	char_type* ibuf;//[SIZE] ;
-	char_type* obuf;//[SIZE] ;
+	ssl_connection& conn;
+	std::vector<char_type> ibuf;
+	std::vector<char_type> obuf;
 
 public:
-	basic_ssl_socketbuf()
-	: conn()
-	, ibuf(0)
-	, obuf(0)
+	basic_ssl_socketbuf(ssl_connection& conn)
+	: conn(conn)
+	, ibuf(SIZE)
+	, obuf(SIZE)
 	{
-		ibuf = new char_type[SIZE];
-		obuf = new char_type[SIZE];
-		buf_type::setp(obuf, obuf + (SIZE - 1));
-		buf_type::setg(ibuf, ibuf, ibuf);
+		buf_type::setp(obuf.data(), obuf.data() + obuf.size() - 1);
+		buf_type::setg(ibuf.data(), ibuf.data(), ibuf.data());
 	}
 
 	virtual ~basic_ssl_socketbuf()
 	{
 		sync();
-		delete[] ibuf;
-		delete[] obuf;
 	}
 
-	void set_ssl_connection(const ssl_connection& conn) { this->conn = conn; }
-	ssl_connection get_ssl_connection() { return this->conn; }
+//	void set_ssl_connection(const ssl_connection& conn)
+//	{
+//		bug_func();
+//		bug_var(conn.sock);
+//		this->conn = conn;
+//	}
+//	ssl_connection get_ssl_connection() const { return this->conn; }
 
 protected:
 
 	int output_buffer()
 	{
+		bug_func();
+		bug_var(conn.ssl);
 		int num = buf_type::pptr() - buf_type::pbase();
-
-		if(SSL_write(conn.ssl, reinterpret_cast<char*>(obuf), num * char_size) != num)
+		bug_var((void*)buf_type::pptr());
+		bug_var((void*)buf_type::pbase());
+		bug_var(num);
+		int ret;
+		if((ret = SSL_write(conn.ssl, reinterpret_cast<char*>(obuf.data()), num * char_size)) != num)
+		{
+			conn.errors.emplace_back(ERR_error_string(SSL_get_error(conn.ssl, ret), nullptr));
 			return traits_type::eof();
+		}
 		buf_type::pbump(-num);
 		return num;
 	}
@@ -150,7 +160,7 @@ protected:
 
 	virtual int sync()
 	{
-		if(output_buffer() == traits_type::eof())
+		if(conn.ssl && output_buffer() == traits_type::eof())
 			return traits_type::eof();
 		return 0;
 	}
@@ -161,10 +171,13 @@ protected:
 			return *buf_type::gptr();
 
 		int num;
-		if((num = SSL_read(conn.ssl, reinterpret_cast<char*>(ibuf), SIZE * char_size)) <= 0)
+		if((num = SSL_read(conn.ssl, reinterpret_cast<char*>(ibuf.data()), ibuf.size() * char_size)) <= 0)
+		{
+			conn.errors.emplace_back(ERR_error_string(SSL_get_error(conn.ssl, num), nullptr));
 			return traits_type::eof();
+		}
 
-		buf_type::setg(ibuf, ibuf, ibuf + num);
+		buf_type::setg(ibuf.data(), ibuf.data(), ibuf.data() + num);
 		return *buf_type::gptr();
 	}
 };
@@ -183,29 +196,42 @@ public:
 
 protected:
 	buf_type buf;
+	ssl_connection conn;
 
 public:
-	basic_ssl_socketstream(): stream_type(&buf) {}
+	basic_ssl_socketstream(): stream_type(&buf), buf(conn)
+	{
+		SSL_load_error_strings();
+		SSL_library_init();
+	}
 
 	virtual ~basic_ssl_socketstream()
 	{
 		this->close();
 	}
 
+	str get_error() const
+	{
+		if(conn.errors.empty())
+			return {};
+		return conn.errors.back();
+	}
+
+	str_vec get_errors() const { return conn.errors; }
+
 	void close()
 	{
-		if(buf.get_ssl_connection().sock != 0)
-			ssl_disconnect();
+		bug_func();
+		bug_var(conn.sock);
+		ssl_disconnect();
 		stream_type::clear();
 	}
 
 	bool open(const std::string& host, uint16_t port = 443)
 	{
+		bug_func();
 		close();
-		ssl_connection conn;
-		if(ssl_connect(host, port, conn))
-			buf.set_ssl_connection(conn);
-		return (bool)*this;
+		return ssl_connect(host, port, conn);
 	}
 
 	bool tcp_connect(const str& host, siz port, int& sd)
@@ -253,6 +279,14 @@ public:
 //			std::cerr << ERR_error_string(code, 0) << '\n';
 //	}
 //
+	void tcp_close(int& fd)
+	{
+		if(fd != -1)
+		{
+			::close(fd);
+			fd = -1;
+		}
+	}
 
 	bool ssl_connect(const str& host, siz port, ssl_connection& conn)
 	{
@@ -262,17 +296,19 @@ public:
 			return false;
 		}
 
-		SSL_load_error_strings();
-		SSL_library_init();
+//		SSL_load_error_strings();
+//		SSL_library_init();
 
 		if(!(conn.ctx = SSL_CTX_new(SSLv23_client_method())))
 		{
 			stream_type::setstate(std::ios::badbit);
+			tcp_close(conn.sock);
 			return false;
 		}
 		if(!(conn.ssl = SSL_new(conn.ctx)))
 		{
 			SSL_CTX_free(conn.ctx);
+			tcp_close(conn.sock);
 			stream_type::setstate(std::ios::badbit);
 			return false;
 		}
@@ -280,6 +316,7 @@ public:
 		{
 			SSL_free(conn.ssl);
 			SSL_CTX_free(conn.ctx);
+			tcp_close(conn.sock);
 			stream_type::setstate(std::ios::badbit);
 			return false;
 		}
@@ -287,6 +324,7 @@ public:
 		{
 			SSL_free(conn.ssl);
 			SSL_CTX_free(conn.ctx);
+			tcp_close(conn.sock);
 			stream_type::setstate(std::ios::badbit);
 			return false;
 		}
@@ -296,8 +334,7 @@ public:
 
 	void ssl_disconnect()
 	{
-		ssl_connection conn = buf.get_ssl_connection();
-		if(conn.sock)
+		if(conn.sock != -1)
 			::close(conn.sock);
 		if(conn.ssl)
 		{

@@ -244,8 +244,10 @@ std::istream& read_http_response_data(std::istream&is, const header_map& headers
 		}
 		else if(h.first == "content-length")
 		{
-			size_t len;
-			if(std::istringstream(h.second) >> len)
+			std::size_t pos;
+			auto len = std::stoull(h.second, &pos);
+//			if(std::istringstream(h.second) >> len)
+			if(pos == h.second.size())
 			{
 //				std::ostringstream oss;
 				data.clear();
