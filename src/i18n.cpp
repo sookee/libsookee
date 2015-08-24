@@ -35,7 +35,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <cstring>
 #include <memory>
 #include <cwchar>
-#if GCC_VERSION > 501010
+#if GCC_VERSION > 50101
 #include <cuchar>
 #else
 #include <uchar.h>
