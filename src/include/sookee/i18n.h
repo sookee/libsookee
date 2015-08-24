@@ -7,7 +7,7 @@
  */
 
 #include <string>
-#include <uchar.h>
+//#include <uchar.h>
 #include <sookee/utf8.h>
 
 namespace sookee { namespace i18n {
