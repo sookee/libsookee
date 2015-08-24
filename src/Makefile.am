@@ -1,5 +1,6 @@
 sookee_includedir = $(prefix)/include/sookee
-#sookee_include_typesdir = $(prefix)/include/sookee/types
+sookee_include_utf8dir = $(prefix)/include/sookee/utf8
+sookee_include_typesdir = $(prefix)/include/sookee/types
 
 sookee_librarydir = $(prefix)/lib/sookee
 
@@ -51,7 +52,7 @@ sookee_include_HEADERS = \
 	$(srcdir)/include/sookee/utils.h \
 	$(srcdir)/include/sookee/xio.h
 		
-sookee_include_HEADERS += \
+sookee_include_types_HEADERS = \
 	$(srcdir)/include/sookee/types/basic.h \
 	$(srcdir)/include/sookee/types/dbl_deq.h \
 	$(srcdir)/include/sookee/types/dbl_lst.h \
@@ -96,7 +97,7 @@ sookee_include_HEADERS += \
 	$(srcdir)/include/sookee/types/typedefs.h \
 	$(srcdir)/include/sookee/types/vec.h
 
-sookee_include_HEADERS += \
+sookee_include_utf8_HEADERS = \
 	$(srcdir)/include/sookee/utf8/checked.h \
 	$(srcdir)/include/sookee/utf8/core.h \
 	$(srcdir)/include/sookee/utf8/unchecked.h
