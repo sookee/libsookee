@@ -26,20 +26,12 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-//#define GCC_VERSION (__GNUC__ * 10000 \
-//	+ __GNUC_MINOR__ * 100 \
-//	+ __GNUC_PATCHLEVEL__)
-
 #include <sookee/i18n.h>
 #include <iconv.h>
 #include <cstring>
 #include <memory>
-#include <cwchar>
-//#if GCC_VERSION > 50101
-//#include <cuchar>
-//#else
-#include <uchar.h>
-//#endif
+//#include <cwchar>
+//#include <uchar.h>
 
 
 
@@ -102,44 +94,44 @@ std::string to_utf8_xxx(std::u32string utf32)
 	return std::string(buf.get(), outbuf);
 }
 
-std::u32string mb_to_utf32(const std::string& mb)
-{
-	std::u32string utf32;
-
-	char32_t pc32;
-	mbstate_t ps;
-
-	size_t len;
-	std::string::size_type pos;
-
-	std::mbrlen(0, 0, &ps);
-	for(pos = 0; (len = mbrtoc32(&pc32, mb.c_str() + pos, MB_CUR_MAX, &ps) != 0); pos += len)
-	{
-		if(pos == size_t(-1) || pos == size_t(-2) || pos == size_t(-3))
-			break;
-		utf32 += pc32;
-	}
-
-	return utf32;
-}
-
-std::string utf32_to_mb(const std::u32string& utf32)
-{
-	std::string mb;
-
-	char pmb[4];
-	mbstate_t ps;
-
-	size_t len;
-
-	mbrlen(0, 0, &ps);
-	for(size_t pos = 0; pos < utf32.size(); ++pos)
-	{
-		if((len = c32rtomb(pmb, utf32[pos], &ps)) <= 4)
-			mb.append(pmb, len);
-	}
-
-	return mb;
-}
+//std::u32string mb_to_utf32(const std::string& mb)
+//{
+//	std::u32string utf32;
+//
+//	char32_t pc32;
+//	mbstate_t ps;
+//
+//	size_t len;
+//	std::string::size_type pos;
+//
+//	std::mbrlen(0, 0, &ps);
+//	for(pos = 0; (len = mbrtoc32(&pc32, mb.c_str() + pos, MB_CUR_MAX, &ps) != 0); pos += len)
+//	{
+//		if(pos == size_t(-1) || pos == size_t(-2) || pos == size_t(-3))
+//			break;
+//		utf32 += pc32;
+//	}
+//
+//	return utf32;
+//}
+//
+//std::string utf32_to_mb(const std::u32string& utf32)
+//{
+//	std::string mb;
+//
+//	char pmb[4];
+//	mbstate_t ps;
+//
+//	size_t len;
+//
+//	mbrlen(0, 0, &ps);
+//	for(size_t pos = 0; pos < utf32.size(); ++pos)
+//	{
+//		if((len = c32rtomb(pmb, utf32[pos], &ps)) <= 4)
+//			mb.append(pmb, len);
+//	}
+//
+//	return mb;
+//}
 
 }} // sookee::i18n
