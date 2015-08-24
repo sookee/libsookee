@@ -30,7 +30,9 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <iconv.h>
 #include <cstring>
 #include <memory>
-#include <wchar.h>
+#include <cwchar>
+#include <uchar.h>
+
 
 //#include <unicode/utypes.h>
 //#include <unicode/ucnv.h>
