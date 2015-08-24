@@ -26,12 +26,21 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
+#define GCC_VERSION (__GNUC__ * 10000 \
+	+ __GNUC_MINOR__ * 100 \
+	+ __GNUC_PATCHLEVEL__)
+
 #include <sookee/i18n.h>
 #include <iconv.h>
 #include <cstring>
 #include <memory>
 #include <cwchar>
+#if GCC_VERSION > 501010
+#include <cuchar>
+#else
 #include <uchar.h>
+#endif
+
 
 
 //#include <unicode/utypes.h>
