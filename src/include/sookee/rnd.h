@@ -89,12 +89,19 @@ public:
 template<typename Type = std::int32_t>
 using PRNG_32 = PRNG<Type>;
 
-using PRNG_32U = PRNG<std::uint32_t>;
+//using PRNG_32U = PRNG<std::uint32_t>;
+using PRNG_32S = PRNG_32<std::int32_t>;
+using PRNG_32U = PRNG_32<std::uint32_t>;
+using PRNG_32F = PRNG_32<float>;
+using PRNG_32D = PRNG_32<double>;
 
 template<typename Type = std::int64_t>
 using PRNG_64 = PRNG<Type, std::mt19937_64>;
 
-using PRNG_64U = PRNG<std::uint32_t, std::mt19937_64>;
+using PRNG_64S = PRNG_64<std::int64_t>;
+using PRNG_64U = PRNG_64<std::uint64_t>;
+using PRNG_64F = PRNG_64<float>;
+using PRNG_64D = PRNG_64<double>;
 
 enum class type {lower, upper, both};
 

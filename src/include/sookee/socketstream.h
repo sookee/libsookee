@@ -73,7 +73,7 @@ template<typename Char>
 class basic_netstream
 : public std::basic_iostream<Char>
 {
-	const std::ios::openmode mode = std::ios::in|std::ios::out;
+	const std::ios::openmode mode = std::ios::in|std::ios::out|std::ios::binary;
 
 public:
 	basic_netstream(basic_netstream&& ns): std::basic_iostream<Char>(ns.rdbuf(nullptr))
@@ -142,11 +142,17 @@ public:
 
 	bool open(const str& host, long port)
 	{
+		bug_func();
+		bug_var(host);
+		bug_var(port);
 		return open(host, std::to_string(port));
 	}
 
 	bool open(const str& host, const str& port)
 	{
+		bug_func();
+		bug_var(host);
+		bug_var(port);
 		addrinfo hints;
 		memset(&hints, 0, sizeof hints);
 		hints.ai_family = AF_UNSPEC; // AF_INET or AF_INET6
@@ -157,6 +163,7 @@ public:
 		{
 			std::basic_iostream<Char>::setstate(std::ios::failbit);
 			error = gai_strerror(status);
+			bug_var(error);
 			return false;
 		}
 
@@ -177,15 +184,22 @@ public:
 		if(!p)
 		{
 			std::basic_iostream<Char>::setstate(std::ios::failbit);
-			error = "unable to find connection";
+			error = std::strerror(errno);
+			bug_var(error);
 			return false;
 		}
 
+		bug_var(sd);
+
 		delete std::basic_iostream<Char>::rdbuf(new (std::nothrow) stdio_filebuf<Char>(sd, mode));
 
-		if(!std::basic_iostream<Char>::rdbuf())
-			std::basic_iostream<Char>::setstate(std::ios::failbit); // memory fail
-		return true;
+		bug_var(std::basic_iostream<Char>::rdbuf());
+		if(std::basic_iostream<Char>::rdbuf())
+			return true;
+
+		bug("ERROR: failed to create ne stdio_filebuf: " << sd);
+		std::basic_iostream<Char>::setstate(std::ios::failbit); // memory fail
+		return false;
 	}
 
 	void close()
