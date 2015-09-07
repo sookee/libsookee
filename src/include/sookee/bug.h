@@ -94,7 +94,7 @@ struct lock_guard_scope_bomb
 #endif
 
 #ifndef DEBUG
-#define DEBUG_ONLY(code)
+#define DEBUG_ONLY(code) do{}while(0)
 #else
 #include <sstream>
 #define DEBUG_ONLY(code) do{code}while(0)

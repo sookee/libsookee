@@ -264,4 +264,66 @@ std::istream& getcsvline(std::istream& is, std::vector<std::string>& fields)
 	return is;
 }
 
+// string conversions
+
+bool s_to_test(char const* s, char const* e)
+{
+	if(e == s)
+		return false;
+
+	while(std::isspace(*e))
+		++e;
+
+	return !(*e);
+}
+
+bool s_to_l(const std::string& s, long int& l)
+{
+	char* end;
+	l = std::strtol(s.c_str(), &end, 10);
+	return s_to_test(s.c_str(), end);
+}
+
+bool s_to_ll(const std::string& s, long long int& ll)
+{
+	char* end;
+	ll = std::strtoll(s.c_str(), &end, 10);
+	return s_to_test(s.c_str(), end);
+}
+
+bool s_to_ul(const std::string& s, unsigned long int& ul)
+{
+	char* end;
+	ul = std::strtoul(s.c_str(), &end, 10);
+	return s_to_test(s.c_str(), end);
+}
+
+bool s_to_ull(const std::string& s, unsigned long long int& ull)
+{
+	char* end;
+	ull = std::strtoull(s.c_str(), &end, 10);
+	return s_to_test(s.c_str(), end);
+}
+
+bool s_to_f(const std::string& s, float& f)
+{
+	char* end;
+	f = std::strtof(s.c_str(), &end);
+	return s_to_test(s.c_str(), end);
+}
+
+bool s_to_d(const std::string& s, double& d)
+{
+	char* end;
+	d = std::strtod(s.c_str(), &end);
+	return s_to_test(s.c_str(), end);
+}
+
+bool s_to_ld(const std::string& s, long double& ld)
+{
+	char* end;
+	ld = std::strtold(s.c_str(), &end);
+	return s_to_test(s.c_str(), end);
+}
+
 }} // sookee::utils

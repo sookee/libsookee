@@ -407,6 +407,89 @@ public:
 std::istream& getcsvfield(std::istream& is, std::string& field);
 std::istream& getcsvline(std::istream& is, std::vector<std::string>& fields);
 
+// string conversions
+
+// All these conversions return true only if a valid
+// number surrounded only by spaces is found
+
+// they acceps the same input as their corresponding
+// std::strtoxx() functions.
+
+bool s_to_l(const std::string& s, long& l);
+bool s_to_ll(const std::string& s, long long& ll);
+
+bool s_to_ul(const std::string& s, unsigned long& ul);
+bool s_to_ull(const std::string& s, unsigned long long& ull);
+
+bool s_to_f(const std::string& s, float& f);
+bool s_to_d(const std::string& s, double& d);
+bool s_to_ld(const std::string& s, long double& ld);
+
+template<class T>
+inline constexpr T fast_pow(const T base, unsigned const exponent)
+{
+    return exponent ? base * fast_pow(base, exponent-1) : 1;
+}
+
+/**
+ *
+ * @param format "000.000"
+ * @param tc
+ * @param n
+ */
+template<typename Integer, unsigned N>
+std::string fast_conv(char const(&format)[N], Integer n)
+{
+	std::string tc = format;
+
+	auto zeros = std::count(std::begin(format), std::end(format), '0');
+
+	auto max = fast_pow(10U, zeros);
+
+	n %= max;
+
+	char* p = &tc[0];
+
+	while(*p)// && max > 1)
+	{
+		if(*p != '0')
+			++p;
+		else
+		{
+			max /= 10;
+			*p++ = '0' + (n / max);
+			n -= (n / max) * max;
+		}
+	}
+
+//	assert(p - &tc[0] == (int)tc.size());
+
+	return tc;
+}
+
+template<typename Integer>
+std::string fast_conv(unsigned N, Integer n)
+{
+	std::string tc(N, '0');
+
+	auto max = fast_pow(10U, N);
+
+	n %= max;
+
+	char* p = &tc[0];
+
+	while(*p)// && max > 1)
+	{
+		max /= 10;
+		*p++ = '0' + (n / max);
+		n -= (n / max) * max;
+	}
+
+//	assert(p - &tc[0] == (int)tc.size());
+
+	return tc;
+}
+
 }} // sookee::utils
 
 namespace soo { using namespace sookee::utils; }
