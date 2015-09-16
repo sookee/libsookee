@@ -226,12 +226,19 @@ class log_writer
 	// circular buffer
 	static constexpr std::size_t default_size = 30;
 
+	std::chrono::milliseconds latency = std::chrono::milliseconds(200);
+	const std::chrono::milliseconds min_latency = std::chrono::milliseconds(10);
+	const std::chrono::milliseconds max_latency = std::chrono::milliseconds(1000);
+
 	std::vector<std::string> q;
 	std::atomic_uint q_head = {0};
 	std::atomic_uint q_tail = {0};
 
 	bool enqueue(str msg)
 	{
+//		bug_fun();
+//		bug_var(q_tail);
+//		bug_var(q_head);
 		auto tail = (q_tail + 1) % q.size();
 
 		// full
@@ -247,6 +254,9 @@ class log_writer
 
 	bool dequeue(str& msg)
 	{
+//		bug_fun();
+//		bug_var(q_tail);
+//		bug_var(q_head);
 		// empty
 		if(q_tail == q_head)
 			return false;
@@ -259,25 +269,49 @@ class log_writer
 	}
 
 	// sink thread
-	std::atomic_bool done = {false};
+	std::atomic_bool done = {true};
 	std::future<void> fut;
 
 #ifdef DEBUG
-	str get_room()
+	std::size_t get_room()
 	{
-		str room = std::to_string(q_tail - ((q_head + 1) % q.size()) + 1);
-		if(room.size() < 3)
-			room = str(3 - room.size(), '0') + room;
-		return room;
+		return q_tail - ((q_head + 1) % q.size()) + 1;
+	}
+
+	str get_room_str(std::size_t room)
+	{
+		str s = std::to_string(room);
+		if(s.size() < 3)
+			s = str(3 - s.size(), '0') + s;
+		return s;
 	}
 
 	void sync()
 	{
+//		bug_fun();
 		str msg;
-		str room = get_room();
+		auto room = get_room();
+
+		// aim for 80% full buffer
+		if(room * 100 / q.size() < 75)
+		{
+			if((latency += std::chrono::milliseconds(10)) < min_latency)
+				latency = min_latency;
+		}
+		else if(room * 100 / q.size() > 85)
+		{
+			if((latency -= std::chrono::milliseconds(10)) > max_latency)
+				latency = max_latency;
+		}
+
+		str debug = std::to_string(latency.count());
+		if(debug.size() < 4)
+			debug = str(4 - debug.size(), '0') + debug;
+
 		while(dequeue(msg))
 		{
-			(*sink) << "[" << room << "] " << msg << '\n';
+			(*sink)<< "{"<< debug << "}" << "[" << get_room_str(room) << "] " << msg << '\n';
+			sink->flush();
 			room = get_room();
 		}
 	}
@@ -295,7 +329,7 @@ class log_writer
 		while(!done)
 		{
 			sync();
-			std::this_thread::sleep_for(std::chrono::milliseconds(200));
+			std::this_thread::sleep_for(std::chrono::milliseconds(latency));
 		}
 	}
 
@@ -378,6 +412,8 @@ public:
 
 	void add_line(std::stringstream& ss)
 	{
+//		if(sink)
+//			(*sink) << ss.str() << std::endl;
 		str msg = ss.str();
 		while(!enqueue(msg))
 			std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -394,6 +430,7 @@ public:
 		if(done)
 		{
 			reset(q.size());
+			done = false;
 			fut = std::async(std::launch::async, &log_writer::consume, this);
 		}
 	}
