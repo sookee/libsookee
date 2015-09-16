@@ -29,7 +29,7 @@ inline rad adv(rad s, siz n = 1)
 }
 
 /**
- * Parse to delim
+ * Parse to delim or EOS
  * @param s
  * @return
  */
