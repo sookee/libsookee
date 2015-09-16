@@ -88,6 +88,37 @@ typedef std::unique_ptr<char, malloc_deleter> cstring_uptr;
 template<typename Type>
 class compiletime_type_is;
 
+// Static type info
+
+template <typename T>
+struct TypeId {
+};
+
+template <size_t N>
+struct TypeInfo {
+};
+
+#define MAKE_TYPE_ID(stype, id)\
+template <> \
+struct TypeId<stype> { \
+	static const size_t value = id; \
+}; \
+template <> \
+struct TypeInfo<TypeId<stype>::value> { \
+    typedef stype type; \
+    static const size_t size = sizeof(type); \
+    static constexpr char const* name = #stype; \
+}
+
+MAKE_TYPE_ID(int, 1);
+MAKE_TYPE_ID(unsigned int, 2);
+MAKE_TYPE_ID(long int, 3);
+MAKE_TYPE_ID(unsigned long int, 4);
+MAKE_TYPE_ID(long long int, 5);
+MAKE_TYPE_ID(unsigned long long int, 6);
+MAKE_TYPE_ID(float, 7);
+MAKE_TYPE_ID(double, 8);
+
 }} // sookee::types
 
 namespace soo { using namespace sookee::types; }

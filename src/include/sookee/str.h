@@ -90,7 +90,7 @@ inline str& trim(str& s, const char* t = ws)
  * of the string.
  * @return The same string passed in as a parameter reference.
  */
-inline str ltrim(str&& s, const char* t = " \n\t")
+inline str ltrim(str&& s, const char* t = ws)
 {
 	s.erase(0, s.find_first_not_of(t));
 	return s;
@@ -103,7 +103,7 @@ inline str ltrim(str&& s, const char* t = " \n\t")
  * of the string.
  * @return The same string passed in as a parameter reference.
  */
-inline str rtrim(str&& s, const char* t = " \n\t")
+inline str rtrim(str&& s, const char* t = ws)
 {
 	s.erase(s.find_last_not_of(t) + 1);
 	return s;
@@ -116,7 +116,7 @@ inline str rtrim(str&& s, const char* t = " \n\t")
  * of the string.
  * @return The same string passed in as a parameter reference.
  */
-inline str trim(str&& s, const char* t = " \n\t")
+inline str trim(str&& s, const char* t = ws)
 {
 	return ltrim(rtrim(s, t), t);
 }
@@ -210,13 +210,6 @@ str& replace(str& s, const str& from, const str& to);
 str replace_word(const str& s, const str& from, const str& to);
 
 inline
-str& transform(str& s, const std::function<int(int)>& func)
-{
-	std::transform(s.begin(), s.end(), s.begin(), func);
-	return s;
-}
-
-inline
 str& lower(str& s)
 {
 	std::transform(s.begin(), s.end(), s.begin()
@@ -224,35 +217,8 @@ str& lower(str& s)
 	return s;
 }
 
-//std::string downcased(std::string s) {
-//  std::locale loc{"en_US.UTF-8"};
-//  std::transform(begin(s), end(s), begin(s), [&](auto const& c) {
-//    return std::tolower(c, loc);
-//  });
-//  return s;
-//}
-
 inline
-str& lower_lc(str& s, const std::locale& loc = std::locale(""))
-{
-	std::transform(std::begin(s), std::end(s), std::begin(s), [&](char c)
-	{
-		return std::tolower(c, loc);
-	});
-	return s;
-}
-
-//inline
-//std::string lower_case(std::string s)
-//{
-//	std::transform(s.begin(), s.end(), s.begin()
-//		, std::ptr_fun<int, int>(std::tolower));
-//	return s;
-//}
-
-
-inline
-str& lower(str&& s)
+str lower(str&& s)
 {
 	return lower(s);
 }
@@ -260,11 +226,13 @@ str& lower(str&& s)
 inline
 str& upper(str& s)
 {
-	return transform(s, toupper);
+	std::transform(s.begin(), s.end(), s.begin()
+		, std::ptr_fun<int, int>(std::toupper));
+	return s;
 }
 
 inline
-str& upper(str&& s)
+str upper(str&& s)
 {
 	return upper(s);
 }

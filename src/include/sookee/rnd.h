@@ -48,9 +48,12 @@ template
 	<
 	  typename Type = int
 	, typename Generator = std::mt19937
-	, typename Dist = typename std::conditional<std::is_integral<Type>::value
-	, std::uniform_int_distribution<Type>
-	, std::uniform_real_distribution<Type>>::type
+	, typename Dist = typename std::conditional
+		<
+			std::is_integral<Type>::value
+			, std::uniform_int_distribution<Type>
+			, std::uniform_real_distribution<Type>
+		>::type
 	>
 class PRNG
 {
@@ -63,6 +66,12 @@ class PRNG
 public:
 	PRNG(): ss({rd{}(), rd{}(), rd{}(), rd{}()}), gen(ss) {}
 
+	/**
+	 * Get a random number between from and to, inclusively.
+	 * @param from Lowest possible return value.
+	 * @param to Highest possible return value.
+	 * @return Random number in the range [from, to].
+	 */
 	Type get(Type from, Type to)
 	{
 		return dis(gen, param_type{from, to});
@@ -89,7 +98,6 @@ public:
 template<typename Type = std::int32_t>
 using PRNG_32 = PRNG<Type>;
 
-//using PRNG_32U = PRNG<std::uint32_t>;
 using PRNG_32S = PRNG_32<std::int32_t>;
 using PRNG_32U = PRNG_32<std::uint32_t>;
 using PRNG_32F = PRNG_32<float>;
