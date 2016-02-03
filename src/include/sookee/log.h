@@ -236,9 +236,6 @@ class log_writer
 
 	bool enqueue(str msg)
 	{
-//		bug_fun();
-//		bug_var(q_tail);
-//		bug_var(q_head);
 		auto tail = (q_tail + 1) % q.size();
 
 		// full
@@ -254,9 +251,6 @@ class log_writer
 
 	bool dequeue(str& msg)
 	{
-//		bug_fun();
-//		bug_var(q_tail);
-//		bug_var(q_head);
 		// empty
 		if(q_tail == q_head)
 			return false;
@@ -310,8 +304,11 @@ class log_writer
 
 		while(dequeue(msg))
 		{
-			(*sink)<< "{"<< debug << "}" << "[" << get_room_str(room) << "] " << msg << '\n';
-			sink->flush();
+			if(sink)
+			{
+				(*sink)<< "{"<< debug << "}" << "[" << get_room_str(room) << "] " << msg << '\n';
+				sink->flush();
+			}
 			room = get_room();
 		}
 	}
@@ -326,6 +323,7 @@ class log_writer
 
 	void consume()
 	{
+//		bug_fun();
 		while(!done)
 		{
 			sync();
@@ -340,7 +338,7 @@ class log_writer
 
 		void swap(log_buffer& lb)
 		{
-			if(&lb !=this)
+			if(&lb != this)
 			{
 				std::swap(lw, lb.lw);
 				std::swap(ss, lb.ss);
@@ -369,18 +367,6 @@ class log_writer
 		}
 	};
 
-	void swap(log_writer& lw)
-	{
-		if(&lw != this)
-		{
-//			stop();
-//			lw.stop();
-			std::swap(sink, lw.sink);
-//			lw.start();
-//			start();
-		}
-	}
-
 	std::string stamp()
 	{
 		std::tm bt;
@@ -392,7 +378,7 @@ class log_writer
 public:
 	log_writer(std::ostream& sink): log_writer(sink, default_size) {}
 	log_writer(std::ostream& sink, std::size_t size): sink(&sink), q(size) {}
-	log_writer(log_writer&& lw): sink(lw.sink) { lw.sink = nullptr; }
+	log_writer(log_writer&& lw) = delete;
 	log_writer(log_writer const&) = delete;
 
 	void reset(std::size_t size = default_size)
@@ -402,27 +388,24 @@ public:
 		q_head = q_tail = 0;
 	}
 
-	log_writer& operator=(log_writer&& lw)
-	{
-		swap(lw);
-		return *this;
-	}
-
+	log_writer& operator=(log_writer&& lw) = delete;
 	log_writer& operator=(log_writer const&) = delete;
 
 	void add_line(std::stringstream& ss)
 	{
-//		if(sink)
-//			(*sink) << ss.str() << std::endl;
+		auto timeout = std::chrono::steady_clock::now() + std::chrono::seconds(10);
 		str msg = ss.str();
-		while(!enqueue(msg))
+		while(!enqueue(msg) && std::chrono::steady_clock::now() < timeout)
 			std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+		if(!(std::chrono::steady_clock::now() < timeout))
+			throw std::runtime_error("Error writing to log system (waited too long), aborting.");
 	}
 
 	template<typename DataType>
 	struct log_buffer operator<<(DataType const& data)
 	{
-		return std::move(log_buffer(*this) << stamp() << data);
+		return log_buffer(*this) << stamp() << data;
 	}
 
 	void start()
@@ -442,7 +425,8 @@ public:
 		if(fut.valid())
 			fut.get();
 
-		sync();
+		if(sink)
+			sync();
 	}
 };
 

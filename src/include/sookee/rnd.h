@@ -92,7 +92,7 @@ public:
 	 * @param num
 	 * @return
 	 */
-	bool pc(Type num) { return chances(num, 100); }
+	bool percent(Type num) { return chances(num, 100); }
 };
 
 template<typename Type = std::int32_t>
@@ -131,10 +131,9 @@ std::string random_alphanum(size_t length, type t = type::both)
 
     const std::string& an = t == type::lower ? anl : t == type::upper ? anu : anb;
 
-    static std::uniform_int_distribution<> pick(0, (int)an.size() - 1);
+    std::uniform_int_distribution<> pick(0, (int)an.size() - 1);
 
     std::string s;
-
     s.reserve(length);
 
     while(length--)

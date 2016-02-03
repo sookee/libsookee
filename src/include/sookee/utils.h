@@ -29,7 +29,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
-//#include <SFML/Graphics.hpp>
+#include <chrono>
 
 #include <sookee/types/basic.h>
 #include <sookee/types/stream.h>
@@ -111,8 +111,43 @@ using dbl_seq = seq<double>;
 //	for(auto&& i: int_seq(-10, 20, 1))
 //		bug_var(i);
 
+class wait_timer
+{
+public:
+	using clock = std::chrono::steady_clock;
+	using duration = clock::duration;
 
-/// seq
+private:
+	duration wait;
+	clock::time_point time_up;
+
+public:
+	wait_timer(duration wait)
+	: wait(wait), time_up(clock::now() + wait)
+	{
+	}
+
+	void pause_thread()
+	{
+		std::this_thread::sleep_until(time_up);
+		time_up += wait;
+	}
+};
+
+inline std::size_t proc_self_status(std::string const& key = "VmRSS")
+{
+	std::ifstream ifs("/proc/self/status");
+
+	std::string k, v;
+
+	std::size_t m;
+	while(std::getline(std::getline(ifs, k, ':') >> std::ws, v))
+		if(k == key)
+			if(std::istringstream(v) >> m)
+				return m * 1024;
+
+	return -1;
+}
 
 }} // ::sookee::utils
 

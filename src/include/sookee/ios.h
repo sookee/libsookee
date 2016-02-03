@@ -28,6 +28,8 @@ http://www.gnu.org/licenses/gpl-2.0.html
 
 '-----------------------------------------------------------------*/
 
+#include <vector>
+
 #include <sookee/types/basic.h>
 #include <sookee/types/stream.h>
 #include <sookee/types/str_vec.h>
@@ -704,6 +706,248 @@ std::istream& getline_s(std::istream& is, std::string& buf, char delim = '\n')
 {
 	return getline_s(is, &buf[0], buf.size(), delim);
 }
+
+/**
+ * This function requires std::ios::sync_with_stdio(false);
+ * and may be implementation specific.
+ *
+ * @param s out parameter
+ * @param wait time to wait before returning with no input
+ * @return false if timed out, true if input received in time allotted
+ */
+inline
+bool timed_input(std::string& s, std::chrono::milliseconds wait)
+{
+	using namespace std::chrono;
+
+	steady_clock::time_point timeup = steady_clock::now() + wait;
+
+	std::streamsize n;
+	while(!(n = std::cin.rdbuf()->in_avail()) && steady_clock::now() < timeup)
+		std::this_thread::sleep_for(milliseconds(10));
+
+	if(!n)
+		return false;
+
+	s.resize(n);
+	std::cin.read(&s[0], n);
+
+	return true;
+}
+
+// untested
+template<typename CharType, typename TraitsType = std::char_traits<CharType>>
+class ibufferstream
+: std::basic_istream<CharType, TraitsType>
+{
+public:
+	using size_type = typename std::vector<CharType>::size_type;
+	using string_type = std::basic_string<CharType, TraitsType>;
+	using istream_type = std::basic_istream<CharType, TraitsType>;
+
+private:
+//	std::vector<char> buf;
+	string_type const* buf;
+	size_type gptr = 0;
+	size_type pptr = 0;
+
+	bool eofbit = false;
+	bool failbit = false;
+
+	void checkeof()
+	{
+		if(gptr == buf.size())
+			eofbit = true;
+	}
+
+	void skipws()
+	{
+		while(gptr < buf.size() && buf[gptr] == ' ') {}
+		checkeof();
+	}
+
+public:
+	ibufferstream(string_type const& buf): istream_type(nullptr), buf(&buf) {}
+	ibufferstream(ibufferstream&& ibs): istream_type(nullptr), buf(ibs.buf) { ibs.buf = nullptr; }
+	ibufferstream(ibufferstream const&) = delete;
+
+	ibufferstream& operator=(ibufferstream&& ibs)
+	{
+		buf = ibs.buf;
+		ibs.buf = nullptr;
+	}
+
+	ibufferstream& operator=(ibufferstream const&) = delete;
+
+	operator bool() const
+	{
+		return failbit;
+	}
+
+	ibufferstream& operator>>(char& c)
+	{
+//		bug_fun();
+		skipws();
+		if(!(gptr < buf.size()))
+			failbit = true;
+		else
+		{
+			c = buf[gptr++];
+			checkeof();
+		}
+		return *this;
+	}
+
+	ibufferstream& operator>>(std::string& s)
+	{
+//		bug_fun();
+		skipws();
+		if(!(gptr < buf.size()))
+			failbit = true;
+		else
+		{
+			s.clear();
+			while(gptr < buf.size() && buf[gptr] != ' ');
+				s += buf[gptr++];
+			checkeof();
+		}
+		return *this;
+	}
+
+	ibufferstream& operator>>(long long int& i)
+	{
+//		bug_fun();
+		skipws();
+		if(!(gptr < buf.size()))
+			failbit = true;
+		else
+		{
+			char* e;
+			i = std::strtoll(buf.data() + gptr, &e, 10);
+			if(e == buf.data())
+				failbit = true;
+			checkeof();
+		}
+		return *this;
+	}
+
+	ibufferstream& operator>>(long int& i)
+	{
+//		bug_fun();
+		long long int lli;
+		if((*this) >> lli)
+		{
+			if(lli > std::numeric_limits<long int>::max())
+				failbit = true;
+			i = lli;
+		}
+
+		return *this;
+	}
+
+	ibufferstream& operator>>(int& i)
+	{
+//		bug_fun();
+		long long int lli;
+		if((*this) >> lli)
+		{
+			if(lli > std::numeric_limits<int>::max())
+				failbit = true;
+			i = lli;
+		}
+
+		return *this;
+	}
+
+	ibufferstream& operator>>(unsigned long long int& i)
+	{
+//		bug_fun();
+		skipws();
+		if(!(gptr < buf.size()))
+			failbit = true;
+		else
+		{
+			char* e;
+			i = std::strtoull(buf.data() + gptr, &e, 10);
+			if(e == buf.data())
+				failbit = true;
+			checkeof();
+		}
+		return *this;
+	}
+
+	ibufferstream& operator>>(unsigned long int& i)
+	{
+//		bug_fun();
+		unsigned long long int lli;
+		if((*this) >> lli)
+		{
+			if(lli > std::numeric_limits<unsigned long int>::max())
+				failbit = true;
+			i = lli;
+		}
+
+		return *this;
+	}
+
+	ibufferstream& operator>>(unsigned int& i)
+	{
+//		bug_fun();
+		unsigned long long int lli;
+		if((*this) >> lli)
+		{
+			if(lli > std::numeric_limits<unsigned int>::max())
+				failbit = true;
+			i = lli;
+		}
+
+		return *this;
+	}
+
+	ibufferstream& operator>>(long double& d)
+	{
+//		bug_fun();
+		skipws();
+		if(!(gptr < buf.size()))
+			failbit = true;
+		else
+		{
+			char* e;
+			d = std::strtold(buf.data() + gptr, &e);
+			if(e == buf.data())
+				failbit = true;
+			checkeof();
+		}
+		return *this;
+	}
+
+	ibufferstream& operator>>(double& d)
+	{
+//		bug_fun();
+		long double ld;
+		if((*this) >> ld)
+		{
+			if(ld > std::numeric_limits<double>::max())
+				failbit = true;
+			d = ld;
+		}
+		return *this;
+	}
+
+	ibufferstream& operator>>(float& f)
+	{
+//		bug_fun();
+		long double ld;
+		if((*this) >> ld)
+		{
+			if(ld > std::numeric_limits<float>::max())
+				failbit = true;
+			f = ld;
+		}
+		return *this;
+	}
+};
+
 
 }} // sookee::ios
 

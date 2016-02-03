@@ -56,7 +56,8 @@ void stack_handler(int sig);
 #define bug(m)
 #define bug_var(v)
 #define bug_cnt(v)
-#define bug_func()
+#define bug_fun()
+#define bug_func() // deprecated
 #define ADD_STACK_HANDLER() do{}while(false)
 #define bug_lock_guard(lock, mutex) sookee::types::lock_guard lock(mutex)
 #else
@@ -69,7 +70,8 @@ std::ostream& operator<<(std::ostream& o, const std::pair<Key, Val>& p)
 #define QUOTE(s) #s
 #define bug_var(v) bug(QUOTE(v:) << std::boolalpha << " " << v)
 #define bug_cnt(v) bug(QUOTE(v:)); for(auto&& e: v) bug("\titem: " << e)
-#define bug_func() sookee::bug::__scope__bomb__ __scoper__(__PRETTY_FUNCTION__)
+#define bug_fun() sookee::bug::__scope__bomb__ __scoper__(__PRETTY_FUNCTION__)
+#define bug_func() sookee::bug::__scope__bomb__ __scoper__(__PRETTY_FUNCTION__) // deprecated
 #define ADD_STACK_HANDLER() signal(SIGSEGV, sookee::bug::stack_handler)
 struct lock_guard_scope_bomb
 {

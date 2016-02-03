@@ -6,7 +6,7 @@
  */
 
 /*-----------------------------------------------------------------.
-| Copyright (C) 2012 SooKee oasookee@gmail.com               |
+| Copyright (C) 2012 SooKee oasookee@gmail.com                     |
 '------------------------------------------------------------------'
 
 This program is free software; you can redistribute it and/or
@@ -166,39 +166,6 @@ str_vec split2(const std::string& s)
     }
     return v;
 }
-
-//void split(const str& s, str_vec& v, char d, bool fold)
-//{
-//	std::istringstream iss(s);
-//	str p;
-//	while(iss && fold && iss.peek() == d)
-//		iss.ignore();
-//	while(iss && std::getline(iss, p, d))
-//	{
-//		v.push_back(p);
-//		while(iss && fold && iss.peek() == d)
-//			iss.ignore();
-//	}
-//}
-
-
-//str_vec split(const str& s, char d, bool fold)
-//{
-//	str_vec v;
-//	std::istringstream iss(s);
-//
-//	str line;
-//	while(std::getline(iss, line, d))
-//	{
-//		if(fold)
-//			trim(line);
-//		if(fold && line.empty())
-//			continue;
-//		v.push_back(line);
-//	}
-//
-//	return v;
-//}
 
 //// TODO: Move this to <sookee/stl.h>
 //template<typename Container, typename Pred>

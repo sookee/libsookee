@@ -127,6 +127,35 @@ str urlencode(const str& url)
 	return oss.str();
 }
 
+str urldecode(std::string s)
+{
+//	bug_func();
+	static str_map urlism;
+	if(urlism.empty())
+	{
+		for(size_t i = 0; i < 256; ++i)
+		{
+			std::ostringstream oss;
+			oss.fill('0');
+			oss << "%" << std::setw(2) << std::hex << i;
+			//std::cout << "adding: " << oss.str() << '\n';
+
+			urlism[lower(oss.str())] = str(1, char(i));
+			urlism[upper(oss.str())] = str(1, char(i));
+		}
+	}
+	str::size_type p;
+	for(const str_map_vt& e: urlism)
+	{
+		while((p = s.find(e.first)) != str::npos)
+		{
+			//std::cout << "found: " << e.first << '\n';
+			s.replace(p, e.first.size(), e.second);
+		}
+	}
+	return s;
+}
+
 // TODO: implement domain checking
 std::string get_cookie_header(const cookie_jar& cookies, const str& /*domain*/)
 {
@@ -310,35 +339,6 @@ str fix_entities(std::string s)
 	for(const str_map_vt& e: ents)
 		while((p = s.find(e.first)) != str::npos)
 			s.replace(p, e.first.size(), e.second);
-	return s;
-}
-
-str urldecode(std::string s)
-{
-//	bug_func();
-	static str_map urlism;
-	if(urlism.empty())
-	{
-		for(size_t i = 0; i < 256; ++i)
-		{
-			std::ostringstream oss;
-			oss.fill('0');
-			oss << "%" << std::setw(2) << std::hex << i;
-			//std::cout << "adding: " << oss.str() << '\n';
-
-			urlism[lower(oss.str())] = str(1, char(i));
-			urlism[upper(oss.str())] = str(1, char(i));
-		}
-	}
-	str::size_type p;
-	for(const str_map_vt& e: urlism)
-	{
-		while((p = s.find(e.first)) != str::npos)
-		{
-			//std::cout << "found: " << e.first << '\n';
-			s.replace(p, e.first.size(), e.second);
-		}
-	}
 	return s;
 }
 

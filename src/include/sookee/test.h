@@ -91,14 +91,15 @@ public:
 
 class Timer
 {
-	hr_clk::time_point tsb;
-	hr_clk::time_point tse;
+	using clk = std::chrono::steady_clock;
+	clk::time_point tsb;
+	clk::time_point tse;
 
 public:
 
-	void clear() { tsb = tse = hr_clk::now(); }
-	void start() { tsb = hr_clk::now(); }
-	void stop() { tse = hr_clk::now(); }
+	void clear() { tsb = tse = clk::now(); }
+	void start() { tsb = clk::now(); }
+	void stop() { tse = clk::now(); }
 
 	friend std::ostream& operator<<(std::ostream& o, const Timer& timer)
 	{

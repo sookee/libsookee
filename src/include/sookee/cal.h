@@ -93,7 +93,7 @@ inline
 size_t days_in_month(year_t y, month_t m)
 {
 	assert(m < 12);
-	static size_t dmap[] =
+	static const size_t dmap[] =
 	{
 		31		// Jan
 		, 28	// Feb
@@ -283,7 +283,7 @@ public:
 //				  civil_from_days(numeric_limits<Int>::max()-719468)]
 
 template <class Int>
-/*constexpr*/ Int days_from_civil(Int y, unsigned m, unsigned d) noexcept
+constexpr Int days_from_civil(Int y, unsigned m, unsigned d) noexcept
 {
 	static_assert(std::numeric_limits<unsigned>::digits >= 18,
 			 "This algorithm has not been ported to a 16 bit unsigned integer");
@@ -301,7 +301,7 @@ template <class Int>
 // Preconditions:  z is number of days since 1970-01-01 and is in the range:
 //				   [numeric_limits<Int>::min(), numeric_limits<Int>::max()-719468].
 template <class Int>
-/*constexpr*/ std::tuple<Int, unsigned, unsigned> civil_from_days(Int z) noexcept
+constexpr std::tuple<Int, unsigned, unsigned> civil_from_days(Int z) noexcept
 {
 	static_assert(std::numeric_limits<unsigned>::digits >= 18,
 			 "This algorithm has not been ported to a 16 bit unsigned integer");
@@ -330,18 +330,18 @@ constexpr bool is_leap(Int y) noexcept
 // Preconditions: m is in [1, 12]
 // Returns: The number of days in the month m of common year
 // The result is always in the range [28, 31].
-constexpr unsigned char last_day_of_month_common_year_data[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 constexpr unsigned last_day_of_month_common_year(unsigned m) noexcept
 {
+	constexpr unsigned char last_day_of_month_common_year_data[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 	return last_day_of_month_common_year_data[m-1];
 }
 
 // Preconditions: m is in [1, 12]
 // Returns: The number of days in the month m of leap year
 // The result is always in the range [29, 31].
-constexpr unsigned char last_day_of_month_leap_year_data[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 constexpr unsigned last_day_of_month_leap_year(unsigned m) noexcept
 {
+	constexpr unsigned char last_day_of_month_leap_year_data[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 	return last_day_of_month_leap_year_data[m-1];
 }
 
