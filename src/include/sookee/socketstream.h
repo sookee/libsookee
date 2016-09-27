@@ -55,7 +55,7 @@ is granted under the same conditions.
 #include <cerrno>
 
 #include <sookee/types/basic.h>
-#include <sookee/bug.h>
+//#include <sookee/bug.h>
 
 #ifdef __clang__
 #	include "stdio_filebuf.h"
@@ -66,17 +66,19 @@ is granted under the same conditions.
 namespace sookee { namespace net {
 
 using namespace __gnu_cxx;
-using namespace sookee::bug;
+//using namespace sookee::bug;
 using namespace sookee::types;
 
 template<typename Char>
 class basic_netstream
 : public std::basic_iostream<Char>
 {
-	const std::ios::openmode mode = std::ios::in|std::ios::out|std::ios::binary;
+	static constexpr std::ios::openmode default_mode = std::ios::in|std::ios::out|std::ios::binary;
+//	const std::ios::openmode mode;
 
 public:
-	basic_netstream(basic_netstream&& ns): std::basic_iostream<Char>(ns.rdbuf(nullptr))
+	basic_netstream(basic_netstream&& ns)
+	: std::basic_iostream<Char>(ns.rdbuf(nullptr))
 	{
 	}
 
@@ -86,14 +88,14 @@ public:
 	}
 
 	basic_netstream(int sd)
-	: std::basic_iostream<Char>(new stdio_filebuf<Char>(sd, mode))
+	: std::basic_iostream<Char>(new stdio_filebuf<Char>(sd, default_mode))
 	{
 	}
 
 	basic_netstream(const str& host, const in_port_t port)
 	: std::basic_iostream<Char>(nullptr)
 	{
-		open(host, port, mode);
+		open(host, port, default_mode);
 	}
 
 	virtual ~basic_netstream()
@@ -131,7 +133,7 @@ public:
 			return;
 		}
 
-		delete std::basic_iostream<Char>::rdbuf(new (std::nothrow) stdio_filebuf<Char>(sd, mode));
+		delete std::basic_iostream<Char>::rdbuf(new (std::nothrow) stdio_filebuf<Char>(sd, default_mode));
 
 		if(!std::basic_iostream<Char>::rdbuf())
 			std::basic_iostream<Char>::setstate(std::ios::failbit); // memory fail
@@ -142,17 +144,17 @@ public:
 
 	bool open(const str& host, long port)
 	{
-		bug_func();
-		bug_var(host);
-		bug_var(port);
+//		bug_fun();
+//		bug_var(host);
+//		bug_var(port);
 		return open(host, std::to_string(port));
 	}
 
 	bool open(const str& host, const str& port)
 	{
-		bug_func();
-		bug_var(host);
-		bug_var(port);
+//		bug_fun();
+//		bug_var(host);
+//		bug_var(port);
 		addrinfo hints;
 		memset(&hints, 0, sizeof hints);
 		hints.ai_family = AF_UNSPEC; // AF_INET or AF_INET6
@@ -163,7 +165,7 @@ public:
 		{
 			std::basic_iostream<Char>::setstate(std::ios::failbit);
 			error = gai_strerror(status);
-			bug_var(error);
+//			bug_var(error);
 			return false;
 		}
 
@@ -185,19 +187,14 @@ public:
 		{
 			std::basic_iostream<Char>::setstate(std::ios::failbit);
 			error = std::strerror(errno);
-			bug_var(error);
 			return false;
 		}
 
-		bug_var(sd);
+		delete std::basic_iostream<Char>::rdbuf(new (std::nothrow) stdio_filebuf<Char>(sd, default_mode));
 
-		delete std::basic_iostream<Char>::rdbuf(new (std::nothrow) stdio_filebuf<Char>(sd, mode));
-
-		bug_var(std::basic_iostream<Char>::rdbuf());
 		if(std::basic_iostream<Char>::rdbuf())
 			return true;
 
-		bug("ERROR: failed to create ne stdio_filebuf: " << sd);
 		std::basic_iostream<Char>::setstate(std::ios::failbit); // memory fail
 		return false;
 	}
@@ -343,7 +340,7 @@ typedef basic_netstream<wchar_t> wnetstream;
 //
 //	void close()
 //	{
-////		bug_func();
+////		bug_fun();
 ////		bug_var(buf.get_socket());
 //		if(buf.get_socket() != -1)
 //			::close(buf.get_socket());
