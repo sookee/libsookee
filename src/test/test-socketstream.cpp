@@ -128,7 +128,7 @@ public:
 
 	bool bind(const str& host, const str& port)
 	{
-		bug_func();
+		bug_fun();
 		sockaddr_in addr;
 		std::memset(&addr, 0, sizeof(addr));
 		addr.sin_family = AF_INET;
@@ -140,7 +140,7 @@ public:
 	template<typename Functor>
 	bool accept(const str& host, const str& port, Functor func)
 	{
-		bug_func();
+		bug_fun();
 		if(!bind(host, port))
 		{
 			log("E: " << std::strerror(errno));
