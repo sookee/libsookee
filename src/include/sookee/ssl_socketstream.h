@@ -58,10 +58,12 @@ is granted under the same conditions.
 #include <openssl/err.h>
 
 #include <sookee/log.h>
+#include <sookee/types/str_vec.h>
 
 namespace sookee { namespace net {
 
 using namespace sookee::log;
+using namespace sookee::types;
 
 typedef std::string str;
 typedef size_t siz;
@@ -119,7 +121,7 @@ public:
 
 //	void set_ssl_connection(const ssl_connection& conn)
 //	{
-//		bug_func();
+//		bug_fun();
 //		bug_var(conn.sock);
 //		this->conn = conn;
 //	}
@@ -129,12 +131,12 @@ protected:
 
 	int output_buffer()
 	{
-		bug_func();
-		bug_var(conn.ssl);
+//		bug_fun();
+//		bug_var(conn.ssl);
 		int num = buf_type::pptr() - buf_type::pbase();
-		bug_var((void*)buf_type::pptr());
-		bug_var((void*)buf_type::pbase());
-		bug_var(num);
+//		bug_var((void*)buf_type::pptr());
+//		bug_var((void*)buf_type::pbase());
+//		bug_var(num);
 		int ret;
 		if((ret = SSL_write(conn.ssl, reinterpret_cast<char*>(obuf.data()), num * char_size)) != num)
 		{
@@ -221,15 +223,15 @@ public:
 
 	void close()
 	{
-		bug_func();
-		bug_var(conn.sock);
+//		bug_fun();
+//		bug_var(conn.sock);
 		ssl_disconnect();
 		stream_type::clear();
 	}
 
 	bool open(const std::string& host, uint16_t port = 443)
 	{
-		bug_func();
+//		bug_fun();
 		close();
 		return ssl_connect(host, port, conn);
 	}
