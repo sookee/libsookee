@@ -383,15 +383,85 @@ std::istream& getcsvline(std::istream& is, std::vector<std::string>& fields);
 // they acceps the same input as their corresponding
 // std::strtoxx() functions.
 
-bool s_to_l(const std::string& s, long& l);
-bool s_to_ll(const std::string& s, long long& ll);
+//bool s_to_l(const std::string& s, long& l);
+//bool s_to_ll(const std::string& s, long long& ll);
+//
+//bool s_to_ul(const std::string& s, unsigned long& ul);
+//bool s_to_ull(const std::string& s, unsigned long long& ull);
+//
+//bool s_to_f(const std::string& s, float& f);
+//bool s_to_d(const std::string& s, double& d);
+//bool s_to_ld(const std::string& s, long double& ld);
 
-bool s_to_ul(const std::string& s, unsigned long& ul);
-bool s_to_ull(const std::string& s, unsigned long long& ull);
+// string conversions
 
-bool s_to_f(const std::string& s, float& f);
-bool s_to_d(const std::string& s, double& d);
-bool s_to_ld(const std::string& s, long double& ld);
+inline
+bool s_to_test(char const* s, char const* e)
+{
+	if(e == s)
+		return false;
+
+	while(std::isspace(*e))
+		++e;
+
+	return !(*e);
+}
+
+inline
+bool s_to_l(const std::string& s, long int& l)
+{
+	char* end;
+	l = std::strtol(s.c_str(), &end, 10);
+	return s_to_test(s.c_str(), end);
+}
+
+inline
+bool s_to_ll(const std::string& s, long long int& ll)
+{
+	char* end;
+	ll = std::strtoll(s.c_str(), &end, 10);
+	return s_to_test(s.c_str(), end);
+}
+
+inline
+bool s_to_ul(const std::string& s, unsigned long int& ul)
+{
+	char* end;
+	ul = std::strtoul(s.c_str(), &end, 10);
+	return s_to_test(s.c_str(), end);
+}
+
+inline
+bool s_to_ull(const std::string& s, unsigned long long int& ull)
+{
+	char* end;
+	ull = std::strtoull(s.c_str(), &end, 10);
+	return s_to_test(s.c_str(), end);
+}
+
+inline
+bool s_to_f(const std::string& s, float& f)
+{
+	char* end;
+	f = std::strtof(s.c_str(), &end);
+	return s_to_test(s.c_str(), end);
+}
+
+inline
+bool s_to_d(const std::string& s, double& d)
+{
+	char* end;
+	d = std::strtod(s.c_str(), &end);
+	return s_to_test(s.c_str(), end);
+}
+
+inline
+bool s_to_ld(const std::string& s, long double& ld)
+{
+	char* end;
+	ld = std::strtold(s.c_str(), &end);
+	return s_to_test(s.c_str(), end);
+}
 
 template<class T>
 inline constexpr T fast_pow(const T base, unsigned const exponent)
