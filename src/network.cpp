@@ -61,19 +61,14 @@ cookie::cookie(const str& data)
 : secure(false)
 , httponly(false)
 {
-//	bug_func();
 	std::istringstream iss(data);
 	std::getline(iss, key, '=');
 	std::getline(iss, val, ';');
 	iss >> std::ws;
 
-//	bug_var(key);
-//	bug_var(val);
-
 	str att;
 	while(std::getline(iss, att, '='))
 	{
-//		bug_var(att);
 		if(att == "Domain")
 			std::getline(iss, domain, ';');
 		else if(att == "Path")
@@ -129,7 +124,6 @@ str urlencode(const str& url)
 
 str urldecode(std::string s)
 {
-//	bug_func();
 	static str_map urlism;
 	if(urlism.empty())
 	{
@@ -138,7 +132,6 @@ str urldecode(std::string s)
 			std::ostringstream oss;
 			oss.fill('0');
 			oss << "%" << std::setw(2) << std::hex << i;
-			//std::cout << "adding: " << oss.str() << '\n';
 
 			urlism[lower(oss.str())] = str(1, char(i));
 			urlism[upper(oss.str())] = str(1, char(i));
@@ -146,20 +139,15 @@ str urldecode(std::string s)
 	}
 	str::size_type p;
 	for(const str_map_vt& e: urlism)
-	{
 		while((p = s.find(e.first)) != str::npos)
-		{
-			//std::cout << "found: " << e.first << '\n';
 			s.replace(p, e.first.size(), e.second);
-		}
-	}
+
 	return s;
 }
 
 // TODO: implement domain checking
 std::string get_cookie_header(const cookie_jar& cookies, const str& /*domain*/)
 {
-//	bug_func();
 	std::ostringstream oss;
 	if(!cookies.empty())
 	{
@@ -201,17 +189,12 @@ std::istream& read_http_response(std::istream&is, response& r)
 
 std::istream& read_http_headers(std::istream&is, header_map& headers)
 {
-//	bug_func();
-	str line;
-
-//	if(!std::getline(is, line))
-//		return is;
-
 	headers.clear();
 
 	str key, val;
 	std::istringstream iss;
 
+	str line;
 	while(std::getline(is, line) && !trim(line).empty())
 	{
 		iss.clear();
@@ -275,14 +258,11 @@ std::istream& read_http_response_data(std::istream&is, const header_map& headers
 		{
 			std::size_t pos;
 			auto len = std::stoull(h.second, &pos);
-//			if(std::istringstream(h.second) >> len)
 			if(pos == h.second.size())
 			{
-//				std::ostringstream oss;
 				data.clear();
 				for(char c; len && is.get(c); --len)
 					data += c;
-//				data = oss.str();
 				return is;
 			}
 		}
@@ -334,7 +314,7 @@ static const str_map ents =
 
 str fix_entities(std::string s)
 {
-//	bug_func();
+//	bug_fun();
 	str::size_type p;
 	for(const str_map_vt& e: ents)
 		while((p = s.find(e.first)) != str::npos)
