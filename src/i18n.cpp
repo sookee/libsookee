@@ -30,6 +30,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <iconv.h>
 #include <cstring>
 #include <memory>
+#include <vector>
 //#include <cwchar>
 //#include <uchar.h>
 
@@ -61,6 +62,7 @@ namespace sookee { namespace i18n {
 std::string to_utf8(std::u32string utf32)
 {
 	std::string utf8;
+//	utf8.reserve(utf32.size() * 4);
 	utf8::utf32to8(utf32.begin(), utf32.end(), std::back_inserter(utf8));
 	return utf8;
 }
@@ -68,6 +70,7 @@ std::string to_utf8(std::u32string utf32)
 std::u32string to_utf32(const std::string& utf8)
 {
 	std::u32string utf32;
+//	utf32.reserve(utf8.size());
 	utf8::utf8to32(utf8.begin(), utf8.end(), std::back_inserter(utf32));
 	return utf32;
 }
@@ -75,15 +78,19 @@ std::u32string to_utf32(const std::string& utf8)
 // Untested iconv version
 std::string to_utf8_xxx(std::u32string utf32)
 {
+	if(utf32.empty())
+		return {};
+
 	iconv_t cd;
 	if((cd = iconv_open("UTF-8", "UTF-32")) == iconv_t(-1))
 		throw std::runtime_error(std::strerror(errno));
 
-	std::unique_ptr<char[]> buf(new char[utf32.size() * 4]);
+	std::vector<char> buf(utf32.size() * 4);
+//	std::unique_ptr<char[]> buf(new char[utf32.size() * 4]);
 
 	auto inbuf = (char*)&utf32[0];
 	auto inbytesleft = utf32.size() * sizeof(std::u32string::value_type);
-	auto outbuf = buf.get();
+	auto outbuf = buf.data();
 	auto outbytesleft = utf32.size() * 4;
 
 	iconv(cd, nullptr, nullptr, nullptr, nullptr);
@@ -91,7 +98,7 @@ std::string to_utf8_xxx(std::u32string utf32)
 	if(iconv(cd, &inbuf, &inbytesleft, &outbuf, &outbytesleft) == std::size_t(-1))
 		throw std::runtime_error(std::strerror(errno));
 
-	return std::string(buf.get(), outbuf);
+	return std::string(buf.data(), outbuf);
 }
 
 //std::u32string mb_to_utf32(const std::string& mb)
