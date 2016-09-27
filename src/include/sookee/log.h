@@ -198,7 +198,7 @@ inline std::string get_filename(const std::string& path)
 //public:
 //	static writer& create(const str& name, std::ostream& os)
 //	{
-////		bug_func();
+////		bug_fun();
 //		recursive_lock_guard lock(mtx);
 //		if(!logs.count(name))
 //			logs.emplace(name, os);
@@ -209,7 +209,7 @@ inline std::string get_filename(const std::string& path)
 //
 //	static writer& get(const str& name)
 //	{
-////		bug_func();
+////		bug_fun();
 //		recursive_lock_guard lock(mtx);
 //		if(!logs.count(name))
 //			err << "WARN: calling get on non-existent log_writer, creating null: " << name;
@@ -239,7 +239,7 @@ class log_writer
 		auto tail = (q_tail + 1) % q.size();
 
 		// full
-		if((tail == q_head))
+		if(tail == q_head)
 			return false;
 
 		q[q_tail] = std::move(msg);
