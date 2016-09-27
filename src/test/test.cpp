@@ -95,14 +95,14 @@
 //
 //	void run(Consumer consumer)
 //	{
-////		bug_func();
+////		bug_fun();
 //		while(!done)
 //			consume(consumer);
 //	}
 //
 //	void run(Producer producer)
 //	{
-////		bug_func();
+////		bug_fun();
 //		while(!done)
 //			produce(producer);
 //	}
@@ -225,7 +225,7 @@
 //public:
 //	static writer& create(const str& name, std::ostream& os)
 //	{
-////		bug_func();
+////		bug_fun();
 //		recursive_lock_guard lock(mtx);
 //		if(!logs.count(name))
 //			logs.emplace(name, os);
@@ -236,7 +236,7 @@
 //
 //	static writer& get(const str& name)
 //	{
-////		bug_func();
+////		bug_fun();
 //		recursive_lock_guard lock(mtx);
 //		if(!logs.count(name))
 //			err << "WARN: calling get on non-existent log_writer, creating null: " << name;
