@@ -1,5 +1,5 @@
-#ifndef LIBSOOKEE_FILEDB_H_
-#define LIBSOOKEE_FILEDB_H_
+#ifndef LIBSOOKEE_FILEDB_H
+#define LIBSOOKEE_FILEDB_H
 /*
  *  Created on: 07 Dec 2014
  *      Author: oasookee@gmail.com
@@ -48,14 +48,12 @@ namespace sookee { namespace filedb {
 template<typename Type>
 std::ostream& write(std::ostream& os, const Type& t)
 {
-	bug_func();
 	return os.write(reinterpret_cast<const char*>(&t), sizeof(t));
 }
 
 inline
 std::ostream& write(std::ostream& os, const std::string& s)
 {
-	bug_func();
 	write(os, s.size());
 	return os.write(s.data(), s.size());
 }
@@ -63,14 +61,12 @@ std::ostream& write(std::ostream& os, const std::string& s)
 inline
 std::ostream& write(std::ostream& os, const char* s)
 {
-	bug_func();
 	return os.write(s, std::strlen(s) + 1);
 }
 
 template<typename Arg, typename... Args>
 std::ostream& write(std::ostream& os, const Arg& arg, const Args&... args)
 {
-	bug_func();
 	return write(write(os, arg), args...);
 }
 
@@ -79,14 +75,12 @@ std::ostream& write(std::ostream& os, const Arg& arg, const Args&... args)
 template<typename Type>
 std::istream& read(std::istream& is, Type& t)
 {
-	bug_func();
 	return is.read(reinterpret_cast<char*>(&t), sizeof(t));
 }
 
 inline
 std::istream& read(std::istream& is, std::string& s)
 {
-	bug_func();
 	std::string::size_type len;
 	read(is, len);
 	s.resize(len);
@@ -96,7 +90,6 @@ std::istream& read(std::istream& is, std::string& s)
 inline
 std::istream& read(std::istream& is, char* s)
 {
-	bug_func();
 	for(char c; is.get(c) && c; ++s)
 		*s = c;
 	*s = 0;
@@ -106,7 +99,6 @@ std::istream& read(std::istream& is, char* s)
 template<typename Arg, typename... Args>
 std::istream& read(std::istream& is, Arg& arg, Args&... args)
 {
-	bug_func();
 	return read(read(is, arg), args...);
 }
 
@@ -154,4 +146,4 @@ std::istream& read(std::istream& is, Arg& arg, Args&... args)
 
 namespace soo { using namespace sookee::filedb; }
 
-#endif // LIBSOOKEE_FILEDB_H_
+#endif // LIBSOOKEE_FILEDB_H
