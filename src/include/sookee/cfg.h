@@ -35,6 +35,8 @@ http://www.gnu.org/licenses/gpl-2.0.html
 #include <sookee/types/stream.h>
 #include <sookee/types/map.h>
 #include <sookee/types/str_vec.h>
+#include <sookee/types/str_set.h>
+#include <sookee/types/str_lst.h>
 #include <sookee/ios.h>
 
 namespace sookee { namespace props {
@@ -55,6 +57,13 @@ private:
 	 */
 	str dir;
 	bool load(const str& dir, const str& file, bool first);
+
+	template<typename Container>
+	Container get_as_container(const str& s) const
+	{
+		auto v = get_vec(s);
+		return {std::begin(v), std::end(v)};
+	}
 
 public:
 
@@ -110,7 +119,7 @@ public:
 	 * found in the config file.
 	 *
 	 * @return The value that the variable s is set to in the config
-	 * file after file glob explnsion has been applied else dflt if
+	 * file after file glob expansion has been applied else dflt if
 	 * not present.
 	 */
 	str get_exp(const str& s, const str& dflt = "") const
@@ -160,6 +169,16 @@ public:
 		for(siz i = 0; i < v.size(); ++i)
 			v[i] = expand_env(v[i], WRDE_SHOWERR|WRDE_UNDEF);
 		return v;
+	}
+
+	str_set get_as_set(const str& s)
+	{
+		return get_as_container<str_set>(s);
+	}
+
+	str_lst get_as_list(const str& s)
+	{
+		return get_as_container<str_lst>(s);
 	}
 
 	/**
