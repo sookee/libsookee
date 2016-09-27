@@ -149,6 +149,75 @@ inline std::size_t proc_self_status(std::string const& key = "VmRSS")
 	return -1;
 }
 
+class Resolver
+{
+	str_vec seen;
+	str_vec resolved;
+	std::map<str, str_vec> deps;
+
+	void resolve(str const& d)
+	{
+		bug("dep_resolve: " << d);
+		seen.push_back(d);
+		for(auto const& nd: deps[d])
+		{
+			if(std::find(resolved.begin(), resolved.end(), nd) != resolved.end())
+				continue;
+			else if(std::find(seen.begin(), seen.end(), nd) == seen.end())
+				resolve(nd);
+			else
+			{
+				log("E: plugin " << d << " has a circular dependency with " << nd);
+				continue;
+			}
+		}
+		bug("     adding: " << d);
+		resolved.push_back(d);
+	}
+
+public:
+
+	// clear internal state without
+	// reducing memory allocation
+	void clear()
+	{
+		seen.clear();
+		resolved.clear();
+		deps.clear();
+	}
+
+	// clear and reduce memory consumption
+	// to minimum
+	void clean(unsigned reserve_guess = 20)
+	{
+		str_vec().swap(seen);
+		seen.reserve(reserve_guess);
+		str_vec().swap(resolved);
+		resolved.reserve(reserve_guess);
+		std::map<str, str_vec>().swap(deps);
+	}
+
+	void add(str const& a)
+	{
+		deps[a];
+		seen.reserve(deps.size());
+	}
+
+	void add(str const& a, str const& b)
+	{
+		deps[a].push_back(b);
+		seen.reserve(deps.size());
+	}
+
+	str_vec const& resolve()
+	{
+		for(auto const& d: deps)
+			if(std::find(resolved.begin(), resolved.end(), d.first) == resolved.end())
+				resolve(d.first);
+		return resolved;
+	}
+};
+
 }} // ::sookee::utils
 
 namespace soo { using namespace sookee::utils; }
