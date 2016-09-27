@@ -1,10 +1,10 @@
 #include <sookee/types/vec.h>
 #include <sookee/str.h>
 #include <sookee/bug.h>
-#include <sookee/log.h>
 #include <sookee/rnd.h>
 #include <sookee/sub.h>
 #include <sookee/test.h>
+#include <sookee/log.h>
 
 using namespace sookee::bug;
 using namespace sookee::log;
