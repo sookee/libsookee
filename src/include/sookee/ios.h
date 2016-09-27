@@ -207,7 +207,7 @@ std::istream& user_insist(std::istream& is, std::ostream& os, Type& t
 {
 	os << question;
 
-	while(retries-- && !ios::user_get<int>(is, t))
+	while(retries-- && !ios::user_get<Type>(is, t))
 	{
 		is.clear();
 		os << error << '\n' << question;
@@ -265,9 +265,18 @@ inline std::istream& operator>>(std::istream& is, const std::string& s)
 inline
 std::istream& getline(std::istream& is, std::string& s, std::streamsize num, char delim = '\n')
 {
-	std::unique_ptr<char[]> buf(new char[num]);
+	std::unique_ptr<char[]> buf(new char[num + 1]);
 	if(is.getline(buf.get(), num + 1, delim))
-		s.assign(buf.get(), is.gcount());
+		s.assign(buf.get(), is.gcount() - 1);
+	return is;
+}
+
+template<std::size_t MaxSize>
+std::istream& get_buffer(std::istream& is, std::string& s, char delim = '\n')
+{
+	char buf[MaxSize + 1];
+	if(is.getline(buf, sizeof(buf), delim))
+		s.assign(buf, is.gcount() - 1);
 	return is;
 }
 
@@ -756,13 +765,13 @@ private:
 
 	void checkeof()
 	{
-		if(gptr == buf.size())
+		if(gptr == buf->size())
 			eofbit = true;
 	}
 
 	void skipws()
 	{
-		while(gptr < buf.size() && buf[gptr] == ' ') {}
+		while(gptr < buf->size() && buf[gptr] == ' ') {}
 		checkeof();
 	}
 
@@ -788,7 +797,7 @@ public:
 	{
 //		bug_fun();
 		skipws();
-		if(!(gptr < buf.size()))
+		if(!(gptr < buf->size()))
 			failbit = true;
 		else
 		{
@@ -802,12 +811,12 @@ public:
 	{
 //		bug_fun();
 		skipws();
-		if(!(gptr < buf.size()))
+		if(!(gptr < buf->size()))
 			failbit = true;
 		else
 		{
 			s.clear();
-			while(gptr < buf.size() && buf[gptr] != ' ');
+			while(gptr < buf->size() && buf[gptr] != ' ')
 				s += buf[gptr++];
 			checkeof();
 		}
@@ -818,13 +827,13 @@ public:
 	{
 //		bug_fun();
 		skipws();
-		if(!(gptr < buf.size()))
+		if(!(gptr < buf->size()))
 			failbit = true;
 		else
 		{
 			char* e;
-			i = std::strtoll(buf.data() + gptr, &e, 10);
-			if(e == buf.data())
+			i = std::strtoll(buf->data() + gptr, &e, 10);
+			if(e == buf->data())
 				failbit = true;
 			checkeof();
 		}
@@ -863,13 +872,13 @@ public:
 	{
 //		bug_fun();
 		skipws();
-		if(!(gptr < buf.size()))
+		if(!(gptr < buf->size()))
 			failbit = true;
 		else
 		{
 			char* e;
-			i = std::strtoull(buf.data() + gptr, &e, 10);
-			if(e == buf.data())
+			i = std::strtoull(buf->data() + gptr, &e, 10);
+			if(e == buf->data())
 				failbit = true;
 			checkeof();
 		}
@@ -908,13 +917,13 @@ public:
 	{
 //		bug_fun();
 		skipws();
-		if(!(gptr < buf.size()))
+		if(!(gptr < buf->size()))
 			failbit = true;
 		else
 		{
 			char* e;
-			d = std::strtold(buf.data() + gptr, &e);
-			if(e == buf.data())
+			d = std::strtold(buf->data() + gptr, &e);
+			if(e == buf->data())
 				failbit = true;
 			checkeof();
 		}
