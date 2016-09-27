@@ -25,6 +25,7 @@ http://www.gnu.org/licenses/gpl-2.0.html
 '-----------------------------------------------------------------*/
 
 #include <sookee/types/basic.h>
+#include <sookee/types/str_map.h>
 #include <sookee/socketstream.h>
 #include <sookee/ssl_socketstream.h>
 #include <sookee/log.h>
@@ -62,7 +63,6 @@ typedef header_pair header;
 typedef header_map::iterator header_iter;
 typedef header_map::const_iterator header_citer;
 
-
 str urlencode(const str& url);
 
 str get_cookie_header(const cookie_jar& cookies, const str& domain);
@@ -78,11 +78,14 @@ struct response
 };
 
 //	str html;
+//	net::response r;
 //	net::header_map headers;
 //	net::cookie_jar cookies;
-//	net::read_http_headers(io, headers);
-//	net::read_http_cookies(io, headers, cookies);
+//	net::read_http_response(io, r);
+//	net::read_http_headers(io, headers); // leading headers
 //	net::read_http_response_data(io, headers, html);
+//	net::read_http_headers(io, headers); // trailing headers
+//	net::read_http_cookies(io, headers, cookies);
 
 /**
  * Return first line of the response containing the response code
@@ -127,6 +130,7 @@ std::istream& read_http_response_data(std::istream&is, const header_map& headers
 
 std::istream& read_tag(std::istream& is, std::ostream& os, const str& tag);
 std::istream& read_tag_by_att(std::istream& is, std::ostream& os, const str& tag, const str& att, const str& val);
+
 /**
  * Assumes XML (XHTML)
  * If called on the start of a tag '<' reads whole tag, including sub-tags.
@@ -188,7 +192,7 @@ public:
 		netstream::close();
 	}
 
-	operator std::iostream&() { return *this; }
+	//operator std::iostream&() { return *this; }
 
 	str get(const str& path) override
 	{
@@ -230,7 +234,7 @@ public:
 	str accept = "text/html";
 	net::header_map headers;
 
-	operator std::iostream&() { return *this; }
+	//operator std::iostream&() { return *this; }
 
 	bool open(const std::string& host, in_port_t port, bool nb = false) override
 	{
