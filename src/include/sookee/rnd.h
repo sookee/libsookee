@@ -84,7 +84,7 @@ public:
 	 * @param denom
 	 * @return
 	 */
-	bool chances(Type num, Type denom) { return num > get(1, denom); }
+	bool chances(Type num, Type denom) { return num >= get(1, denom); }
 
 	/**
 	 * Percentage chance of success. This function returns true
