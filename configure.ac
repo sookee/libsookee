@@ -25,7 +25,7 @@ AC_INIT([libsookee],[0.1],[oasookee@gmail.com],[libsookee])
 AC_CONFIG_SRCDIR([src/Makefile.am])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_AUX_DIR([aux])
+AC_CONFIG_AUX_DIR([aux-bits])
 
 AM_INIT_AUTOMAKE([1.10 foreign])
 AM_SILENT_RULES
