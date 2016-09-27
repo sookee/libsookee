@@ -167,51 +167,60 @@ str_vec split2(const std::string& s)
     return v;
 }
 
-//// TODO: Move this to <sookee/stl.h>
-//template<typename Container, typename Pred>
-//typename Container::iterator remove_if(Container& c, Pred pred)
+// CSV===
+
+// USAGE
+
+//std::string field;
+//for(const auto& test: tests)
 //{
-//	return std::remove_if(c.begin(), c.end(), pred);
-//}
+//	std::vector<std::string> fields;
 //
-//// TODO: Move this to <sookee/stl.h>
-//template<typename Container, typename Pred>
-//typename Container::iterator erase_if(Container& c, Pred pred)
-//{
-//	return c.erase(std::remove_if(c.begin(), c.end(), pred), c.end());
+//	std::istringstream iss(test);
+//	while(getcsvline(iss, fields))
+//	{
+//		for(auto const& field: fields)
+//			std::cout << field << " | ";
+//		std::cout << '\n';
+//	}
 //}
+
+// "bmbmnbm", ",n,mn,,m,", "hkjkj\"hhjhjg"
+
+// quoted -> quote esc
+// unquoted -> comma esc
 
 std::istream& getcsvfield(std::istream& is, std::string& field)
 {
-	using std::ws;
-
 	field.clear();
 
+	char delim = ',';
+	if((is >> std::ws).peek() == '"'  || is.peek() == '\'')
+		is.get(delim);
+
 	char c;
-	if((is >> ws).peek() == '"')
+	while(is.get(c))
 	{
-		is.ignore();
-		bool esc = false;
-		while((esc || is.peek() != '"') && is.get(c))
+		if(c == '\\' && is.peek() == delim)
 		{
-			if(esc)
-				esc = false;
-			else if(c == '\\')
-			{
-				esc = true;
-				continue;
-			}
-			field += c;
+			field += delim;
+			is.ignore();
+			continue;
 		}
-		if(c != '"')
-			is.clear();
-		is.ignore(std::numeric_limits<std::streamsize>::max(), ',');
+
+		if(c == delim)
+		{
+			if(c != ',' && (is >> std::ws).peek() == ',')
+				is.get(c);
+			break;
+		}
+
+		if(c != ',')
+			field += c;
 	}
-	else
-	{
-		if(std::getline(is, field, ','))
-			rtrim(field);
-	}
+
+	if(!field.empty())
+		is.clear();
 
 	return is;
 }
@@ -220,77 +229,14 @@ std::istream& getcsvline(std::istream& is, std::vector<std::string>& fields)
 {
 	fields.clear();
 	std::string field;
-
-	while(getcsvfield(is, field))
-		fields.push_back(std::move(field));
-
-	is.clear();
-	if(fields.empty())
-		is.setstate(std::ios::failbit);
-
+	if(std::getline(is, field))
+	{
+		std::istringstream iss(field);
+		while(getcsvfield(iss, field))
+			fields.push_back(field);
+	}
 	return is;
 }
 
-// string conversions
-
-bool s_to_test(char const* s, char const* e)
-{
-	if(e == s)
-		return false;
-
-	while(std::isspace(*e))
-		++e;
-
-	return !(*e);
-}
-
-bool s_to_l(const std::string& s, long int& l)
-{
-	char* end;
-	l = std::strtol(s.c_str(), &end, 10);
-	return s_to_test(s.c_str(), end);
-}
-
-bool s_to_ll(const std::string& s, long long int& ll)
-{
-	char* end;
-	ll = std::strtoll(s.c_str(), &end, 10);
-	return s_to_test(s.c_str(), end);
-}
-
-bool s_to_ul(const std::string& s, unsigned long int& ul)
-{
-	char* end;
-	ul = std::strtoul(s.c_str(), &end, 10);
-	return s_to_test(s.c_str(), end);
-}
-
-bool s_to_ull(const std::string& s, unsigned long long int& ull)
-{
-	char* end;
-	ull = std::strtoull(s.c_str(), &end, 10);
-	return s_to_test(s.c_str(), end);
-}
-
-bool s_to_f(const std::string& s, float& f)
-{
-	char* end;
-	f = std::strtof(s.c_str(), &end);
-	return s_to_test(s.c_str(), end);
-}
-
-bool s_to_d(const std::string& s, double& d)
-{
-	char* end;
-	d = std::strtod(s.c_str(), &end);
-	return s_to_test(s.c_str(), end);
-}
-
-bool s_to_ld(const std::string& s, long double& ld)
-{
-	char* end;
-	ld = std::strtold(s.c_str(), &end);
-	return s_to_test(s.c_str(), end);
-}
 
 }} // sookee::utils
