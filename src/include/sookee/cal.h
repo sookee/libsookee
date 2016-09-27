@@ -16,11 +16,7 @@
 #include <chrono>
 #include <sstream>
 
-#include <sookee/bug.h>
-
 namespace sookee { namespace cal {
-
-using namespace sookee::bug;
 
 typedef size_t year_t;
 typedef size_t month_t;
