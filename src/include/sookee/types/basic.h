@@ -1,9 +1,6 @@
-#pragma once
-#ifndef _LIBSOOKEE_TYPES_BASIC_H_
-#define _LIBSOOKEE_TYPES_BASIC_H_
+#ifndef LIBSOOKEE_TYPES_BASIC_H
+#define LIBSOOKEE_TYPES_BASIC_H
 /*
- * tyoes.h
- *
  *  Created on: 9 Jan 2012
  *      Author: oasookee@gmail.com
  */
@@ -123,4 +120,4 @@ MAKE_TYPE_ID(double, 8);
 
 namespace soo { using namespace sookee::types; }
 
-#endif /* _LIBSOOKEE_TYPES_BASIC_H_ */
+#endif // LIBSOOKEE_TYPES_BASIC_H
