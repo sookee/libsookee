@@ -19,7 +19,7 @@ noinst_PROGRAMS = \
 	test-cal
 	
 LIB_SOOKEE = -L../.libs -lsookee
-	
+
 test_SOURCES = test.cpp
 test_LDADD = $(LIB_SOOKEE)
 
